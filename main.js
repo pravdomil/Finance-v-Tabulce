@@ -11,6 +11,7 @@ function onOpen() {
 
 function update() {
     fio.update();
+    fio.categorize();
 }
 
 function categorize() {
