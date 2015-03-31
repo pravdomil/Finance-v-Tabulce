@@ -129,7 +129,7 @@ var fioCategory = new function() {
         
         row["Rok"] = row["Datum"] ? row["Datum"].getYear() : "";
   
-        if(cell["Skupina"] == "" && cell["Věc"] == "") {
+        if(row["Skupina"] == "" && row["Věc"] == "") {
             
             // TODO
             
@@ -146,7 +146,7 @@ var fioCategory = new function() {
             
             var type = fioColumns.arr[i];
             
-            obj[type] = formatCell(arr[i], type, true);
+            obj[type] = this.formatCell(arr[i], type, true);
         }
         
         return obj;
@@ -156,7 +156,7 @@ var fioCategory = new function() {
         
         var arr = [];
         
-        for(var key in obj) arr.push( formatCell(obj[key], key) );
+        for(var key in obj) arr.push( this.formatCell(obj[key], key) );
         
         return arr;
     }
@@ -169,7 +169,7 @@ var fioCategory = new function() {
             case "Příjem":
             case "Přijato":
             case "Odesláno":
-                return forJS ? jsNumber(value) : docsNumber(value);
+                return forJS ? this.jsNumber(value) : this.docsNumber(value);
             case "Datum":
                 return value;
             default:
