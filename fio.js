@@ -45,11 +45,22 @@ var fioRules = new function() {
 
 var fioApi = new function() {
     
+    this.config = PropertiesService.getUserProperties();
+    
+    this.promptToken = function() {
+        
+        this.token = Browser.inputBox('Zadejte token');
+        
+        this.config.setProperty('token', this.token);
+        
+        return this.token;
+    }
+    
     this.api = function(arg) {
         
-        this.token = UserProperties.getProperty("token");
+        this.token = this.config.getProperty("token");
         
-        if (!this.token) throw "Token není nastaven.";
+        if (!this.token && !this.promptToken()) throw "Token není nastaven.";
         
         var response = UrlFetchApp.fetch("https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json");
         
