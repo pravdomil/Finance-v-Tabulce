@@ -1,11 +1,12 @@
 function onOpen() {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    
-    ss.addMenu("Fio", [
-        {name: "Update", functionName: "update"},
-        {name: "Categorize", functionName: "categorize"},
-        {name: "Track cash", functionName: "trackCash"},
-    ]);
+    SpreadsheetApp.getUi().createMenu('Fio')
+        .addItem('Aktualizovat', 'update')
+        .addItem('Rozčlenit', 'categorize')
+        .addSeparator()
+        .addItem('Nastavit token', 'setToken')
+        .addSeparator()
+        .addItem('Zanést hotovost', 'trackCash')
+        .addToUi();
 }
 
 function update() {
@@ -16,9 +17,13 @@ function categorize() {
     fio.categorize();
 }
 
+function setToken() {
+    fioApi.promptToken();
+}
+
 function trackCash() {
     
-    var amount = parseInt(Browser.inputBox('Amount'));
+    var amount = parseInt(Browser.inputBox('Částka'));
     if(!amount) return;
     
     var date = new Date();
