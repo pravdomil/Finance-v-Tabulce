@@ -38,14 +38,103 @@ var fioColumns = new function() {
 
 var fioRules = new function() {
     
-    this.string = HtmlService.createHtmlOutputFromFile('rules').getContent();
+    this.loadRulesFromFile = function() {
+        
+        this.rules = [];
+        
+        var file = HtmlService.createHtmlOutputFromFile('rules').getContent().split("\n");
+        
+        for(var i = 0; i < file.length; i++) {
     
-    this.categorize = function(row) {
+            var line = file[i];
         
-        // TODO
+            if(!line.trim()) continue;
         
-        return row;
+            var group;
+            var item;
+        
+            if(/^\s+/.test(line))
+            {
+                this.rules.push({
+                    group : group,
+                    item : item,
+                    cond : this.parseCondition(line)
+                })
+            }
+            else
+            {
+                line = line.split(">");
+            
+                group = line[0] ? line[0].trim() : "";
+                item = line[1] ? line[1].trim() : "";
+            }
+        }
     }
+    
+    this.parseCondition = function(cond) {
+        
+        var arr = [];
+        
+        cond = cond.split("&&");
+        
+        for(var i = 0; i < cond.length; i++) {
+            
+            var equal = cond[i].split("==");
+            
+            if(equal.length == 2) {
+                
+                arr.push({
+                    column : equal[0].trim(),
+                    value : equal[1].trim(),
+                    mode : "equal",
+                });
+            }
+            
+            var match = cond[i].split("~");
+            
+            if(match.length == 2) {
+                
+                arr.push({
+                    column : match[0].trim(),
+                    value : match[1].trim(),
+                    mode : "match",
+                });
+            }
+        }
+        
+        return arr;
+    }
+    
+    this.get = function(row) {
+        
+        for(var i = 0; i < this.rules.length; i++) {
+            
+            var rule = this.rules[i];
+            var passed = false;
+            
+            for(var c = 0; c < rule.cond.length; c++) {
+                
+                var cond = rule.cond[c];
+                
+                if(cond.mode == "equal") passed = (row[cond.column] == cond.value);
+                else if(cond.mode == "match") {
+                    
+                    var regex = new RegExp( this.escapeRegExp(cond.value), "i");
+                    passed = regex.test(row[cond.column]);
+                }
+                
+                if(!passed) break;
+            }
+            
+            if(passed) return rule;
+        }
+    }
+    
+    this.escapeRegExp = function(s) {
+        return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+    }
+    
+    this.loadRulesFromFile();
 }
 
 
@@ -135,7 +224,15 @@ var fioCategory = new function() {
         
         row["Rok"] = row["Datum"] ? row["Datum"].getYear() : "";
   
-        if(row["Skupina"] == "" && row["Věc"] == "") row = fioRules.categorize(row);
+        if(row["Skupina"] == "" && row["Věc"] == "") {
+            
+            var rule = fioRules.get(row);
+            
+            if(rule) {
+                row["Skupina"] = rule.group;
+                row["Věc"] = rule.item;
+            }
+        }
   
         return this.rowToArr(row);
     }
