@@ -40,6 +40,12 @@ var fioRules = new function() {
     
     this.string = HtmlService.createHtmlOutputFromFile('rules').getContent();
     
+    this.categorize = function(row) {
+        
+        // TODO
+        
+        return row;
+    }
 }
 
 
@@ -129,11 +135,7 @@ var fioCategory = new function() {
         
         row["Rok"] = row["Datum"] ? row["Datum"].getYear() : "";
   
-        if(row["Skupina"] == "" && row["Věc"] == "") {
-            
-            // TODO
-            
-        }
+        if(row["Skupina"] == "" && row["Věc"] == "") row = fioRules.categorize(row);
   
         return this.rowToArr(row);
     }
