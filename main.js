@@ -31,8 +31,8 @@ function trackCash() {
     date = date.getDate() + "." + ( date.getMonth() + 1 ) + "." + date.getFullYear();
     
     var arr = [
-        [date, docsNumber(amount), 'CZK', '', '', '', '', '', 'cash'],
-        [date, docsNumber(amount * -1), 'CZK', '', '', '', '', '', 'cash'],
+        [date, fioCategory.docsNumber(amount), 'CZK', '', '', '', '', '', 'cash'],
+        [date, fioCategory.docsNumber(amount * -1), 'CZK', '', '', '', '', '', 'cash'],
     ];
     fio.insert(arr);
     
