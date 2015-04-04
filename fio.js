@@ -286,6 +286,18 @@ var fioCategory = new function() {
 }
 
 
+var fioTrigger = new function() {
+    
+    this.config = PropertiesService.getUserProperties();
+    
+    if(this.config.getProperty("triggerSet")) return;
+    
+    ScriptApp.newTrigger('update').timeBased().atHour(5).everyDays(1).create();
+    
+    this.config.setProperty("triggerSet", true)
+}
+
+
 var fio = new function() {
     
     this.emptySheet = function() {
