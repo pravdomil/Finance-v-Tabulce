@@ -28,8 +28,8 @@ var fioColumns = new function() {
     for (var key in this.obj) this.arr.push(this.obj[key]);
     
     this.arr.push("Měsíc");
-    this.arr.push("Přijato");
-    this.arr.push("Odesláno");
+    this.arr.push("Pohyb");
+    this.arr.push("Částka");
     this.arr.push("Skupina");
     this.arr.push("Věc");
     this.arr.push("Rok");
@@ -219,9 +219,9 @@ var fioCategory = new function() {
         
         row["Měsíc"] = row["Datum"] ? row["Datum"].getYear() + "." + (row["Datum"].getMonth() + 1) : "";
         
-        row["Přijato"] = row["Objem"] < 0 ? 0 : row["Objem"];
+        row["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem";
         
-        row["Odesláno"] = row["Objem"] < 0 ? (row["Objem"] * -1) : 0;
+        row["Částka"] = Math.abs(row["Objem"]);
         
         row["Rok"] = row["Datum"] ? row["Datum"].getYear() : "";
   
@@ -266,8 +266,7 @@ var fioCategory = new function() {
             case "Objem":
             case "ID pohybu":
             case "Výdaj":
-            case "Příjem":
-            case "Přijato":
+            case "Částka":
             case "Odesláno":
                 return forJS ? this.jsNumber(value) : this.docsNumber(value);
             case "Datum":
