@@ -145,6 +145,7 @@ var fioApi = new function() {
     this.promptToken = function() {
         
         this.token = Browser.inputBox('Zadejte token');
+        if(this.token == "cancel") this.token = "";
         
         this.config.setProperty('token', this.token);
         
