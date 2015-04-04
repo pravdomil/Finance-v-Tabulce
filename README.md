@@ -1,6 +1,6 @@
 ## Fio API SpreadsheetApp
 
-Start with this [spreadsheet](https://docs.google.com/spreadsheet/ccc?key=1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA&newcopy=true)!
+Start with this [spreadsheet](https://docs.google.com/spreadsheets/d/1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA/copy)!
 
 ## Based on
 
