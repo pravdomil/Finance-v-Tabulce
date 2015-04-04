@@ -329,7 +329,7 @@ var fio = new function() {
         this.sheet.getRange(2, 1, data.length, data[0].length).setValues(data);
     }
     
-    this.ss = SpreadsheetApp.getActiveSpreadsheet();
+    this.ss = SpreadsheetApp.getActive();
     if(!this.ss) return;
     
     this.sheet = this.ss.getSheetByName("db");
