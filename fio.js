@@ -287,14 +287,17 @@ var fioCategory = new function() {
 
 
 var fioTrigger = new function() {
+    try
+    {
+        this.config = PropertiesService.getUserProperties();
     
-    this.config = PropertiesService.getUserProperties();
+        if(this.config.getProperty("triggerSet")) return;
     
-    if(this.config.getProperty("triggerSet")) return;
+        ScriptApp.newTrigger('update').timeBased().atHour(5).everyDays(1).create();
     
-    ScriptApp.newTrigger('update').timeBased().atHour(5).everyDays(1).create();
-    
-    this.config.setProperty("triggerSet", true)
+        this.config.setProperty("triggerSet", true);
+    }
+    catch (e) {}
 }
 
 
