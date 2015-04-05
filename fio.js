@@ -145,9 +145,9 @@ var fioApi = new function() {
     this.promptToken = function() {
         
         this.token = Browser.inputBox('Zadejte token');
-        if(!this.token || this.token == "cancel") this.token = "";
+        if(this.token == "cancel") this.token = null;
         
-        this.config.setProperty('token', this.token);
+        if(this.token !== null) this.config.setProperty('token', this.token);
         
         return this.token;
     }
@@ -156,7 +156,12 @@ var fioApi = new function() {
         
         this.token = this.config.getProperty("token");
         
-        if (!this.token && !this.promptToken()) throw "Token není nastaven.";
+        if (!this.token && !this.promptToken())
+        {
+            if(this.token === null) return {};
+            
+            throw "Token není nastaven.";
+        }
         
         var response = UrlFetchApp.fetch("https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json");
         
