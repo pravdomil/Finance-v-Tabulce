@@ -38,71 +38,45 @@ var fioColumns = new function() {
 
 var fioRules = new function() {
     
-    this.loadRulesFromFile = function() {
+    this.load = function() {
+        
+        this.sheet = fio.ss.getSheetByName("rules");
+        if(!this.sheet) this.sheet = fio.ss.insertSheet('rules', 0);
+        
+        this.parse(this.sheet.getRange("A:F").getValues());
+    }
+    
+    this.parse = function(array) {
         
         this.rules = [];
         
-        var file = HtmlService.createHtmlOutputFromFile('rules').getContent().split("\n");
-        
-        for(var i = 0; i < file.length; i++) {
+        for(var i = 1; i < array.length; i++) {
     
-            var line = file[i];
-        
-            if(!line.trim()) continue;
-        
-            var group;
-            var item;
-        
-            if(/^\s+/.test(line))
+            var group = array[i][0];
+            var item = array[i][1];
+            
+            if(!group || !item) continue;
+            
+            var cond = [];
+            while(true)
             {
-                this.rules.push({
-                    group : group,
-                    item : item,
-                    cond : this.parseCondition(line)
-                })
-            }
-            else
-            {
-                line = line.split(">");
-            
-                group = line[0] ? line[0].trim() : "";
-                item = line[1] ? line[1].trim() : "";
-            }
-        }
-    }
-    
-    this.parseCondition = function(cond) {
-        
-        var arr = [];
-        
-        cond = cond.split("&&");
-        
-        for(var i = 0; i < cond.length; i++) {
-            
-            var equal = cond[i].split("==");
-            
-            if(equal.length == 2) {
-                
-                arr.push({
-                    column : equal[0].trim(),
-                    value : equal[1].trim(),
-                    mode : "equal",
+                cond.push({
+                    column : array[i][2],
+                    mode : array[i][3],
+                    value : String(array[i][4]),
                 });
-            }
-            
-            var match = cond[i].split("~");
-            
-            if(match.length == 2) {
                 
-                arr.push({
-                    column : match[0].trim(),
-                    value : match[1].trim(),
-                    mode : "match",
-                });
+                if(array[i + 1][2] != "+") break;
+                
+                i += 2;
             }
+            
+            this.rules.push({
+                group : group,
+                item : item,
+                cond : cond,
+            })
         }
-        
-        return arr;
     }
     
     this.get = function(row) {
@@ -116,11 +90,23 @@ var fioRules = new function() {
                 
                 var cond = rule.cond[c];
                 
-                if(cond.mode == "equal") passed = (row[cond.column] == cond.value);
-                else if(cond.mode == "match") {
+                switch(cond.mode) {
+                    case "=":
+                        passed = (row[cond.column] == cond.value);
+                        break;
                     
-                    var regex = new RegExp( this.escapeRegExp(cond.value), "i");
-                    passed = regex.test(row[cond.column]);
+                    case "~":
+                        var regex = new RegExp( this.escapeRegExp(cond.value), "i");
+                        passed = regex.test(row[cond.column]);
+                        break;
+                        
+                    case "<":
+                        passed = (row[cond.column] < cond.value);
+                        break;
+                        
+                    case ">":
+                        passed = (row[cond.column] > cond.value);
+                        break;
                 }
                 
                 if(!passed) break;
@@ -134,7 +120,6 @@ var fioRules = new function() {
         return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
     }
     
-    this.loadRulesFromFile();
 }
 
 
@@ -343,3 +328,5 @@ var fio = new function() {
     this.sheet = this.ss.getSheetByName("db");
     if(!this.sheet) this.emptySheet();
 }
+
+fioRules.load();
