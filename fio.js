@@ -323,7 +323,7 @@ var fio = new function() {
     }
     
     this.ss = SpreadsheetApp.getActive();
-    if(!this.ss) return;
+    if(!this.ss) throw "Žádný spreadsheet.";
     
     this.sheet = this.ss.getSheetByName("db");
     if(!this.sheet) this.emptySheet();
