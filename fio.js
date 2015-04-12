@@ -128,6 +128,7 @@ var fioRules = new function() {
 var fioApi = new function() {
     
     this.config = PropertiesService.getUserProperties();
+    this.token = this.config.getProperty("token");
     
     this.promptToken = function() {
         
@@ -141,8 +142,6 @@ var fioApi = new function() {
     
     this.api = function(arg) {
         
-        this.token = this.config.getProperty("token");
-        
         if (!this.token && !this.promptToken())
         {
             if(this.token === null) return {};
@@ -155,6 +154,13 @@ var fioApi = new function() {
         if (response.getResponseCode() != 200) throw "Nepodařilo se spojit se serverem.";
         
         return Utilities.jsonParse(response.getContentText()).accountStatement;
+    }
+    
+    this.setLatestTransaction = function(arg) {
+        
+        if (!this.token) return;
+        
+        UrlFetchApp.fetch("https://www.fio.cz/ib_api/rest/set-last-id/" + this.token + "/" + arg + "/");
     }
     
     this.getLatestTransaction = function() {
@@ -305,6 +311,16 @@ var fio = new function() {
     }
     
     this.update = function() {
+        
+        var last_id = this.sheet.getRange("S2:S100").getValues()[0];
+        
+        for(var i = 0; i < last_id.length; i++)
+        {
+            if(!last_id[i]) continue;
+            
+            fioApi.setLatestTransaction(String(last_id[i]));
+            break;
+        }
         
         var latest = fioApi.getLatestTransaction();
         
