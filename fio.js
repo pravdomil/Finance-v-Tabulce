@@ -60,18 +60,20 @@ var fioRules = new function() {
             var cond = [];
             while(true)
             {
-                cond.push({
+                var obj = {
                     column : array[i][2],
                     mode : array[i][3],
                     value : String(array[i][4]),
-                });
+                }
+                
+                if(obj.column) cond.push(obj);
                 
                 if(array[i + 1][2] != "+") break;
                 
                 i += 2;
             }
             
-            this.rules.push({
+            if(cond.length) this.rules.push({
                 group : group,
                 item : item,
                 cond : cond,
