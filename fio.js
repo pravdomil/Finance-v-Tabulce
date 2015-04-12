@@ -55,7 +55,7 @@ var fioRules = new function() {
             var group = array[i][0];
             var item = array[i][1];
             
-            if(!group || !item) continue;
+            if(!group) continue;
             
             var cond = [];
             while(true)
