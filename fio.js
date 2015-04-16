@@ -177,17 +177,18 @@ var fioApi = new function() {
             
             var obj = list[i];
             
-            trans[i] = [];
+            trans[i] = {};
             
             for (var key in fioColumns.obj) {
                 
                 var val = obj[key];
+                var column = fioColumns.obj[key];
                 
                 if(!val) val = "";
-                else if(val.name == "Datum") val = val.value.replace(/\+[0-9]+/, "");
+                else if(column == "Datum") val = val.value.replace(/\+[0-9]+/, "");
                 else val = val.value;
                 
-                trans[i].push(val);
+                trans[i][column] = val;
             }
         }
         
@@ -336,8 +337,22 @@ var fio = new function() {
     this.insert = function(data) {
         if(!data) return;
         
-        this.sheet.insertRowsAfter(1, data.length);
-        this.sheet.getRange(2, 1, data.length, data[0].length).setValues(data);
+        for(var i = 0; i < data.length; i++) {
+            
+            var row = new Array(fio.columns.length);
+            
+            for(var c = 0; c < row.length; c++) {
+                
+                var column = fio.columns[c];
+                var value = data[i][column];
+                
+                row[c] = value ? value : "";
+            }
+            
+            this.sheet.insertRowsAfter(1, 1);
+            this.sheet.getRange("2:2").setValues([row]);
+            
+        }
     }
     
     this.ss = SpreadsheetApp.getActive();
@@ -345,6 +360,8 @@ var fio = new function() {
     
     this.sheet = this.ss.getSheetByName("db");
     if(!this.sheet) this.emptySheet();
+    
+    this.columns = this.sheet.getRange("1:1").getValues()[0];
 }
 
 fioRules.load();
