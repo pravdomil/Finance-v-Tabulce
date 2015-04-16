@@ -156,9 +156,9 @@ var fioApi = new function() {
     
     this.setLatestTransaction = function(arg) {
         
-        if (!this.token) return;
+        if (!this.token || !arg) return;
         
-        UrlFetchApp.fetch("https://www.fio.cz/ib_api/rest/set-last-id/" + this.token + "/" + arg + "/");
+        UrlFetchApp.fetch("https://www.fio.cz/ib_api/rest/set-last-id/" + this.token + "/" + String(arg) + "/");
     }
     
     this.getLatestTransaction = function() {
@@ -315,17 +315,31 @@ var fio = new function() {
         this.sheet.deleteRows(2, this.sheet.getMaxRows() - 1);
     }
     
-    this.update = function() {
+    this.getColumnId = function() {
         
-        var last_id = this.sheet.getRange("S2:S100").getValues()[0];
+        for(var i = 0; i < fio.columns.length; i++)
+        {
+            if(fio.columns[i] == "ID pohybu") return i;
+        }
+    }
+    
+    this.getLastId = function () {
+        
+        var id_column = this.getColumnId();
+        
+        if(id_column === null) return;
+        
+        var last_id = this.sheet.getRange(2, id_column + 1, 100, 1).getValues()[0];
         
         for(var i = 0; i < last_id.length; i++)
         {
-            if(!last_id[i]) continue;
-            
-            fioApi.setLatestTransaction(String(last_id[i]));
-            break;
+            if(last_id[i]) return last_id[i];
         }
+    }
+    
+    this.update = function() {
+        
+        fioApi.setLatestTransaction(this.getLastId());
         
         var latest = fioApi.getLatestTransaction();
         
