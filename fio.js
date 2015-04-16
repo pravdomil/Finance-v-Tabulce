@@ -259,8 +259,8 @@ var fioCategory = new function() {
         return arr;
     }
     
-    this.formatCell = function(value, type, forJS) {
-        switch(type) {
+    this.formatCell = function(value, column, forJS) {
+        switch(column) {
             case "Objem":
             case "ID pohybu":
             case "Výdaj":
