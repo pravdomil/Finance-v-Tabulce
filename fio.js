@@ -1,7 +1,5 @@
 var fioColumns = new function() {
     
-    this.range = "A:Y";
-    
     this.obj = {
         'column0': 'Datum',
         'column1': 'Objem',
@@ -203,13 +201,14 @@ var fioCategory = new function() {
         
         this.sheet = sheet;
         
-        var data = this.sheet.getRange(fioColumns.range).getValues();
+        var range = this.sheet.getRange(2, 1, this.sheet.getMaxRows()-1, fio.columns.length);
+        var data = range.getValues();
         
-        for(var i = 1; i < data.length; i++) {
+        for(var i = 0; i < data.length; i++) {
             data[i] = this.categorize(data[i]);
         }
         
-        sheet.getRange(fioColumns.range).setValues(data);
+        range.setValues(data);
     }
     
     this.categorize = function(rowArr) {
@@ -241,11 +240,11 @@ var fioCategory = new function() {
         
         var obj = {};
         
-        for(var i = 0; i < arr.length; i++) {
+        for(var i = 0; i < fio.columns.length; i++) {
             
-            var type = fioColumns.arr[i];
+            var column = fio.columns[i];
             
-            obj[type] = this.formatCell(arr[i], type, true);
+            obj[column] = this.formatCell(arr[i], column, true);
         }
         
         return obj;
@@ -253,9 +252,14 @@ var fioCategory = new function() {
     
     this.rowToArr = function(obj) {
         
-        var arr = [];
+        var arr = new Array(fio.columns.length);
         
-        for(var key in obj) arr.push( this.formatCell(obj[key], key) );
+        for(var i = 0; i < fio.columns.length; i++) {
+            
+            var column = fio.columns[i];
+            
+            arr[i] = this.formatCell(obj[column], column);
+        }
         
         return arr;
     }
