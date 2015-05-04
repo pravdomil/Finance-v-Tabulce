@@ -31,9 +31,20 @@ function trackCash() {
     date = date.getDate() + "." + ( date.getMonth() + 1 ) + "." + date.getFullYear();
     
     var arr = [
-        [date, fioCategory.docsNumber(amount), 'CZK', '', '', '', '', '', 'cash'],
-        [date, fioCategory.docsNumber(amount * -1), 'CZK', '', '', '', '', '', 'cash'],
-    ];
+		{
+			"Datum" : date,
+			"Objem" : fioCategory.docsNumber(amount),
+			"Měna" : "CZK",
+			"Typ pohybu" : "cash",
+		},
+		{
+			"Datum" : date,
+			"Objem" : fioCategory.docsNumber(amount * -1),
+			"Měna" : "CZK",
+			"Typ pohybu" : "cash",
+		}
+	];
+	
     fio.insert(arr);
     
     fio.categorize();
