@@ -368,7 +368,7 @@ function FIO_QUERY(arg) {
 
 function FIO_COLUMN(arg) {
     
-    Utilities.sleep(1000)
+    Utilities.sleep(1000);
     
     for(var i = 0; i < fio.columns.length; i++) {
         
