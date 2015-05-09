@@ -38,8 +38,8 @@ var fioRules = new function() {
     
     this.load = function() {
         
-        this.sheet = fio.ss.getSheetByName("rules");
-        if(!this.sheet) this.sheet = fio.ss.insertSheet('rules', 0);
+        this.sheet = fio.ss.getSheetByName("kategorie");
+        if(!this.sheet) this.sheet = fio.ss.insertSheet("kategorie", 0);
         
         this.parse(this.sheet.getRange("A:F").getValues());
     }
