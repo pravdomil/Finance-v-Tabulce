@@ -211,14 +211,14 @@ var fioCategory = new function() {
         
         var row = this.rowToObj(rowArr);
         
-        row["Měsíc"] = row["Datum"] ? row["Datum"].getYear() + "." + (row["Datum"].getMonth() + 1) : "";
+        if(!row["Pohyb"]) row["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem";
+        if(!row["Částka"]) row["Částka"] = '=IF(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Pohyb"))) = "Ignorovat"; 0; ABS(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Objem")))))';
         
-        row["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem";
+        if(!row["Předatovat"]) row["Předatovat"] = row["Datum"];
+        if(!row["Měsíc"]) row["Měsíc"] = '=DATE(YEAR(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Předatovat")))); ' +
+            'MONTH(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Předatovat")))); 1)';
+        if(!row["Rok"]) row["Rok"] = '=YEAR(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Předatovat"))))';
         
-        row["Částka"] = Math.abs(row["Objem"]);
-        
-        row["Rok"] = row["Datum"] ? row["Datum"].getYear() : "";
-  
         if(row["Skupina"] == "" && row["Věc"] == "") {
             
             var rule = fioRules.get(row);
