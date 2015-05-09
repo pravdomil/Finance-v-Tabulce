@@ -352,3 +352,22 @@ var fio = new function() {
 }
 
 fioRules.load();
+
+
+
+function FIO_QUERY(arg) {
+    
+    
+    
+}
+
+function FIO_COLUMN(arg) {
+    
+    Utilities.sleep(1000)
+    
+    for(var i = 0; i < fio.columns.length; i++) {
+        
+        if(fio.columns[i] == arg) return i + 1;
+        
+    }
+}
