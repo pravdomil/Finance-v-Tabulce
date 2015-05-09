@@ -1,4 +1,4 @@
-## Fio výpis
+## Fio výpis účtu
 
 Start with this [spreadsheet](https://docs.google.com/spreadsheets/d/1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA/copy)!
 
