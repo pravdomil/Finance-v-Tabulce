@@ -25,11 +25,12 @@ var fioColumns = new function() {
     this.arr = [];
     for (var key in this.obj) this.arr.push(this.obj[key]);
     
-    this.arr.push("Měsíc");
     this.arr.push("Pohyb");
     this.arr.push("Částka");
     this.arr.push("Skupina");
     this.arr.push("Věc");
+    this.arr.push("Předatovat");
+    this.arr.push("Měsíc");
     this.arr.push("Rok");
 }
 
