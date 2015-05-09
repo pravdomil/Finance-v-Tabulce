@@ -242,7 +242,7 @@ var fioCategory = new function() {
             
             var column = fio.columns[i];
             
-            obj[column] = this.formatCell(arr[i], column, true);
+            obj[column] = arr[i];
         }
         
         return obj;
@@ -256,33 +256,10 @@ var fioCategory = new function() {
             
             var column = fio.columns[i];
             
-            arr[i] = this.formatCell(obj[column], column);
+            arr[i] = obj[column];
         }
         
         return arr;
-    }
-    
-    this.formatCell = function(value, column, forJS) {
-        switch(column) {
-            case "Objem":
-            case "ID pohybu":
-            case "Výdaj":
-            case "Částka":
-            case "Odesláno":
-                return forJS ? this.jsNumber(value) : this.docsNumber(value);
-            case "Datum":
-                return value;
-            default:
-                return String(value);
-        }
-    }
-
-    this.docsNumber = function(num) {
-        return String(Number(String(num).replace(",", "."))).replace(".", ",");
-    }
-
-    this.jsNumber = function(num) {
-        return Number(String(num).replace(",", "."));
     }
 }
 
