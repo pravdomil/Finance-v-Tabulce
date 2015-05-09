@@ -52,6 +52,7 @@ var fioRules = new function() {
     
             var group = array[i][0];
             var item = array[i][1];
+            var ignore = array[i][5];
             
             if(!group) continue;
             
@@ -75,6 +76,7 @@ var fioRules = new function() {
                 group : group,
                 item : item,
                 cond : cond,
+                ignore : ignore,
             })
         }
     }
@@ -223,6 +225,8 @@ var fioCategory = new function() {
             if(rule) {
                 row["Skupina"] = rule.group;
                 row["Věc"] = rule.item;
+                
+                if(rule.ignore) row["Pohyb"] = "Ignorovat";
             }
         }
   
