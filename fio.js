@@ -200,38 +200,44 @@ var fioCategory = new function() {
         var range = this.sheet.getRange(2, 1, this.sheet.getMaxRows()-1, fio.columns.length);
         var data = range.getValues();
         
-        for(var i = 0; i < data.length; i++) {
-            data[i] = this.categorize(data[i]);
+        for(var r = 0; r < data.length; r++) {
+            
+            var modified = this.categorize(data[r]);
+            
+            for(var key in modified) {
+                
+                this.sheet.getRange(2 + r, FIO_COLUMN(key)).setValue(modified[key]);
+                
+            }
         }
-        
-        range.setValues(data);
     }
     
     this.categorize = function(rowArr) {
         
         var row = this.rowToObj(rowArr);
+        var obj = {};
         
-        if(!row["Pohyb"]) row["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem";
-        if(!row["Částka"]) row["Částka"] = '=IF(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Pohyb"))) = "Ignorovat"; 0; ABS(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Objem")))))';
+        if(!row["Pohyb"]) obj["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem";
+        if(!row["Částka"]) obj["Částka"] = '=IF(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Pohyb"))) = "Ignorovat"; 0; ABS(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Objem")))))';
         
-        if(!row["Předatovat"]) row["Předatovat"] = row["Datum"];
-        if(!row["Měsíc"]) row["Měsíc"] = '=DATE(YEAR(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Předatovat")))); ' +
+        if(!row["Předatovat"]) obj["Předatovat"] = row["Datum"];
+        if(!row["Měsíc"]) obj["Měsíc"] = '=DATE(YEAR(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Předatovat")))); ' +
             'MONTH(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Předatovat")))); 1)';
-        if(!row["Rok"]) row["Rok"] = '=YEAR(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Předatovat"))))';
+        if(!row["Rok"]) obj["Rok"] = '=YEAR(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Předatovat"))))';
         
         if(row["Skupina"] == "" && row["Věc"] == "") {
             
             var rule = fioRules.get(row);
             
             if(rule) {
-                row["Skupina"] = rule.group;
-                row["Věc"] = rule.item;
+                obj["Skupina"] = rule.group;
+                obj["Věc"] = rule.item;
                 
-                if(rule.ignore) row["Pohyb"] = "Ignorovat";
+                if(rule.ignore) obj["Pohyb"] = "Ignorovat";
             }
         }
   
-        return this.rowToArr(row);
+        return obj;
     }
     
     this.rowToObj = function(arr) {
@@ -248,19 +254,6 @@ var fioCategory = new function() {
         return obj;
     }
     
-    this.rowToArr = function(obj) {
-        
-        var arr = new Array(fio.columns.length);
-        
-        for(var i = 0; i < fio.columns.length; i++) {
-            
-            var column = fio.columns[i];
-            
-            arr[i] = obj[column];
-        }
-        
-        return arr;
-    }
 }
 
 
