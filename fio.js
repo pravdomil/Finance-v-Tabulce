@@ -218,12 +218,11 @@ var fioCategory = new function() {
         var obj = {};
         
         if(!row["Pohyb"]) obj["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem";
-        if(!row["Částka"]) obj["Částka"] = '=IF(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Pohyb"))) = "Ignorovat"; 0; ABS(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Objem")))))';
+        if(!row["Částka"]) obj["Částka"] = '=IF(INDIRECT(ADDRESS(ROW(); MATCH("Pohyb"; $1:$1; 0))) = "Ignorovat"; 0; ABS(INDIRECT(ADDRESS(ROW(); MATCH("Objem"; $1:$1; 0)))))';
         
         if(!row["Předatovat"]) obj["Předatovat"] = row["Datum"];
-        if(!row["Měsíc"]) obj["Měsíc"] = '=DATE(YEAR(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Předatovat")))); ' +
-            'MONTH(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Předatovat")))); 1)';
-        if(!row["Rok"]) obj["Rok"] = '=YEAR(INDIRECT(ADDRESS(ROW(); FIO_COLUMN("Předatovat"))))';
+        if(!row["Měsíc"]) obj["Měsíc"] = '=IF(INDIRECT(ADDRESS(ROW(); MATCH("Předatovat"; $1:$1; 0))); DATE(YEAR(INDIRECT(ADDRESS(ROW(); MATCH("Předatovat"; $1:$1; 0)))); MONTH(INDIRECT(ADDRESS(ROW(); MATCH("Předatovat"; $1:$1; 0)))); 1); "")';
+        if(!row["Rok"]) obj["Rok"] = '=IF(INDIRECT(ADDRESS(ROW(); MATCH("Předatovat"; $1:$1; 0))); YEAR(INDIRECT(ADDRESS(ROW(); MATCH("Předatovat"; $1:$1; 0)))); "")';
         
         if(row["Skupina"] == "" && row["Věc"] == "") {
             
