@@ -317,7 +317,7 @@ var fio = new function() {
     }
     
     this.columnIndex = function(name) {
-    
+        
         name = String(name).toLowerCase();
         
         for(var i = 0; i < this.columns.length; i++) {
@@ -342,4 +342,12 @@ fioRules.load();
 
 function FIO_QUERY(arg) {
     
+    return arg.replace(/FIO_[A-ž_]+/g, function(match, contents, offset, s)
+        {
+            match = match.replace(/FIO_/, "");
+            match = match.replace(/_/, " ");
+            
+            return String.fromCharCode(97 + fio.columnIndex(match) - 1).toUpperCase();
+        }
+    );
 }
