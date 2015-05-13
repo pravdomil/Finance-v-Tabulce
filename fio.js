@@ -318,9 +318,11 @@ var fio = new function() {
     
     this.columnIndex = function(name) {
     
+        name = String(name).toLowerCase();
+        
         for(var i = 0; i < this.columns.length; i++) {
         
-            if(this.columns[i] == name) return i + 1;
+            if(String(this.columns[i]).toLowerCase() == name) return i + 1;
         
         }
     }
