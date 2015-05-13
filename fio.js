@@ -206,7 +206,7 @@ var fioCategory = new function() {
             
             for(var key in modified) {
                 
-                this.sheet.getRange(2 + r, FIO_COLUMN(key)).setValue(modified[key]);
+                this.sheet.getRange(2 + r, fio.columnIndex(key)).setValue(modified[key]);
                 
             }
         }
@@ -317,6 +317,15 @@ var fio = new function() {
         }
     }
     
+    this.columnIndex = function(name) {
+    
+        for(var i = 0; i < this.columns.length; i++) {
+        
+            if(this.columns[i] == name) return i + 1;
+        
+        }
+    }
+    
     this.ss = SpreadsheetApp.getActive();
     if(!this.ss) throw "Žádný spreadsheet.";
     
@@ -332,17 +341,4 @@ fioRules.load();
 
 function FIO_QUERY(arg) {
     
-    
-    
-}
-
-function FIO_COLUMN(arg) {
-    
-    Utilities.sleep(1000);
-    
-    for(var i = 0; i < fio.columns.length; i++) {
-        
-        if(fio.columns[i] == arg) return i + 1;
-        
-    }
 }
