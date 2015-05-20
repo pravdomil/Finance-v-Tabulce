@@ -206,7 +206,8 @@ var fioCategory = new function() {
             
             for(var key in modified) {
                 
-                this.sheet.getRange(2 + r, fio.columnIndex(key)).setValue(modified[key]);
+                var ci = fio.columnIndex(key);
+                if(ci) this.sheet.getRange(2 + r, ci).setValue(modified[key]);
                 
             }
         }
@@ -325,6 +326,8 @@ var fio = new function() {
             if(String(this.columns[i]).toLowerCase() == name) return i + 1;
         
         }
+        
+        return null;
     }
     
     this.ss = SpreadsheetApp.getActive();
