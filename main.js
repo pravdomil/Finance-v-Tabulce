@@ -33,13 +33,13 @@ function trackCash() {
     var arr = [
 		{
 			"Datum" : date,
-			"Objem" : fioCategory.docsNumber(amount),
+			"Objem" : amount,
 			"Měna" : "CZK",
 			"Typ pohybu" : "cash",
 		},
 		{
 			"Datum" : date,
-			"Objem" : fioCategory.docsNumber(amount * -1),
+			"Objem" : amount * -1,
 			"Měna" : "CZK",
 			"Typ pohybu" : "cash",
 		}
