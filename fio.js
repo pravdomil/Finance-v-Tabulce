@@ -39,6 +39,8 @@ var fioRules = new function() {
     
     this.load = function() {
         
+		if(!fio.ss) return;
+		
         this.sheet = fio.ss.getSheetByName("kategorie");
         if(!this.sheet) this.sheet = fio.ss.insertSheet("kategorie", 0);
         
@@ -331,12 +333,13 @@ var fio = new function() {
     }
     
     this.ss = SpreadsheetApp.getActive();
-    if(!this.ss) throw "Žádný spreadsheet.";
-    
-    this.sheet = this.ss.getSheetByName("db");
-    if(!this.sheet) this.emptySheet();
-    
-    this.columns = this.sheet.getRange("1:1").getValues()[0];
+    if(this.ss)
+	{
+		this.sheet = this.ss.getSheetByName("db");
+    	if(!this.sheet) this.emptySheet();
+    	
+    	this.columns = this.sheet.getRange("1:1").getValues()[0];
+	}
 }
 
 fioRules.load();
