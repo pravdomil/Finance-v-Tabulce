@@ -27,6 +27,7 @@ var fioColumns = new function() {
     
     this.arr.push("Pohyb");
     this.arr.push("Částka");
+	this.arr.push("Charakter");
     this.arr.push("Skupina");
     this.arr.push("Věc");
     this.arr.push("Předatovat");
@@ -55,7 +56,7 @@ var fioRules = new function() {
     
             var group = array[i][0];
             var item = array[i][1];
-            var ignore = array[i][5];
+            var character = array[i][5];
             
             if(!group) continue;
             
@@ -79,7 +80,7 @@ var fioRules = new function() {
                 group : group,
                 item : item,
                 cond : cond,
-                ignore : ignore,
+                character : character,
             })
         }
     }
@@ -232,8 +233,11 @@ var fioCategory = new function() {
 		}
         
         if(row["Pohyb"] === "") obj["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem";
-		if(row["Částka"] === "") obj["Částka"] = f('=IF(FIO_POHYB = "Ignorovat"; 0; ABS(FIO_OBJEM))');
-        
+		if(row["Částka"] === "") obj["Částka"] = f('=ABS(FIO_OBJEM)');
+		if(row["Charakter"] === "") {
+			obj["Charakter"] = f('=IF(FIO_VĚC = ""; "Navíc"; "Běžné")');
+        }
+		
         if(row["Předatovat"] === "") obj["Předatovat"] = row["Datum"];
         if(row["Měsíc"] === "") {
 			obj["Měsíc"] = f('=IF(FIO_PŘEDATOVAT; DATE(YEAR(FIO_PŘEDATOVAT); MONTH(FIO_PŘEDATOVAT); 1); "")');
@@ -250,7 +254,7 @@ var fioCategory = new function() {
                 obj["Skupina"] = rule.group;
                 obj["Věc"] = rule.item;
                 
-                if(rule.ignore) obj["Pohyb"] = "Ignorovat";
+                if(rule.character) obj["Charakter"] = rule.character;
             }
         }
   
