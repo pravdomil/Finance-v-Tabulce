@@ -45,7 +45,7 @@ var fioRules = new function() {
         this.sheet = fio.ss.getSheetByName("kategorie");
         if(!this.sheet) this.sheet = fio.ss.insertSheet("kategorie", 0);
         
-        this.parse(this.sheet.getRange("A:F").getValues());
+        this.parse(this.sheet.getRange("A:G").getValues());
     }
     
     this.parse = function(array) {
@@ -57,6 +57,7 @@ var fioRules = new function() {
             var group = array[i][0];
             var item = array[i][1];
             var character = array[i][5];
+			var comment = array[i][6];
             
             if(!group) continue;
             
@@ -81,6 +82,7 @@ var fioRules = new function() {
                 item : item,
                 cond : cond,
                 character : character,
+				comment : comment,
             })
         }
     }
@@ -255,6 +257,7 @@ var fioCategory = new function() {
                 obj["Věc"] = rule.item;
                 
                 if(rule.character) obj["Charakter"] = rule.character;
+				if(row["Komentář"] === "") obj["Komentář"] = rule.comment;
             }
         }
   
