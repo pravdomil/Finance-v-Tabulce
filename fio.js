@@ -247,6 +247,10 @@ var fioCategory = new function() {
         if(row["Rok"] === "") {
 			obj["Rok"] = f('=IF(FIO_PŘEDATOVAT; YEAR(FIO_PŘEDATOVAT); "")');
 		}
+		
+		if(row["Komentář"] !== undefined && row["Komentář"].trim() === "" && row["Zpráva pro příjemce"]) {
+			obj["Komentář"] = row["Zpráva pro příjemce"];
+		}
         
         if(row["Skupina"] == "" && row["Věc"] == "") {
             
