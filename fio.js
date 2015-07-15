@@ -248,8 +248,10 @@ var fioCategory = new function() {
 			obj["Rok"] = f('=IF(FIO_PŘEDATOVAT; YEAR(FIO_PŘEDATOVAT); "")');
 		}
 		
-		if(row["Komentář"] !== undefined && row["Komentář"].trim() === "" && row["Zpráva pro příjemce"]) {
-			obj["Komentář"] = row["Zpráva pro příjemce"];
+		if(row["Komentář"] !== undefined && row["Komentář"].trim() === "")
+		{
+			if(row["Zpráva pro příjemce"]) obj["Komentář"] = row["Zpráva pro příjemce"];
+			else if(row["Uživatelská identifikace"]) obj["Komentář"] = row["Uživatelská identifikace"];
 		}
         
         if(row["Skupina"] == "" && row["Věc"] == "") {
