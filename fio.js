@@ -195,7 +195,7 @@ var fioRules = new function() {
 
 var fioApi = new function() {
     
-    this.config = PropertiesService.getScriptProperties();
+    this.config = PropertiesService.getDocumentProperties();
     this.token = this.config.getProperty("token");
     
     this.promptToken = function() {
@@ -352,7 +352,7 @@ var fioCategory = new function() {
 var fioTrigger = new function() {
     try
     {
-        this.config = PropertiesService.getScriptProperties();
+        this.config = PropertiesService.getDocumentProperties();
     
         if(this.config.getProperty("triggerSet")) return;
     
