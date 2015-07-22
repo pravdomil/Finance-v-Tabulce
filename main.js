@@ -28,7 +28,7 @@ function update() {
 function install() {
 	
 	var ss = SpreadsheetApp.getActiveSpreadsheet();
-	var config = PropertiesService.getUserProperties();
+	var config = PropertiesService.getScriptProperties();
 	
 	// setup custom onOpen trigger
 	if(!config.getProperty("openTriggerSet"))
