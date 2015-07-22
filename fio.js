@@ -368,11 +368,14 @@ var fio = new function() {
     
     this.emptySheet = function() {
         
-        this.sheet = this.ss.insertSheet('db', 0);
+        var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA');
+		return template.getSheetByName("db").copyTo(this.ss).setName("db").activate();
+    }
+	
+    this.balanceSheet = function() {
         
-        this.sheet.getRange(1, 1, 1, fioColumns.arr.length).setValues([fioColumns.arr]);
-        
-        this.sheet.deleteRows(2, this.sheet.getMaxRows() - 1);
+        var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA');
+		return template.getSheetByName("zůstatek").copyTo(this.ss).setName("zůstatek");
     }
     
     this.update = function() {
@@ -425,8 +428,9 @@ var fio = new function() {
     this.ss = SpreadsheetApp.getActive();
     if(this.ss)
 	{
-		this.sheet = this.ss.getSheetByName("db");
-    	if(!this.sheet) this.emptySheet();
+		this.sheet = this.ss.getSheetByName("db") || this.emptySheet();
+		
+		this.balance = this.ss.getSheetByName("zůstatek") || this.balanceSheet();
     	
     	this.columns = this.sheet.getRange("1:1").getValues()[0];
 	}
