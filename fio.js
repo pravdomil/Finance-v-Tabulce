@@ -95,12 +95,17 @@ var fioColumns = new function() {
 
 var fioRules = new function() {
     
+    this.emptySheet = function() {
+        
+        var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA');
+		return template.getSheetByName("kategorie").copyTo(fio.ss).setName("kategorie");
+    }
+	
     this.load = function() {
         
 		if(!fio.ss) return;
 		
-        this.sheet = fio.ss.getSheetByName("kategorie");
-        if(!this.sheet) this.sheet = fio.ss.insertSheet("kategorie", 0);
+        this.sheet = fio.ss.getSheetByName("kategorie") || this.emptySheet();
         
         this.parse(this.sheet.getRange("A:G").getValues());
     }
