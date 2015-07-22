@@ -1,51 +1,60 @@
+/*
+
+Fio výpis účtu
+
+Authors: Filip Hráček, Pravdomil Toman
+
+https://github.com/Pravdomil/Fio-API-SpreadsheetApp
+
+*/
+
 function onOpen() {
-    SpreadsheetApp.getUi().createMenu('Fio')
-        .addItem('Aktualizovat', 'update')
-        .addItem('Rozčlenit', 'categorize')
-        .addSeparator()
-        .addItem('Nastavit token', 'setToken')
-        .addSeparator()
-        .addItem('Zanést hotovost', 'trackCash')
-        .addToUi();
+	// simple triggers can't do anything that requires authorization
+	// so make option to install custom onOpen trigger
+	SpreadsheetApp.getUi().createMenu('Fio').addItem('Instalovat', 'install').addToUi();
+}
+
+function customOnOpen() {
+	// custom onOpen trigger, we can do everything
+	// fio core is loaded so replace the menu
+	fioMenu();
 }
 
 function update() {
-    fio.update();
-    fio.categorize();
+	// all trigger functions must be visible before fio core init
+	fioUpdate();
 }
 
-function categorize() {
-    fio.categorize();
-}
-
-function setToken() {
-    fioApi.promptToken();
-}
-
-function trackCash() {
-    
-    var amount = parseInt(Browser.inputBox('Částka'));
-    if(!amount) return;
-    
-    var date = new Date();
-    date = date.getDate() + "." + ( date.getMonth() + 1 ) + "." + date.getFullYear();
-    
-    var arr = [
-		{
-			"Datum" : date,
-			"Objem" : amount,
-			"Měna" : "CZK",
-			"Typ pohybu" : "cash",
-		},
-		{
-			"Datum" : date,
-			"Objem" : amount * -1,
-			"Měna" : "CZK",
-			"Typ pohybu" : "cash",
-		}
-	];
+function install() {
 	
-    fio.insert(arr);
-    
-    fio.categorize();
+	var ss = SpreadsheetApp.getActiveSpreadsheet();
+	var config = PropertiesService.getUserProperties();
+	
+	// setup custom onOpen trigger
+	if(!config.getProperty("openTriggerSet"))
+	{
+		ScriptApp.newTrigger("customOnOpen").forSpreadsheet(ss).onOpen().create();
+		config.setProperty("openTriggerSet", true);
+	}
+	
+	// fio core is loaded so replace the menu
+	fioMenu();
+}
+
+
+// try to load fio core if possible
+try {
+
+	// load core from cdn
+	var fio_js = "https://cdn.rawgit.com/Pravdomil/Fio-API-SpreadsheetApp/master/fio.js";
+	fio_js = UrlFetchApp.fetch(fio_js).getContentText();
+	
+	// run
+	eval(fio_js);
+	
+}
+catch(e)
+{
+	//throw e; // uncomment for debug
+	Logger.log(e);
 }
