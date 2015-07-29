@@ -325,7 +325,7 @@ var fioCategory = new function() {
                 obj["Věc"] = rule.item;
                 
                 if(rule.character) obj["Charakter"] = rule.character;
-				if(row["Komentář"] === "") obj["Komentář"] = rule.comment;
+				if(obj["Komentář"] === "") obj["Komentář"] = rule.comment;
             }
         }
   
