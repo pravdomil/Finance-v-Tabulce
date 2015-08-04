@@ -299,7 +299,7 @@ var fioCategory = new function() {
         if(row["Pohyb"] === "") obj["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem";
 		if(row["Částka"] === "") obj["Částka"] = f('=ABS(FIO_OBJEM)');
 		if(row["Charakter"] === "") {
-			obj["Charakter"] = f('=IF(FIO_VĚC = ""; "Navíc"; "Běžné")');
+			obj["Charakter"] = f('=IF(FIO_VĚC = ""; "Navíc"; "Výdaje")');
         }
 		
         if(row["Předatovat"] === "") obj["Předatovat"] = row["Datum"];
