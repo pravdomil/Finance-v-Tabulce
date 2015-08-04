@@ -440,7 +440,7 @@ fioRules.load();
 
 
 
-function FIO_QUERY(arg) {
+function fio_query(arg) {
     
     return arg.replace(/FIO_[A-ž_]+/g, function(match, contents, offset, s)
         {

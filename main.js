@@ -58,3 +58,8 @@ catch(e)
 	//throw e; // uncomment for debug
 	Logger.log(e);
 }
+
+
+function FIO_QUERY(arg) {
+    return fio_query(arg);
+}
