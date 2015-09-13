@@ -328,10 +328,78 @@ var airApi = new function() {
 
 
 var fioApi = new function() {
+    
+    this.token = fin.config.getProperty("fioToken");
+	
+    this.columns = {
+        'column0': 'Datum',
+        'column1': 'Objem',
+        'column14': 'Měna',
+        'column2': 'Protiúčet',
+        'column3': 'Kód banky',
+        'column4': 'KS',
+        'column5': 'VS',
+        'column6': 'SS',
+        'column8': 'Typ pohybu',
+        'column16': 'Zpráva pro příjemce',
+        'column7': 'Uživatelská identifikace',
+        'column25': 'Komentář',
+        'column10': 'Název protiúčtu',
+        'column12': 'Název banky',
+        'column18': 'Upřesnění',
+        'column9': 'Provedl',
+        'column26': 'BIC',
+        'column17': 'ID pokynu',
+        'column22': 'ID pohybu',
+    }
 	
 	this.submit = function(args) {
-		
+		this.token = args.fioToken;
+		fin.config.setProperty('fioToken', this.token);
 	}
+    
+    this.api = function(arg) {
+        
+		if (!this.token) return;
+        
+        var response = UrlFetchApp.fetch("https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json");
+        
+        if (response.getResponseCode() != 200) throw "Nepodařilo se spojit se serverem.";
+        
+        return Utilities.jsonParse(response.getContentText()).accountStatement;
+    }
+    
+    this.getLatestTransaction = function() {
+        
+        var json = this.api("transactions");
+        
+        if (!json || !json.transactionList) return;
+        
+        var list = json.transactionList.transaction;
+        
+        var trans = [];
+        
+        for (var i = 0; i < list.length; i++) {
+            
+            var obj = list[i];
+            
+            trans[i] = {};
+            
+            for (var key in this.columns) {
+                
+                var val = obj[key];
+                var column = this.columns[key];
+                
+                if(!val) val = "";
+                else if(column == "Datum") val = val.value.replace(/\+[0-9]+/, "");
+                else val = val.value;
+                
+                trans[i][column] = val;
+            }
+        }
+        
+        return trans.reverse();
+    }
 }
 
 
