@@ -282,7 +282,7 @@ b { font-weight: bold; }\
 <b>Finance v tabulce</b><br><br>\
 <form id="fio" onsubmit="google.script.run.finSubmit(this);google.script.host.close();">\
 	Přihlašte se do internetového bankovnictví a v nastavení najděte sekci API. Vytvořte nový token a zadejte ho níže.<br><br>\
-	<input type="password" placeholder="Token" name="fioToken" required><br><br>\
+	<input type="password" placeholder="Token" name="fioToken"><br><br>\
 	<input type="hidden" name="obj" value="fioApi">\
 	<input type="submit" value="Nastavit">\
 </form>\
@@ -290,8 +290,8 @@ b { font-weight: bold; }\
 	Je potřeba úvest adresu, kde je hostován <a href="https://github.com/Pravdomil/AirApi">script AirApi</a>.<br>\
 	<input type="url" placeholder="Adresa AirApi" name="airApi" required><br><br>\
 	A pak přihlašovací údaje do internetového bankovnictví.<br><br>\
-	<input type="text" placeholder="Jméno" name="airUser" required><br><br>\
-	<input type="password" placeholder="Heslo" name="airPass" required><br><br>\
+	<input type="text" placeholder="Jméno" name="airUser"><br><br>\
+	<input type="password" placeholder="Heslo" name="airPass"><br><br>\
 	<input type="hidden" name="obj" value="airApi">\
 	<input type="submit" value="Nastavit">\
 </form>\
