@@ -384,7 +384,7 @@ b { font-weight: bold; }\
 
 var airApi = new function() {
 	
-	this.config = fin.config.getProperty("air");
+	this.config = JSON.parse(fin.config.getProperty("air"));
 	
 	this.submit = function(args) {
 		this.config = {
@@ -392,12 +392,26 @@ var airApi = new function() {
 			"user": args.airUser,
 			"pass": args.airPass,
 		}
-		fin.config.setProperty('air', this.config);
+		fin.config.setProperty('air', JSON.stringify(this.config));
+	}
+	
+	this.api = function() {
+		
+		if (!this.config.api) return;
+        
+		var url = this.config.api + "?c=1&f=json&u=" + this.config.user + "&p=" + this.config.pass;
+		var response = UrlFetchApp.fetch(url);
+        
+        return Utilities.jsonParse(response.getContentText());
 	}
     
     this.getLatestTransaction = function() {
 		
-		return;
+        var json = this.api();
+        
+        if (!json) return;
+		
+		return this.api();
     }
 }
 
