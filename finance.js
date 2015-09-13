@@ -421,9 +421,9 @@ var fin = new function() {
     
     this.refresh = function() {
         
-        //var latest = fioApi.getLatestTransaction();
-        
-        //this.insert(latest);
+        this.insert( fioApi.getLatestTransaction() );
+		
+		this.insert( airApi.getLatestTransaction() );
     }
     
     this.categorize = function() {
