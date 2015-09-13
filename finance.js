@@ -473,7 +473,7 @@ var fioApi = new function() {
             }
         }
         
-        return trans.reverse();
+        return trans;
     }
 }
 
