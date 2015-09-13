@@ -362,7 +362,7 @@ b { font-weight: bold; }\
 	<input type="submit" value="Nastavit">\
 </form>\
 <form id="air" onsubmit="google.script.run.finSubmit(this);google.script.host.close();">\
-	Je potřeba úvest adresu, kde je hostován <a href="https://github.com/Pravdomil/AirApi">script AirApi</a>.<br>\
+	Je potřeba úvest adresu, kde je hostován <a href="https://github.com/Pravdomil/AirApi">script AirApi</a>.<br><br>\
 	<input type="url" placeholder="Adresa AirApi" name="airApi" required><br><br>\
 	A pak přihlašovací údaje do internetového bankovnictví.<br><br>\
 	<input type="text" placeholder="Jméno" name="airUser"><br><br>\
@@ -375,7 +375,7 @@ b { font-weight: bold; }\
 	<a href="#fio" class="button">Fio banka</a> <a href="#air" class="button">Air Bank</a>\
 </form>\
 ';
-		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(200).setHeight(340);
+		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(200).setHeight(350);
 		
 		SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
 	}
