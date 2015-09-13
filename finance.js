@@ -1,6 +1,9 @@
+function finInit() {
+	fioMenu();
+}
 
 function fioMenu() {
-    SpreadsheetApp.getUi().createMenu('Fio')
+    SpreadsheetApp.getUi().createMenu('Finance')
         .addItem('Aktualizovat', 'fioUpdate')
         .addItem('Rozčlenit', 'fioCategorize')
         .addSeparator()

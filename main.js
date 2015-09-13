@@ -1,28 +1,28 @@
 /*
 
-Fio výpis účtu
+Finance v tabulce
 
 Authors: Filip Hráček, Pravdomil Toman
 
-https://github.com/Pravdomil/Fio-API-SpreadsheetApp
+https://github.com/Pravdomil/finance-v-tabulce
 
 */
 
+// onOpen trigger
 function onOpen() {
 	// simple triggers can't do anything that requires authorization
-	// so make option to install custom onOpen trigger
-	SpreadsheetApp.getUi().createMenu('Fio').addItem('Instalovat', 'install').addToUi();
+	// so make option to install custom onOpen trigger that can do everything
+	SpreadsheetApp.getUi().createMenu('Finance').addItem('Instalovat', 'install').addToUi();
 }
 
+// onOpen custom trigger
 function customOnOpen() {
-	// custom onOpen trigger, we can do everything
-	// fio core is loaded so replace the menu
-	fioMenu();
+	finInit();
 }
 
+// daily trigger
 function update() {
-	// all trigger functions must be visible before fio core init
-	fioUpdate();
+	finUpdate();
 }
 
 function install() {
@@ -37,29 +37,29 @@ function install() {
 		config.setProperty("openTriggerSet", true);
 	}
 	
-	// fio core is loaded so replace the menu
-	fioMenu();
+	// run custom trigger
+	customOnOpen();
 }
 
 
-// try to load fio core if possible
+// try to load core if possible
 try {
 
 	// load core from cdn
-	var fio_js = "https://cdn.rawgit.com/Pravdomil/Fio-API-SpreadsheetApp/master/fio.js";
-	fio_js = UrlFetchApp.fetch(fio_js).getContentText();
+	var core = "https://cdn.rawgit.com/Pravdomil/finance-v-tabulce/master/finance.js";
+	core = UrlFetchApp.fetch(core).getContentText();
 	
 	// run
-	eval(fio_js);
+	eval(core);
 	
 }
 catch(e)
 {
-	//throw e; // uncomment for debug
+	//throw e;
 	Logger.log(e);
 }
 
 
-function FIO_QUERY(arg) {
-    return fio_query(arg);
+function FIN_QUERY(arg) {
+    return fin_query(arg);
 }
