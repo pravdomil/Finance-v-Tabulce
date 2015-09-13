@@ -15,7 +15,7 @@ function onOpen() {
 	SpreadsheetApp.getUi().createMenu('Finance').addItem('Instalovat', 'install').addToUi();
 }
 
-// onOpen custom trigger
+// custom onOpen trigger
 function customOnOpen() {
 	finInit();
 }
@@ -25,6 +25,7 @@ function dailyTrigger() {
 	finDailyTrigger();
 }
 
+// install custom onOpen trigger
 function install() {
 	
 	var ss = SpreadsheetApp.getActiveSpreadsheet();
