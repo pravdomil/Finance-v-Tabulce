@@ -1,29 +1,29 @@
 function finInit() {
-	fioMenu();
+	finMenu();
 }
 
-function fioMenu() {
+function finDailyTrigger() {
+	finRefresh();
+}
+
+function finMenu() {
     SpreadsheetApp.getUi().createMenu('Finance')
-        .addItem('Aktualizovat', 'fioUpdate')
-        .addItem('Rozčlenit', 'fioCategorize')
+        .addItem('Aktualizovat', 'finRefresh')
+        .addItem('Rozčlenit', 'finCategorize')
         .addSeparator()
-        .addItem('Nastavit token', 'setToken')
+        .addItem('Nastavení', 'finConfig')
         .addSeparator()
         .addItem('Zanést hotovost', 'trackCash')
         .addToUi();
 }
 
-function fioUpdate() {
-    fio.update();
-    fio.categorize();
+function finRefresh() {
+    fin.refresh();
+    fin.categorize();
 }
 
-function fioCategorize() {
-    fio.categorize();
-}
-
-function setToken() {
-    fioApi.promptToken();
+function finCategorize() {
+    fin.categorize();
 }
 
 function trackCash() {
@@ -49,66 +49,28 @@ function trackCash() {
 		}
 	];
 	
-    fio.insert(arr);
+    fin.insert(arr);
     
-    fio.categorize();
+    fin.categorize();
 }
 
 
 /////////////////////////
 
 
-var fioColumns = new function() {
-    
-    this.obj = {
-        'column0': 'Datum',
-        'column1': 'Objem',
-        'column14': 'Měna',
-        'column2': 'Protiúčet',
-        'column3': 'Kód banky',
-        'column4': 'KS',
-        'column5': 'VS',
-        'column6': 'SS',
-        'column8': 'Typ pohybu',
-        'column16': 'Zpráva pro příjemce',
-        'column7': 'Uživatelská identifikace',
-        'column25': 'Komentář',
-        'column10': 'Název protiúčtu',
-        'column12': 'Název banky',
-        'column18': 'Upřesnění',
-        'column9': 'Provedl',
-        'column26': 'BIC',
-        'column17': 'ID pokynu',
-        'column22': 'ID pohybu',
-    }
-    
-    this.arr = [];
-    for (var key in this.obj) this.arr.push(this.obj[key]);
-    
-    this.arr.push("Pohyb");
-    this.arr.push("Částka");
-	this.arr.push("Charakter");
-    this.arr.push("Skupina");
-    this.arr.push("Věc");
-    this.arr.push("Předatovat");
-    this.arr.push("Měsíc");
-    this.arr.push("Rok");
-}
-
-
-var fioRules = new function() {
+var finRules = new function() {
     
     this.emptySheet = function() {
         
         var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA');
-		return template.getSheetByName("kategorie").copyTo(fio.ss).setName("kategorie");
+		return template.getSheetByName("kategorie").copyTo(fin.ss).setName("kategorie");
     }
 	
     this.load = function() {
         
-		if(!fio.ss) return;
+		if(!fin.ss) return;
 		
-        this.sheet = fio.ss.getSheetByName("kategorie") || this.emptySheet();
+        this.sheet = fin.ss.getSheetByName("kategorie") || this.emptySheet();
         
         this.parse(this.sheet.getRange("A:G").getValues());
     }
@@ -196,78 +158,13 @@ var fioRules = new function() {
 }
 
 
-var fioApi = new function() {
-    
-    this.config = PropertiesService.getDocumentProperties();
-    this.token = this.config.getProperty("token");
-    
-    this.promptToken = function() {
-        
-        this.token = Browser.inputBox('Zadejte token');
-        if(this.token == "cancel") this.token = null;
-        
-        if(this.token !== null) this.config.setProperty('token', this.token);
-        
-        return this.token;
-    }
-    
-    this.api = function(arg) {
-        
-        if (!this.token && !this.promptToken())
-        {
-            if(this.token === null) return {};
-            
-            throw "Token není nastaven.";
-        }
-        
-        var response = UrlFetchApp.fetch("https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json");
-        
-        if (response.getResponseCode() != 200) throw "Nepodařilo se spojit se serverem.";
-        
-        return Utilities.jsonParse(response.getContentText()).accountStatement;
-    }
-    
-    this.getLatestTransaction = function() {
-        
-        var json = this.api("transactions");
-        
-        if (!json.transactionList) return;
-        
-        var list = json.transactionList.transaction;
-        
-        var trans = [];
-        
-        for (var i = 0; i < list.length; i++) {
-            
-            var obj = list[i];
-            
-            trans[i] = {};
-            
-            for (var key in fioColumns.obj) {
-                
-                var val = obj[key];
-                var column = fioColumns.obj[key];
-                
-                if(!val) val = "";
-                else if(column == "Datum") val = val.value.replace(/\+[0-9]+/, "");
-                else val = val.value;
-                
-                trans[i][column] = val;
-            }
-        }
-        
-        return trans.reverse();
-    }
-}
-
-
-var fioCategory = new function() {
+var finCategory = new function() {
     
     this.resolve = function(sheet) {
         
         this.sheet = sheet;
         
-        var range = this.sheet.getRange(2, 1, this.sheet.getMaxRows()-1, fio.columns.length);
+        var range = this.sheet.getRange(2, 1, this.sheet.getMaxRows()-1, fin.columns.length);
         var data = range.getValues();
         
         for(var r = 0; r < data.length; r++) {
@@ -276,7 +173,7 @@ var fioCategory = new function() {
             
             for(var key in modified) {
                 
-                var ci = fio.columnIndex(key);
+                var ci = fin.columnIndex(key);
                 if(ci) this.sheet.getRange(2 + r, ci).setValue(modified[key]);
                 
             }
@@ -289,9 +186,9 @@ var fioCategory = new function() {
         var obj = {};
 		
 		var f = function(arg) {
-		    return arg.replace(/FIO_[A-ž_]+/g, function(match, contents, offset, s)
+		    return arg.replace(/FIN_[A-ž_]+/g, function(match, contents, offset, s)
 		        {
-		            match = match.replace(/FIO_/, "");
+		            match = match.replace(/FIN_/, "");
 		            match = match.replace(/_/, " ");
             		
 		            return 'INDIRECT(ADDRESS(ROW(); MATCH("' + match + '"; $1:$1; 0)))';
@@ -300,17 +197,17 @@ var fioCategory = new function() {
 		}
         
         if(row["Pohyb"] === "") obj["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem";
-		if(row["Částka"] === "") obj["Částka"] = f('=ABS(FIO_OBJEM)');
+		if(row["Částka"] === "") obj["Částka"] = f('=ABS(FIN_OBJEM)');
 		if(row["Charakter"] === "") {
-			obj["Charakter"] = f('=IF(FIO_VĚC = ""; "Navíc"; "Výdaje")');
+			obj["Charakter"] = f('=IF(FIN_VĚC = ""; "Navíc"; "Výdaje")');
         }
 		
         if(row["Předatovat"] === "") obj["Předatovat"] = row["Datum"];
         if(row["Měsíc"] === "") {
-			obj["Měsíc"] = f('=IF(FIO_PŘEDATOVAT; DATE(YEAR(FIO_PŘEDATOVAT); MONTH(FIO_PŘEDATOVAT); 1); "")');
+			obj["Měsíc"] = f('=IF(FIN_PŘEDATOVAT; DATE(YEAR(FIN_PŘEDATOVAT); MONTH(FIN_PŘEDATOVAT); 1); "")');
 		}
         if(row["Rok"] === "") {
-			obj["Rok"] = f('=IF(FIO_PŘEDATOVAT; YEAR(FIO_PŘEDATOVAT); "")');
+			obj["Rok"] = f('=IF(FIN_PŘEDATOVAT; YEAR(FIN_PŘEDATOVAT); "")');
 		}
 		
 		if(row["Komentář"] !== undefined && row["Komentář"].trim() === "")
@@ -321,7 +218,7 @@ var fioCategory = new function() {
         
         if(row["Skupina"] == "" && row["Věc"] == "") {
             
-            var rule = fioRules.get(row);
+            var rule = finRules.get(row);
             
             if(rule) {
                 obj["Skupina"] = rule.group;
@@ -339,9 +236,9 @@ var fioCategory = new function() {
         
         var obj = {};
         
-        for(var i = 0; i < fio.columns.length; i++) {
+        for(var i = 0; i < fin.columns.length; i++) {
             
-            var column = fio.columns[i];
+            var column = fin.columns[i];
             
             obj[column] = arr[i];
         }
@@ -352,14 +249,14 @@ var fioCategory = new function() {
 }
 
 
-var fioTrigger = new function() {
+var finTrigger = new function() {
     try
     {
         this.config = PropertiesService.getDocumentProperties();
     
         if(this.config.getProperty("triggerSet")) return;
     
-        ScriptApp.newTrigger('update').timeBased().atHour(5).everyDays(1).create();
+        ScriptApp.newTrigger('dailyTrigger').timeBased().atHour(6).everyDays(1).create();
     
         this.config.setProperty("triggerSet", true);
     }
@@ -367,7 +264,7 @@ var fioTrigger = new function() {
 }
 
 
-var fio = new function() {
+var fin = new function() {
     
     this.emptySheet = function() {
         
@@ -381,16 +278,16 @@ var fio = new function() {
 		return template.getSheetByName("zůstatek").copyTo(this.ss).setName("zůstatek");
     }
     
-    this.update = function() {
+    this.refresh = function() {
         
-        var latest = fioApi.getLatestTransaction();
+        //var latest = fioApi.getLatestTransaction();
         
-        this.insert(latest);
+        //this.insert(latest);
     }
     
     this.categorize = function() {
         
-        fioCategory.resolve(this.sheet);
+        finCategory.resolve(this.sheet);
         
     }
     
@@ -399,11 +296,11 @@ var fio = new function() {
         
         for(var i = 0; i < data.length; i++) {
             
-            var row = new Array(fio.columns.length);
+            var row = new Array(fin.columns.length);
             
             for(var c = 0; c < row.length; c++) {
                 
-                var column = fio.columns[c];
+                var column = fin.columns[c];
                 var value = data[i][column];
                 
                 row[c] = value ? value : "";
@@ -439,18 +336,18 @@ var fio = new function() {
 	}
 }
 
-fioRules.load();
+finRules.load();
 
 
 
-function fio_query(arg) {
+function fin_query(arg) {
     
-    return arg.replace(/FIO_[A-ž_]+/g, function(match, contents, offset, s)
+    return arg.replace(/FIN_[A-ž_]+/g, function(match, contents, offset, s)
         {
-            match = match.replace(/FIO_/, "");
+            match = match.replace(/FIN_/, "");
             match = match.replace(/_/, " ");
             
-            return String.fromCharCode(97 + fio.columnIndex(match) - 1).toUpperCase();
+            return String.fromCharCode(97 + fin.columnIndex(match) - 1).toUpperCase();
         }
     );
 }
