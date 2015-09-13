@@ -42,6 +42,10 @@ function install() {
 	customOnOpen();
 }
 
+// google.script.host bridge
+function finSubmit(args) {
+	eval(args.obj).submit(args);
+}
 
 // try to load core if possible
 try {
