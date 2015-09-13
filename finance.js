@@ -309,9 +309,21 @@ b { font-weight: bold; }\
 
 var airApi = new function() {
 	
+	this.config = fin.config.getProperty("air");
+	
 	this.submit = function(args) {
-		
+		this.config = {
+			"api": args.airApi,
+			"user": args.airUser,
+			"pass": args.airPass,
+		}
+		fin.config.setProperty('air', this.config);
 	}
+    
+    this.getLatestTransaction = function() {
+		
+		return;
+    }
 }
 
 
