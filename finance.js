@@ -11,7 +11,7 @@ function finMenu() {
         .addItem('Aktualizovat', 'finRefresh')
         .addItem('Rozčlenit', 'finCategorize')
         .addSeparator()
-        .addItem('Nastavení', 'finConfig')
+        .addItem('Nastavení', 'finConfigShow')
         .addSeparator()
         .addItem('Zanést hotovost', 'trackCash')
         .addToUi();
@@ -24,6 +24,10 @@ function finRefresh() {
 
 function finCategorize() {
     fin.categorize();
+}
+
+function finConfigShow() {
+	finConfig.show();
 }
 
 function trackCash() {
@@ -261,6 +265,63 @@ var finTrigger = new function() {
         this.config.setProperty("triggerSet", true);
     }
     catch (e) {}
+}
+
+
+var finConfig = new function() {
+	
+	this.show = function() {
+		var html = '\
+<style>\
+*{padding: 0;margin: 0;border: 0;position: relative;box-sizing: border-box;vertical-align: bottom;color: inherit;font: inherit;text-decoration: inherit;letter-spacing: inherit;word-spacing: inherit;text-transform: inherit;}\
+input,button,textarea,select,.button{display: inline-block;padding: 0.5rem;height: 2rem;border: 1px solid;-webkit-border-radius: .25rem;border-radius: .25rem;background-clip: padding-box;background-color: #FFF}input[type="submit"]{cursor: pointer}.button{text-align: center}\
+html{ font-family: sans-serif; font-size: 18px; }\
+body { font-size: 14px; line-height: 1rem; }\
+b { font-weight: bold; }\
+*:target { display: block !important; }\
+#fio, #air, *:target ~ form { display: none; }\
+</style>\
+<b>Finance v tabulce</b><br><br>\
+<form id="fio" onsubmit="google.script.run.finSubmit(this);google.script.host.close();">\
+	Přihlašte se do internetového bankovnictví a v nastavení najděte sekci API. Vytvořte nový token a zadejte ho níže.<br><br>\
+	<input type="password" placeholder="Token" name="fioToken" required><br><br>\
+	<input type="hidden" name="obj" value="airApi">\
+	<input type="submit" value="Nastavit">\
+</form>\
+<form id="air" onsubmit="google.script.run.finSubmit(this);google.script.host.close();">\
+	Je potřeba úvest adresu, kde je hostován <a href="https://github.com/Pravdomil/AirApi">script AirApi</a>.<br>\
+	<input type="url" placeholder="Adresa AirApi" name="airApi" required><br><br>\
+	A pak přihlašovací údaje do internetového bankovnictví.<br><br>\
+	<input type="text" placeholder="Jméno" name="airUser" required><br><br>\
+	<input type="password" placeholder="Heslo" name="airPass" required><br><br>\
+	<input type="hidden" name="obj" value="fioApi">\
+	<input type="submit" value="Nastavit">\
+</form>\
+<form>\
+	Zvolte banku, kterou chcete používat pro tuto tabulku.<br><br>\
+	<a href="#fio" class="button">Fio banka</a> <a href="#air" class="button">Air Bank</a>\
+</form>\
+';
+		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(200).setHeight(340);
+		
+		SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
+	}
+}
+
+
+var airApi = new function() {
+	
+	this.submit = function(args) {
+		
+	}
+}
+
+
+var fioApi = new function() {
+	
+	this.submit = function(args) {
+		
+	}
 }
 
 
