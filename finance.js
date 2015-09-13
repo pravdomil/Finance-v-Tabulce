@@ -283,7 +283,7 @@ b { font-weight: bold; }\
 <form id="fio" onsubmit="google.script.run.finSubmit(this);google.script.host.close();">\
 	Přihlašte se do internetového bankovnictví a v nastavení najděte sekci API. Vytvořte nový token a zadejte ho níže.<br><br>\
 	<input type="password" placeholder="Token" name="fioToken" required><br><br>\
-	<input type="hidden" name="obj" value="airApi">\
+	<input type="hidden" name="obj" value="fioApi">\
 	<input type="submit" value="Nastavit">\
 </form>\
 <form id="air" onsubmit="google.script.run.finSubmit(this);google.script.host.close();">\
@@ -292,7 +292,7 @@ b { font-weight: bold; }\
 	A pak přihlašovací údaje do internetového bankovnictví.<br><br>\
 	<input type="text" placeholder="Jméno" name="airUser" required><br><br>\
 	<input type="password" placeholder="Heslo" name="airPass" required><br><br>\
-	<input type="hidden" name="obj" value="fioApi">\
+	<input type="hidden" name="obj" value="airApi">\
 	<input type="submit" value="Nastavit">\
 </form>\
 <form>\
