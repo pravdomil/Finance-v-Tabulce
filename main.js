@@ -21,8 +21,8 @@ function customOnOpen() {
 }
 
 // daily trigger
-function update() {
-	finUpdate();
+function dailyTrigger() {
+	finDailyTrigger();
 }
 
 function install() {
