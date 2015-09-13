@@ -439,8 +439,6 @@ var fioApi = new function() {
         
         var response = UrlFetchApp.fetch("https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json");
         
-        if (response.getResponseCode() != 200) throw "Nepodařilo se spojit se serverem.";
-        
         return Utilities.jsonParse(response.getContentText()).accountStatement;
     }
     
