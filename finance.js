@@ -256,13 +256,11 @@ var finCategory = new function() {
 var finTrigger = new function() {
     try
     {
-        this.config = PropertiesService.getDocumentProperties();
-    
-        if(this.config.getProperty("triggerSet")) return;
+        if(fin.config.getProperty("triggerSet")) return;
     
         ScriptApp.newTrigger('dailyTrigger').timeBased().atHour(6).everyDays(1).create();
     
-        this.config.setProperty("triggerSet", true);
+        fin.config.setProperty("triggerSet", true);
     }
     catch (e) {}
 }
@@ -326,7 +324,9 @@ var fioApi = new function() {
 
 
 var fin = new function() {
-    
+	
+    this.config = PropertiesService.getDocumentProperties();
+
     this.emptySheet = function() {
         
         var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA');
