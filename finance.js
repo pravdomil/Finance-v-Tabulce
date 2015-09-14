@@ -358,10 +358,10 @@ var finConfig = new function() {
 		var html = '\
 <style>\
 *{padding: 0;margin: 0;border: 0;position: relative;box-sizing: border-box;vertical-align: bottom;color: inherit;font: inherit;text-decoration: inherit;letter-spacing: inherit;word-spacing: inherit;text-transform: inherit;}\
-input,button,textarea,select,.button{display: inline-block;padding: 0.5rem;height: 2rem;border: 1px solid;-webkit-border-radius: .25rem;border-radius: .25rem;background-clip: padding-box;background-color: #FFF}input[type="submit"]{cursor: pointer}.button{text-align: center}\
+input,button,textarea,select,.button{display: inline-block;padding: 0.5rem;height: 2rem;border: 1px solid;-webkit-border-radius: .25rem;border-radius: .25rem;background-clip: padding-box;background-color: #FFF}input[type="submit"]{cursor: pointer}.button{text-align: center;font-weight:normal;}\
 html{ font-family: sans-serif; font-size: 17px; }\
 body { font-size: 14px; line-height: 1rem; }\
-b { font-weight: bold; }\
+b, a { font-weight: bold; }\
 *:target { display: block !important; }\
 #fio, #air, *:target ~ form { display: none; }\
 </style>\
@@ -388,7 +388,7 @@ b { font-weight: bold; }\
 	Můžete nastavit obě banky zároveň.<br><br>\
 	Pro vypnutí účtu nastavte prázdná pole.<br><br>\
 	Po nastavení bude tabulka každé ráno automaticky aktualizována.<br><br>\
-	<b><a href="https://github.com/Pravdomil/finance-v-tabulce" target="_blank">Bližší informace</a></b>.\
+	<a href="https://github.com/Pravdomil/finance-v-tabulce" target="_blank">Bližší informace</a>.\
 </form>\
 ';
 		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(200).setHeight(400);
