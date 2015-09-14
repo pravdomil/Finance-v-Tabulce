@@ -124,6 +124,17 @@ var fin = new function() {
         
         return null;
     }
+	
+	this.getIds = function() {
+		
+		var uniqueCol = this.columnIndex("ID pohybu");
+		var ids = this.sheet.getRange(2, uniqueCol, this.sheet.getMaxRows()-1, 1).getValues();
+		
+		 // flatten and convert to string
+		for (var i = 0; i < ids.length; i++) ids[i] = ids[i][0] + "";
+        
+		return ids;
+	}
     
     this.ss = SpreadsheetApp.getActive();
     if(this.ss)
