@@ -300,7 +300,7 @@ var finCategory = new function() {
 			obj["Rok"] = f('=IF(FIN_PŘEDATOVAT; YEAR(FIN_PŘEDATOVAT); "")');
 		}
 		
-		if(row["Poznámka"] !== undefined && row["Poznámka"].trim() === "")
+		if(row["Poznámka"] !== undefined && String(row["Poznámka"]).trim() === "")
 		{
 			if(row["Zpráva pro příjemce"]) obj["Poznámka"] = row["Zpráva pro příjemce"];
 			else if(row["Účel"]) obj["Poznámka"] = row["Účel"];
