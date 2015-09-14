@@ -415,7 +415,7 @@ var airApi = new function() {
 		var url = this.config.api + "?c=1&f=json&u=" + this.config.user + "&p=" + this.config.pass + "&o=" + older;
 		var response = UrlFetchApp.fetch(url);
 		
-		if(!older) fin.config.setProperty("airRan", 1);
+		if(older) fin.config.setProperty("airRan", 1);
         
         return Utilities.jsonParse(response.getContentText());
 	}
