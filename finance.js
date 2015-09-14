@@ -421,8 +421,17 @@ var airApi = new function() {
         var json = this.api();
         
         if (!json) return;
+		var ids = fin.getIds();
+		var out = [];
 		
-		return this.api();
+		for (var i = 0; i < json.length; i++) {
+        	
+			if( ids.indexOf( json[i]["ID pohybu"] ) !== -1) continue;
+			
+			out.push( json[i] );
+        }
+		
+		return out;
     }
 }
 
