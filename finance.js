@@ -480,6 +480,11 @@ var fioApi = new function() {
                 if(!val) val = "";
                 else if(column == "Datum") val = val.value.replace(/\+[0-9]+/, "");
                 else val = val.value;
+				
+				if(column == "Kód banky" && val) {
+					trans[i]["Protiúčet"] = trans[i]["Protiúčet"] + "/" + val;
+					continue;
+				}
                 
                 trans[i][column] = val;
             }
