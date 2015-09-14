@@ -365,33 +365,35 @@ b, a { font-weight: bold; }\
 *:target { display: block !important; }\
 #fio, #air, *:target ~ form { display: none; }\
 </style>\
-<b>Finance v tabulce</b><br><br>\
+<b>Finance v tabulce</b><br><br>\
 <form id="fio" onsubmit="google.script.run.finSubmit(this);google.script.host.close();">\
-	Přihlašte se do internetového bankovnictví a v nastavení najděte sekci API. Vytvořte nový token a zadejte ho níže.<br><br>\
+	Přihlašte se do internetového bankovnictví a v nastavení najděte sekci API. Vytvořte nový token a zadejte ho níže.<br><br>\
 	<input type="password" placeholder="Token" name="fioToken"><br><br>\
 	<input type="hidden" name="obj" value="fioApi">\
 	<input type="submit" value="Nastavit">\
 </form>\
 <form id="air" onsubmit="google.script.run.finSubmit(this);google.script.host.close();">\
-	Je potřeba úvest adresu, kde je hostován <a href="https://github.com/Pravdomil/AirApi" target="_blank">script AirApi</a>.<br><br>\
+	Je potřeba úvest adresu, kde je hostován <a href="https://github.com/Pravdomil/AirApi" target="_blank">script AirApi</a>.<br><br>\
 	<input type="url" placeholder="Adresa AirApi" name="airApi"><br><br>\
-	A pak přihlašovací údaje do internetového bankovnictví.<br><br>\
-	<input type="text" placeholder="Jméno" name="airUser"><br><br>\
+	A pak přihlašovací údaje do internetového bankovnictví.<br><br>\
+	<input type="text" placeholder="Jméno" name="airUser">\
 	<input type="password" placeholder="Heslo" name="airPass"><br><br>\
+	Číslo účtu, který chcete sledovat, ponechte prázdný pro výchozí účet.<br><br>\
+	<input type="password" placeholder="Číslo účtu" name="airAccount"><br><br>\
 	<input type="hidden" name="obj" value="airApi">\
 	<input type="submit" value="Nastavit"><br><br>\
-	Pro diakritiku zvolte kódování UTF8 v bankovnictví, nastavení, aplikace, historie plateb.\
+	Pro diakritiku zvolte kódování UTF8 v bankovnictví, nastavení, aplikace, historie plateb.\
 </form>\
 <form>\
-	Zvolte banku, kterou chcete používat pro tuto tabulku.<br><br>\
-	<a href="#fio" class="button">Fio banka</a> <a href="#air" class="button">Air Bank</a><br><br><br>\
+	Zvolte banku, kterou chcete používat pro tuto tabulku.<br><br>\
+	<a href="#fio" class="button">Fio banka</a> <a href="#air" class="button">Air Bank</a><br><br><br>\
 	Můžete nastavit obě banky zároveň.<br><br>\
 	Pro vypnutí účtu nastavte prázdná pole.<br><br>\
-	Po nastavení bude tabulka každé ráno automaticky aktualizována.<br><br>\
+	Po nastavení bude tabulka každé ráno automaticky aktualizována.<br><br>\
 	<a href="https://github.com/Pravdomil/finance-v-tabulce" target="_blank">Bližší informace</a>.\
 </form>\
 ';
-		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(200).setHeight(400);
+		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(400).setHeight(400);
 		
 		SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
 	}
