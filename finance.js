@@ -494,8 +494,8 @@ var fioApi = new function() {
     }
 }
 
-finRules.load();
 
+finRules.load();
 
 
 function fin_query(arg) {
