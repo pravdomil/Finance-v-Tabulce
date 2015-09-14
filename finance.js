@@ -408,7 +408,7 @@ var airApi = new function() {
 	
 	this.api = function() {
 		
-		if (!this.config.api) return;
+		if (!this.config || !this.config.api) return;
         
 		var url = this.config.api + "?c=1&f=json&u=" + this.config.user + "&p=" + this.config.pass;
 		var response = UrlFetchApp.fetch(url);
