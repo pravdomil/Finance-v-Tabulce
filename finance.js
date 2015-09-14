@@ -418,7 +418,11 @@ var airApi = new function() {
 		var older = fin.config.getProperty("airRan") ? 0 : 1;
 		
 		var url = this.config.api + "?c=1&f=json&u=" + this.config.user + "&p=" + this.config.pass + "&o=" + older;
-		var response = UrlFetchApp.fetch(url);
+		var response = UrlFetchApp.fetch(url, {muteHttpExceptions: true});
+		
+		if(response.getResponseCode() != 200) {
+			throw "AirApi: " + response;
+		}
 		
 		if(older) fin.config.setProperty("airRan", 1);
         
@@ -480,8 +484,13 @@ var fioApi = new function() {
         
 		if (!this.token) return;
         
-        var response = UrlFetchApp.fetch("https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json");
-        
+		var url = "https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json";
+        var response = UrlFetchApp.fetch(url, {muteHttpExceptions: true});
+		
+		if(response.getResponseCode() != 200) {
+			throw "FioApi: Bad token? Or too fast?";
+		}
+		
         return JSON.parse(response.getContentText()).accountStatement;
     }
     
