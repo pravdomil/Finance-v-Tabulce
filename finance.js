@@ -409,6 +409,7 @@ var airApi = new function() {
 			"api": args.airApi,
 			"user": args.airUser,
 			"pass": args.airPass,
+			"account": args.airAccount,
 		}
 		fin.config.setProperty('air', JSON.stringify(this.config));
 	}
@@ -419,7 +420,7 @@ var airApi = new function() {
         
 		var older = fin.config.getProperty("airRan") ? 0 : 1;
 		
-		var url = this.config.api + "?c=1&f=json&u=" + this.config.user + "&p=" + this.config.pass + "&o=" + older;
+		var url = this.config.api + "?c=1&f=json&u=" + this.config.user + "&p=" + this.config.pass + "&o=" + older + "&a=" + this.config.account;
 		var response = UrlFetchApp.fetch(url, {muteHttpExceptions: true});
 		
 		if(response.getResponseCode() != 200) {
