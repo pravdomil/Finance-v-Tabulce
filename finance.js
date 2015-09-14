@@ -410,8 +410,12 @@ var airApi = new function() {
 		
 		if (!this.config || !this.config.api) return;
         
-		var url = this.config.api + "?c=1&f=json&u=" + this.config.user + "&p=" + this.config.pass;
+		var older = fin.config.getProperty("airRan") ? 0 : 1;
+		
+		var url = this.config.api + "?c=1&f=json&u=" + this.config.user + "&p=" + this.config.pass + "&o=" + older;
 		var response = UrlFetchApp.fetch(url);
+		
+		if(!older) fin.config.setProperty("airRan", 1);
         
         return Utilities.jsonParse(response.getContentText());
 	}
