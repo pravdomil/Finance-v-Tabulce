@@ -453,7 +453,7 @@ var fioApi = new function() {
         
         var response = UrlFetchApp.fetch("https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json");
         
-        return Utilities.jsonParse(response.getContentText()).accountStatement;
+        return JSON.parse(response.getContentText()).accountStatement;
     }
     
     this.getLatestTransaction = function() {
