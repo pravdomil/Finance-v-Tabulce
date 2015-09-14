@@ -380,7 +380,7 @@ b { font-weight: bold; }\
 	<input type="password" placeholder="Heslo" name="airPass"><br><br>\
 	<input type="hidden" name="obj" value="airApi">\
 	<input type="submit" value="Nastavit"><br><br>\
-	Pro dikritiku zvolte kódování UTF8 v bankovnictví, nastavení, aplikace, historie plateb.\
+	Pro diakritiku zvolte kódování UTF8 v bankovnictví, nastavení, aplikace, historie plateb.\
 </form>\
 <form>\
 	Zvolte banku, kterou chcete používat pro tuto tabulku.<br><br>\
