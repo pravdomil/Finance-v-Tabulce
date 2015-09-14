@@ -412,13 +412,14 @@ var airApi = new function() {
 			"account": args.airAccount,
 		}
 		fin.config.setProperty('air', JSON.stringify(this.config));
+		fin.config.setProperty('airFetchOlder', 1);
 	}
 	
 	this.api = function() {
 		
 		if (!this.config || !this.config.api) return;
         
-		var older = fin.config.getProperty("airRan") ? 0 : 1;
+		var older = fin.config.getProperty("airFetchOlder") ? 1 : 0;
 		
 		var url = this.config.api + "?c=1&f=json&u=" + this.config.user + "&p=" + this.config.pass + "&o=" + older + "&a=" + this.config.account;
 		var response = UrlFetchApp.fetch(url, {muteHttpExceptions: true});
@@ -427,7 +428,7 @@ var airApi = new function() {
 			throw "AirApi: " + response;
 		}
 		
-		if(older) fin.config.setProperty("airRan", 1);
+		if(older) fin.config.setProperty("airFetchOlder", 0);
         
         return Utilities.jsonParse(response.getContentText());
 	}
