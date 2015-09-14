@@ -359,7 +359,7 @@ var finConfig = new function() {
 <style>\
 *{padding: 0;margin: 0;border: 0;position: relative;box-sizing: border-box;vertical-align: bottom;color: inherit;font: inherit;text-decoration: inherit;letter-spacing: inherit;word-spacing: inherit;text-transform: inherit;}\
 input,button,textarea,select,.button{display: inline-block;padding: 0.5rem;height: 2rem;border: 1px solid;-webkit-border-radius: .25rem;border-radius: .25rem;background-clip: padding-box;background-color: #FFF}input[type="submit"]{cursor: pointer}.button{text-align: center}\
-html{ font-family: sans-serif; font-size: 18px; }\
+html{ font-family: sans-serif; font-size: 17px; }\
 body { font-size: 14px; line-height: 1rem; }\
 b { font-weight: bold; }\
 *:target { display: block !important; }\
