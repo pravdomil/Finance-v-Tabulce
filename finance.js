@@ -163,7 +163,7 @@ var finRules = new function() {
             var group = array[i][0];
             var item = array[i][1];
             var character = array[i][5];
-			var comment = array[i][6];
+			var note = array[i][6];
             
             if(!group) continue;
             
@@ -188,7 +188,7 @@ var finRules = new function() {
                 item : item,
                 cond : cond,
                 character : character,
-				comment : comment,
+				note : note,
             })
         }
     }
@@ -289,10 +289,10 @@ var finCategory = new function() {
 			obj["Rok"] = f('=IF(FIN_PŘEDATOVAT; YEAR(FIN_PŘEDATOVAT); "")');
 		}
 		
-		if(row["Komentář"] !== undefined && row["Komentář"].trim() === "")
+		if(row["Poznámka"] !== undefined && row["Poznámka"].trim() === "")
 		{
-			if(row["Zpráva pro příjemce"]) obj["Komentář"] = row["Zpráva pro příjemce"];
-			else if(row["Uživatelská identifikace"]) obj["Komentář"] = row["Uživatelská identifikace"];
+			if(row["Zpráva pro příjemce"]) obj["Poznámka"] = row["Zpráva pro příjemce"];
+			else if(row["Účel"]) obj["Poznámka"] = row["Účel"];
 		}
         
         if(row["Skupina"] == "" && row["Věc"] == "") {
@@ -304,7 +304,7 @@ var finCategory = new function() {
                 obj["Věc"] = rule.item;
                 
                 if(rule.character) obj["Charakter"] = rule.character;
-				if(obj["Komentář"] === "") obj["Komentář"] = rule.comment;
+				if(obj["Poznámka"] === "") obj["Poznámka"] = rule.note;
             }
         }
   
@@ -431,8 +431,8 @@ var fioApi = new function() {
         'column6': 'SS',
         'column8': 'Typ pohybu',
         'column16': 'Zpráva pro příjemce',
-        'column7': 'Uživatelská identifikace',
-        'column25': 'Komentář',
+        'column7': 'Účel', // Uživatelská identifikace
+        'column25': 'Poznámka', // Komentář
         'column10': 'Název protiúčtu',
         'column12': 'Název banky',
         'column18': 'Upřesnění',
