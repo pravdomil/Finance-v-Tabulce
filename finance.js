@@ -416,9 +416,6 @@ var airApi = new function() {
 	
 	this.show = function() {
 		
-		var older = fin.config.getProperty("airFetchOlder") ? 1 : 0;
-		if(older) fin.config.setProperty("airFetchOlder", 0);
-		
 		var html = '\
 <style>\
 *{padding: 0;margin: 0;border: 0;position: relative;box-sizing: border-box;vertical-align: bottom;color: inherit;font: inherit;text-decoration: inherit;letter-spacing: inherit;word-spacing: inherit;text-transform: inherit;}\
