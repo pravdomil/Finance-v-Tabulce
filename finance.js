@@ -486,6 +486,7 @@ function attachFile() {\
         }
 		
 		fin.insert(out);
+		fin.categorize();
 	}
 	
 	this.replaceCols = function(csv) {
