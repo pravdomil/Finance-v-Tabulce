@@ -466,18 +466,18 @@ function attachFile() {\
 		//this.postJson(json);
 	}
 	
-	this.postJson = function(json) {
+	this.postArr = function(arr) {
 		
-        if (!json) return;
+        if (!arr) return;
 		
 		var ids = fin.getIds();
 		var out = [];
 		
-		for (var i = 0; i < json.length; i++) {
+		for (var i = 0; i < arr.length; i++) {
         	
-			if( ids.indexOf( json[i]["ID pohybu"] ) !== -1) continue;
+			if( ids.indexOf( arr[i]["ID pohybu"] ) !== -1) continue;
 			
-			out.push( json[i] );
+			out.push( arr[i] );
         }
 		
 		fin.insert(out);
