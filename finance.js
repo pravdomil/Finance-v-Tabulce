@@ -421,7 +421,7 @@ b, a { font-weight: bold; }\
 </style>\
 <b>Finance v tabulce</b><br><br>\
 <b>Aktualizace AirBank</b><br><br>\
-Nahrajte export výpisu ůčtu ve formátu CSV.<br><br>\
+Nahrajte export výpisu ůčtu ve formátu CSV.<br><br>\
 <input id="file" name="file" type="file"><br><br>\
 <input value="Nahrát" type="button" onclick="attachFile();this.disabled=true;">\
 \
