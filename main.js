@@ -44,7 +44,7 @@ function install() {
 
 // google.script.host bridge
 function finBridge(args) {
-	eval(args.obj)[args.func](args);
+	return eval(args.obj)[args.func](args);
 }
 
 // try to load core if possible
