@@ -390,7 +390,7 @@ b, a { font-weight: bold; }\
 	<a href="https://github.com/Pravdomil/finance-v-tabulce" target="_blank">Bližší informace</a>.\
 </form>\
 ';
-		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(250).setHeight(400);
+		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(250).setHeight(300);
 		
 		SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
 	}
@@ -443,7 +443,7 @@ function attachFile() {\
 </form>\
 ';
 		
-		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(300).setHeight(400);
+		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(300).setHeight(300);
 		
 		SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
 	}
