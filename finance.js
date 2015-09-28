@@ -436,7 +436,7 @@ function attachFile() {\
 	reader.readAsText(file);\
 }\
 </script>\
-<form id="form" onsubmit="google.script.run.finBridge(this);google.script.host.close();">\
+<form id="form" onsubmit="document.body.innerHTML=\'Nahrávám...\'; google.script.run.withSuccessHandler(google.script.host.close).finBridge(this);">\
 	<input type="hidden" name="csv" id="csv">\
 	<input type="hidden" name="obj" value="airApi">\
 	<input type="hidden" name="func" value="submitCsv">\
