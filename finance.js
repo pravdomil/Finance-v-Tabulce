@@ -374,13 +374,11 @@ b, a { font-weight: bold; }\
 	<input type="submit" value="Nastavit">\
 </form>\
 <form id="air" onsubmit="google.script.run.finBridge(this);google.script.host.close();">\
-	Je potřeba úvest adresu, kde je hostován <a href="https://github.com/Pravdomil/AirApi" target="_blank">script AirApi</a>.<br><br>\
-	<input type="url" placeholder="Adresa AirApi" name="airApi"><br><br>\
-	A pak přihlašovací údaje do internetového bankovnictví.<br><br>\
-	<input type="text" placeholder="Jméno" name="airUser">\
+	Je potřeba úvest přihlašovací údaje do internetového bankovnictví.<br><br>\
+	<input type="text" placeholder="Jméno" name="airUser"><br><br>\
 	<input type="password" placeholder="Heslo" name="airPass"><br><br>\
 	Číslo účtu, který chcete sledovat, ponechte prázdný pro výchozí účet.<br><br>\
-	<input type="password" placeholder="Číslo účtu" name="airAccount"><br><br>\
+	<input type="text" placeholder="Číslo účtu" name="airAccount"><br><br>\
 	<input type="hidden" name="obj" value="airApi">\
 	<input type="hidden" name="func" value="submit">\
 	<input type="submit" value="Nastavit"><br><br>\
@@ -395,7 +393,7 @@ b, a { font-weight: bold; }\
 	<a href="https://github.com/Pravdomil/finance-v-tabulce" target="_blank">Bližší informace</a>.\
 </form>\
 ';
-		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(400).setHeight(400);
+		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(250).setHeight(400);
 		
 		SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
 	}
@@ -408,7 +406,6 @@ var airApi = new function() {
 	
 	this.submit = function(args) {
 		this.config = {
-			"api": args.airApi,
 			"user": args.airUser,
 			"pass": args.airPass,
 			"account": args.airAccount,
@@ -417,29 +414,49 @@ var airApi = new function() {
 		fin.config.setProperty('airFetchOlder', 1);
 	}
 	
-	this.api = function() {
+	this.show = function() {
 		
-		if (!this.config || !this.config.api) return;
-        
 		var older = fin.config.getProperty("airFetchOlder") ? 1 : 0;
-		
-		var url = this.config.api + "?c=1&f=json&u=" + this.config.user + "&p=" + this.config.pass + "&o=" + older + "&a=" + this.config.account;
-		var response = UrlFetchApp.fetch(url, {muteHttpExceptions: true});
-		
-		if(response.getResponseCode() != 200) {
-			throw "AirApi: " + response;
-		}
-		
 		if(older) fin.config.setProperty("airFetchOlder", 0);
-        
-        return Utilities.jsonParse(response.getContentText());
+		
+		var html = '\
+<style>\
+*{padding: 0;margin: 0;border: 0;position: relative;box-sizing: border-box;vertical-align: bottom;color: inherit;font: inherit;text-decoration: inherit;letter-spacing: inherit;word-spacing: inherit;text-transform: inherit;}\
+input,button,textarea,select,.button{display: inline-block;padding: 0.5rem;height: 2rem;border: 1px solid;-webkit-border-radius: .25rem;border-radius: .25rem;background-clip: padding-box;background-color: #FFF}input[type="submit"]{cursor: pointer}.button{text-align: center;font-weight:normal;}\
+html{ font-family: sans-serif; font-size: 17px; }\
+body { font-size: 14px; line-height: 1rem; }\
+b, a { font-weight: bold; }\
+</style>\
+<b>Finance v tabulce</b><br><br>\
+<form id="air" onsubmit="google.script.run.finBridge(this);google.script.host.close();">\
+	Je potřeba nainstalovat rozšíření <a href="https://chrome.google.com/webstore/detail/imacros-for-chrome/cplklnmnlbnpmjogncfgfijoopmnlemp">iMacro</a>.<br><br>\
+	<a href="javascript:run()">Přihlásit se a aktualizovat</a><br><br>\
+</form>\
+';
+		
+		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(250).setHeight(400);
+		
+		SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
 	}
-    
+	
     this.getLatestTransaction = function() {
 		
-        var json = this.api();
-        
+		if (!this.config || !this.config.user || !this.config.pass) return;
+		
+		this.show();
+    }
+	
+	this.csvSubmit = function(args) {
+		
+		//convert csv to json
+		
+		//this.postJson(json);
+	}
+	
+	this.postJson = function(json) {
+		
         if (!json) return;
+		
 		var ids = fin.getIds();
 		var out = [];
 		
@@ -450,8 +467,8 @@ var airApi = new function() {
 			out.push( json[i] );
         }
 		
-		return out;
-    }
+		fin.insert(out);
+	}
 }
 
 
