@@ -375,10 +375,7 @@ b, a { font-weight: bold; }\
 </form>\
 <form id="air" onsubmit="google.script.run.finBridge(this);google.script.host.close();">\
 	Je potřeba úvest přihlašovací údaje do internetového bankovnictví.<br><br>\
-	<input type="text" placeholder="Jméno" name="airUser"><br><br>\
-	<input type="password" placeholder="Heslo" name="airPass"><br><br>\
-	Číslo účtu, který chcete sledovat, ponechte prázdný pro výchozí účet.<br><br>\
-	<input type="text" placeholder="Číslo účtu" name="airAccount"><br><br>\
+	<input type="text" placeholder="Uživatelské jméno" name="airUser"><br><br>\
 	<input type="hidden" name="obj" value="airApi">\
 	<input type="hidden" name="func" value="submit">\
 	<input type="submit" value="Nastavit"><br><br>\
@@ -407,8 +404,6 @@ var airApi = new function() {
 	this.submit = function(args) {
 		this.config = {
 			"user": args.airUser,
-			"pass": args.airPass,
-			"account": args.airAccount,
 		}
 		fin.config.setProperty('air', JSON.stringify(this.config));
 		fin.config.setProperty('airFetchOlder', 1);
@@ -455,7 +450,7 @@ function attachFile() {\
 	
     this.getLatestTransaction = function() {
 		
-		if (!this.config || !this.config.user || !this.config.pass) return;
+		if (!this.config || !this.config.user) return;
 		
 		this.show();
     }
