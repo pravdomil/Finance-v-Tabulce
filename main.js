@@ -43,8 +43,8 @@ function install() {
 }
 
 // google.script.host bridge
-function finSubmit(args) {
-	eval(args.obj).submit(args);
+function finBridge(args) {
+	eval(args.obj)[args.func](args);
 }
 
 // try to load core if possible

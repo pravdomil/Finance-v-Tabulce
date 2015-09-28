@@ -366,13 +366,14 @@ b, a { font-weight: bold; }\
 #fio, #air, *:target ~ form { display: none; }\
 </style>\
 <b>Finance v tabulce</b><br><br>\
-<form id="fio" onsubmit="google.script.run.finSubmit(this);google.script.host.close();">\
+<form id="fio" onsubmit="google.script.run.finBridge(this);google.script.host.close();">\
 	Přihlašte se do internetového bankovnictví a v nastavení najděte sekci API. Vytvořte nový token a zadejte ho níže.<br><br>\
 	<input type="password" placeholder="Token" name="fioToken"><br><br>\
 	<input type="hidden" name="obj" value="fioApi">\
+	<input type="hidden" name="func" value="submit">\
 	<input type="submit" value="Nastavit">\
 </form>\
-<form id="air" onsubmit="google.script.run.finSubmit(this);google.script.host.close();">\
+<form id="air" onsubmit="google.script.run.finBridge(this);google.script.host.close();">\
 	Je potřeba úvest adresu, kde je hostován <a href="https://github.com/Pravdomil/AirApi" target="_blank">script AirApi</a>.<br><br>\
 	<input type="url" placeholder="Adresa AirApi" name="airApi"><br><br>\
 	A pak přihlašovací údaje do internetového bankovnictví.<br><br>\
@@ -381,6 +382,7 @@ b, a { font-weight: bold; }\
 	Číslo účtu, který chcete sledovat, ponechte prázdný pro výchozí účet.<br><br>\
 	<input type="password" placeholder="Číslo účtu" name="airAccount"><br><br>\
 	<input type="hidden" name="obj" value="airApi">\
+	<input type="hidden" name="func" value="submit">\
 	<input type="submit" value="Nastavit"><br><br>\
 	Pro diakritiku zvolte kódování UTF8 v bankovnictví, nastavení, aplikace, historie plateb.\
 </form>\
