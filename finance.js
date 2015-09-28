@@ -425,13 +425,29 @@ body { font-size: 14px; line-height: 1rem; }\
 b, a { font-weight: bold; }\
 </style>\
 <b>Finance v tabulce</b><br><br>\
-<form id="air" onsubmit="google.script.run.finBridge(this);google.script.host.close();">\
-	Je potřeba nainstalovat rozšíření <a href="https://chrome.google.com/webstore/detail/imacros-for-chrome/cplklnmnlbnpmjogncfgfijoopmnlemp">iMacro</a>.<br><br>\
-	<a href="javascript:run()">Přihlásit se a aktualizovat</a><br><br>\
+Nahrajte export výpisu ůčtu ve formátu CSV.<br><br>\
+<input id="file" name="file" type="file"><br><br>\
+<input value="Nahrát" type="button" onclick="attachFile();this.disabled=true;">\
+\
+<script>\
+function attachFile() {\
+	var reader = new FileReader();\
+	var file = document.getElementById("file").files[0];\
+	reader.onloadend = function() {\
+		document.getElementById("csv").value = reader.result;\
+		document.getElementById("form").onsubmit();\
+	};\
+	reader.readAsText(file);\
+}\
+</script>\
+<form id="form" onsubmit="google.script.run.finBridge(this);google.script.host.close();">\
+	<input type="hidden" name="csv" id="csv">\
+	<input type="hidden" name="obj" value="airApi">\
+	<input type="hidden" name="func" value="csvSubmit">\
 </form>\
 ';
 		
-		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(250).setHeight(400);
+		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(300).setHeight(400);
 		
 		SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
 	}
