@@ -445,7 +445,9 @@ function attachFile() {\
 		
 		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(300).setHeight(300);
 		
-		SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
+		try {
+			SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
+		} catch(e) {}
 	}
 	
     this.getLatestTransaction = function() {
