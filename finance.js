@@ -281,15 +281,12 @@ var finCategory = new function() {
 
 
 var finTrigger = new function() {
-    try
-    {
-        if(fin.config.getProperty("triggerSet")) return;
-    
-        ScriptApp.newTrigger('dailyTrigger').timeBased().atHour(6).everyDays(1).create();
-    
-        fin.config.setProperty("triggerSet", true);
-    }
-    catch (e) {}
+  try {
+    if(fin.config.getProperty("triggerSet")) { return }
+    ScriptApp.newTrigger('dailyTrigger').timeBased().atHour(6).everyDays(1).create()
+    fin.config.setProperty("triggerSet", true)
+  }
+  catch (e) { }
 }
 
 
