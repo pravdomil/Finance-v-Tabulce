@@ -52,88 +52,71 @@ function trackCash() {
 
 
 var fin = new function() {
-	
-    this.config = PropertiesService.getDocumentProperties();
+  this.config = PropertiesService.getDocumentProperties()
+  
+  this.emptySheet = function() {
+    var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA')
+    return template.getSheetByName("db").copyTo(this.ss).setName("db").activate()
+  }
+  
+  this.balanceSheet = function() {
+    var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA')
+    return template.getSheetByName("zůstatek").copyTo(this.ss).setName("zůstatek")
+  }
+  
+  this.refresh = function() {
+    this.insert( fioApi.getLatestTransaction() )
+    this.insert( airApi.getLatestTransaction() )
+  }
+  
+  this.categorize = function() {
+    finCategory.resolve(this.sheet)
+  }
+  
+  this.insert = function(data) {
+    if(!data) { return }
+    
+    for(var i = 0; i < data.length; i++) {
+      var row = new Array(fin.columns.length)
+      
+      for(var c = 0; c < row.length; c++) {
+        var column = fin.columns[c]
+        var value = data[i][column]
+        
+        row[c] = value ? value : ""
+      }
+      
+      this.sheet.insertRowsAfter(1, 1)
+      this.sheet.getRange("2:2").setValues([row])
+    }
+  }
+  
+  this.columnIndex = function(name) {
+    name = String(name).toLowerCase()
+    
+    for(var i = 0; i < this.columns.length; i++) {
+      if(String(this.columns[i]).toLowerCase() == name) { return i + 1 }
+    }
+    
+    return null
+  }
 
-    this.emptySheet = function() {
-        
-        var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA');
-		return template.getSheetByName("db").copyTo(this.ss).setName("db").activate();
-    }
-	
-    this.balanceSheet = function() {
-        
-        var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA');
-		return template.getSheetByName("zůstatek").copyTo(this.ss).setName("zůstatek");
-    }
+  this.getIds = function() {
+    var uniqueCol = this.columnIndex("ID pohybu")
+    var ids = this.sheet.getRange(2, uniqueCol, this.sheet.getMaxRows()-1, 1).getValues()
     
-    this.refresh = function() {
-        
-        this.insert( fioApi.getLatestTransaction() );
-		
-		this.insert( airApi.getLatestTransaction() );
-    }
+    // flatten and convert to string
+    for (var i = 0; i < ids.length; i++) { ids[i] = ids[i][0] + "" }
     
-    this.categorize = function() {
-        
-        finCategory.resolve(this.sheet);
-        
-    }
-    
-    this.insert = function(data) {
-        if(!data) return;
-        
-        for(var i = 0; i < data.length; i++) {
-            
-            var row = new Array(fin.columns.length);
-            
-            for(var c = 0; c < row.length; c++) {
-                
-                var column = fin.columns[c];
-                var value = data[i][column];
-                
-                row[c] = value ? value : "";
-            }
-            
-            this.sheet.insertRowsAfter(1, 1);
-            this.sheet.getRange("2:2").setValues([row]);
-            
-        }
-    }
-    
-    this.columnIndex = function(name) {
-        
-        name = String(name).toLowerCase();
-        
-        for(var i = 0; i < this.columns.length; i++) {
-        
-            if(String(this.columns[i]).toLowerCase() == name) return i + 1;
-        
-        }
-        
-        return null;
-    }
-	
-	this.getIds = function() {
-		
-		var uniqueCol = this.columnIndex("ID pohybu");
-		var ids = this.sheet.getRange(2, uniqueCol, this.sheet.getMaxRows()-1, 1).getValues();
-		
-		 // flatten and convert to string
-		for (var i = 0; i < ids.length; i++) ids[i] = ids[i][0] + "";
-        
-		return ids;
-	}
-    
-    this.ss = SpreadsheetApp.getActive();
-    if(this.ss)
-	{
-		this.sheet = this.ss.getSheetByName("db") || this.emptySheet();
-		
-		this.balance = this.ss.getSheetByName("zůstatek") || this.balanceSheet();
-    	
-    	this.columns = this.sheet.getRange("1:1").getValues()[0];
-	}
+    return ids
+  }
+  
+  this.ss = SpreadsheetApp.getActive()
+  if(this.ss) {
+    this.sheet = this.ss.getSheetByName("db") || this.emptySheet()
+    this.balance = this.ss.getSheetByName("zůstatek") || this.balanceSheet()
+    this.columns = this.sheet.getRange("1:1").getValues()[0]
+  }
 }
 
 
