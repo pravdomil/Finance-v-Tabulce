@@ -268,14 +268,14 @@ var finCategory = new function() {
   }
   
   this.rowToObj = function(arr) {
-    var obj = {};
+    var obj = {}
     
     for(var i = 0; i < fin.columns.length; i++) {
       var column = fin.columns[i]
       obj[column] = arr[i]
     }
     
-    return obj;
+    return obj
   }
 }
 
