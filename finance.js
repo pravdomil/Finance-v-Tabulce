@@ -260,6 +260,8 @@ var finCategory = new function() {
       }
     }
     
+    if(row["Skupina"] == "") { obj["Skupina"] = " " }
+    
     return obj
   }
   
