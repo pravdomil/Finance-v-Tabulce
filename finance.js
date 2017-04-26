@@ -450,49 +450,47 @@ function attachFile() {\
 
 
 var fioApi = new function() {
-    
-    this.token = fin.config.getProperty("fioToken");
-  
-    this.columns = {
-        'column0': 'Datum',
-        'column1': 'Objem',
-        'column14': 'Měna',
-        'column2': 'Protiúčet',
-        'column3': 'Kód banky',
-        'column4': 'KS',
-        'column5': 'VS',
-        'column6': 'SS',
-        'column8': 'Typ pohybu',
-        'column16': 'Zpráva pro příjemce',
-        'column7': 'Účel', // Uživatelská identifikace
-        'column25': 'Poznámka', // Komentář
-        'column10': 'Název protiúčtu',
-        'column12': 'Název banky',
-        'column18': 'Upřesnění',
-        'column9': 'Provedl',
-        'column26': 'BIC',
-        'column17': 'ID pokynu',
-        'column22': 'ID pohybu',
-    }
+  this.token = fin.config.getProperty("fioToken")
+
+  this.columns = {
+    'column0': 'Datum',
+    'column1': 'Objem',
+    'column14': 'Měna',
+    'column2': 'Protiúčet',
+    'column3': 'Kód banky',
+    'column4': 'KS',
+    'column5': 'VS',
+    'column6': 'SS',
+    'column8': 'Typ pohybu',
+    'column16': 'Zpráva pro příjemce',
+    'column7': 'Účel', // Uživatelská identifikace
+    'column25': 'Poznámka', // Komentář
+    'column10': 'Název protiúčtu',
+    'column12': 'Název banky',
+    'column18': 'Upřesnění',
+    'column9': 'Provedl',
+    'column26': 'BIC',
+    'column17': 'ID pokynu',
+    'column22': 'ID pohybu',
+  }
   
   this.submit = function(args) {
-    this.token = args.fioToken;
-    fin.config.setProperty('fioToken', this.token);
+    this.token = args.fioToken
+    fin.config.setProperty('fioToken', this.token)
   }
     
-    this.api = function(arg) {
+  this.api = function(arg) {
+    if(!this.token) { return }
         
-    if (!this.token) return;
-        
-    var url = "https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json";
-        var response = UrlFetchApp.fetch(url, {muteHttpExceptions: true});
+    var url = "https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json"
+    var response = UrlFetchApp.fetch(url, {muteHttpExceptions: true})
     
     if(response.getResponseCode() != 200) {
-      throw "FioApi: Bad token? Or too fast?";
+      throw "FioApi: Bad token? Or too fast?"
     }
     
-        return JSON.parse(response.getContentText()).accountStatement;
-    }
+    return JSON.parse(response.getContentText()).accountStatement
+  }
     
     this.getLatestTransaction = function() {
         
