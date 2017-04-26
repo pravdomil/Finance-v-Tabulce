@@ -291,9 +291,8 @@ var finTrigger = new function() {
 
 
 var finConfig = new function() {
-	
-	this.show = function() {
-		var html = '\
+  this.show = function() {
+    var html = '\
 <style>\
 *{padding: 0;margin: 0;border: 0;position: relative;box-sizing: border-box;vertical-align: bottom;color: inherit;font: inherit;text-decoration: inherit;letter-spacing: inherit;word-spacing: inherit;text-transform: inherit;}\
 input,button,textarea,select,.button{display: inline-block;padding: 0.5rem;height: 2rem;border: 1px solid;-webkit-border-radius: .25rem;border-radius: .25rem;background-clip: padding-box;background-color: #FFF}input[type="submit"]{cursor: pointer}.button{text-align: center;font-weight:normal;}\
@@ -305,33 +304,35 @@ b, a { font-weight: bold; }\
 </style>\
 <b>Finance v tabulce</b><br><br>\
 <form id="fio" onsubmit="google.script.run.finBridge(this);google.script.host.close();">\
-	Přihlašte se do internetového bankovnictví a v nastavení najděte sekci API. Vytvořte nový token a zadejte ho níže.<br><br>\
-	<input type="password" placeholder="Token" name="fioToken"><br><br>\
-	<input type="hidden" name="obj" value="fioApi">\
-	<input type="hidden" name="func" value="submit">\
-	<input type="submit" value="Nastavit">\
+  Přihlašte se do internetového bankovnictví a v nastavení najděte sekci API. Vytvořte nový token a zadejte ho níže.<br><br>\
+  <input type="password" placeholder="Token" name="fioToken"><br><br>\
+  <input type="hidden" name="obj" value="fioApi">\
+  <input type="hidden" name="func" value="submit">\
+  <input type="submit" value="Nastavit">\
 </form>\
 <form id="air" onsubmit="google.script.run.finBridge(this);google.script.host.close();">\
-	Je potřeba úvest přihlašovací údaje do internetového bankovnictví.<br><br>\
-	<input type="text" placeholder="Uživatelské jméno" name="airUser"><br><br>\
-	<input type="hidden" name="obj" value="airApi">\
-	<input type="hidden" name="func" value="submit">\
-	<input type="submit" value="Nastavit"><br><br>\
-	Pro diakritiku zvolte kódování UTF8 v bankovnictví, nastavení, aplikace, historie plateb.\
+  Je potřeba úvest přihlašovací údaje do internetového bankovnictví.<br><br>\
+  <input type="text" placeholder="Uživatelské jméno" name="airUser"><br><br>\
+  <input type="hidden" name="obj" value="airApi">\
+  <input type="hidden" name="func" value="submit">\
+  <input type="submit" value="Nastavit"><br><br>\
+  Pro diakritiku zvolte kódování UTF8 v bankovnictví, nastavení, aplikace, historie plateb.\
 </form>\
 <form>\
-	Zvolte banku, kterou chcete používat pro tuto tabulku.<br><br>\
-	<a href="#fio" class="button">Fio banka</a> <a href="#air" class="button">Air Bank</a><br><br><br>\
-	Můžete nastavit obě banky zároveň.<br><br>\
-	Pro vypnutí účtu nastavte prázdná pole.<br><br>\
-	Po nastavení bude tabulka každé ráno automaticky aktualizována.<br><br>\
-	<a href="https://github.com/Pravdomil/finance-v-tabulce" target="_blank">Bližší informace</a>.\
+  Zvolte banku, kterou chcete používat pro tuto tabulku.<br><br>\
+  <a href="#fio" class="button">Fio banka</a> <a href="#air" class="button">Air Bank</a><br><br><br>\
+  Můžete nastavit obě banky zároveň.<br><br>\
+  Pro vypnutí účtu nastavte prázdná pole.<br><br>\
+  Po nastavení bude tabulka každé ráno automaticky aktualizována.<br><br>\
+  <a href="https://github.com/Pravdomil/finance-v-tabulce" target="_blank">Bližší informace</a>.\
 </form>\
-';
-		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(250).setHeight(300);
-		
-		SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
-	}
+'
+    var htmlOutput = HtmlService.createHtmlOutput(html)
+      .setSandboxMode(HtmlService.SandboxMode.IFRAME)
+      .setWidth(250).setHeight(300)
+    
+    SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ')
+  }
 }
 
 
