@@ -337,20 +337,16 @@ b, a { font-weight: bold; }\
 
 
 var airApi = new function() {
-	
-	this.config = JSON.parse(fin.config.getProperty("air"));
-	
-	this.submit = function(args) {
-		this.config = {
-			"user": args.airUser,
-		}
-		fin.config.setProperty('air', JSON.stringify(this.config));
-		fin.config.setProperty('airFetchOlder', 1);
-	}
-	
-	this.show = function() {
-		
-		var html = '\
+  this.config = JSON.parse(fin.config.getProperty("air"))
+  
+  this.submit = function(args) {
+    this.config = { "user": args.airUser }
+    fin.config.setProperty('air', JSON.stringify(this.config))
+    fin.config.setProperty('airFetchOlder', 1)
+  }
+  
+  this.show = function() {
+    var html = '\
 <style>\
 *{padding: 0;margin: 0;border: 0;position: relative;box-sizing: border-box;vertical-align: bottom;color: inherit;font: inherit;text-decoration: inherit;letter-spacing: inherit;word-spacing: inherit;text-transform: inherit;}\
 input,button,textarea,select,.button{display: inline-block;padding: 0.5rem;height: 2rem;border: 1px solid;-webkit-border-radius: .25rem;border-radius: .25rem;background-clip: padding-box;background-color: #FFF}input[type="submit"]{cursor: pointer}.button{text-align: center;font-weight:normal;}\
@@ -366,98 +362,99 @@ Nahrajte export výpisu ůčtu ve formátu CSV.<br><br>\
 \
 <script>\
 function attachFile() {\
-	var reader = new FileReader();\
-	var file = document.getElementById("file").files[0];\
-	reader.onloadend = function() {\
-		document.getElementById("csv").value = reader.result;\
-		document.getElementById("form").onsubmit();\
-	};\
-	reader.readAsText(file);\
+  var reader = new FileReader();\
+  var file = document.getElementById("file").files[0];\
+  reader.onloadend = function() {\
+    document.getElementById("csv").value = reader.result;\
+    document.getElementById("form").onsubmit();\
+  };\
+  reader.readAsText(file);\
 }\
 </script>\
 <form id="form" onsubmit="document.body.innerHTML=\'Nahrávám...\'; google.script.run.withSuccessHandler(google.script.host.close).finBridge(this);">\
-	<input type="hidden" name="csv" id="csv">\
-	<input type="hidden" name="obj" value="airApi">\
-	<input type="hidden" name="func" value="submitCsv">\
+  <input type="hidden" name="csv" id="csv">\
+  <input type="hidden" name="obj" value="airApi">\
+  <input type="hidden" name="func" value="submitCsv">\
 </form>\
-';
-		
-		var htmlOutput = HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME).setWidth(300).setHeight(300);
-		
-		try {
-			SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ');
-		} catch(e) {}
-	}
-	
-    this.getLatestTransaction = function() {
-		
-		if (!this.config || !this.config.user) return;
-		
-		this.show();
+'
+    
+    var htmlOutput = HtmlService.createHtmlOutput(html)
+      .setSandboxMode(HtmlService.SandboxMode.IFRAME)
+      .setWidth(300).setHeight(300)
+    
+    try {
+      SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ')
     }
-	
-	this.submitCsv = function(args) {
-		
-		var csv = this.replaceCols(args.csv);
-		
-		var arr = Papa.parse(csv, { header: true, skipEmptyLines: true }).data;
-		
-		arr.reverse();
-		
-		this.postArr(arr);
-	}
-	
-	this.postArr = function(arr) {
-		
-        if (!arr) return;
-		
-		var ids = fin.getIds();
-		var out = [];
-		
-		for (var i = 0; i < arr.length; i++) {
-        	
-			if( ids.indexOf( arr[i]["ID pohybu"] ) !== -1) continue;
-			
-			out.push( arr[i] );
+    catch(e) { }
+  }
+  
+  this.getLatestTransaction = function() {
+    if (!this.config || !this.config.user) { return }
+    this.show()
+  }
+  
+  this.submitCsv = function(args) {
+    
+    var csv = this.replaceCols(args.csv)
+    
+    var arr = Papa.parse(csv, { header: true, skipEmptyLines: true }).data
+    
+    arr.reverse()
+    
+    this.postArr(arr)
+  }
+  
+  this.postArr = function(arr) {
+    
+        if (!arr) return
+    
+    var ids = fin.getIds()
+    var out = []
+    
+    for (var i = 0; i < arr.length; i++) {
+          
+      if( ids.indexOf( arr[i]["ID pohybu"] ) !== -1) continue
+      
+      out.push( arr[i] )
         }
-		
-		fin.insert(out);
-		fin.categorize();
-	}
-	
-	this.replaceCols = function(csv) {
-		
-		var cols = [
-			["Variabilní symbol", "VS"],
-			["Konstantní symbol", "KS"],
-			["Specifický symbol", "SS"],
-			
-			["Datum provedení", "Datum"],
-			["Číslo účtu protistrany", "Protiúčet"],
-			["Typ platby", "Typ pohybu"],
-			
-			["Částka v měně účtu", "Objem"],
-			["Měna účtu", "Měna"],
-			
-			["Poznámka k platbě", "Účel"],
-			["Poznámka pro mne", "Poznámka"],
-			
-			["Název, adresa a stát protistrany", "Název protiúčtu"],
-			["Název, adresa a stát banky protistrany", "Název banky"],
-			
-			["Zadal", "Provedl"],
-			["Referenční číslo", "ID pohybu"],
-		];
-		
-		var rows = csv.split( /\r\n|\r|\n/ );
-		
-		for(var i = 0; i < cols.length; i++)
-		{
-			rows[0] = rows[0].replace('"' + cols[i][0] + '"', '"' + cols[i][1] + '"');
-		}
-		
+    
+    fin.insert(out)
+    fin.categorize();
+  }
+  
+  this.replaceCols = function(csv) {
+    
+    var cols = [
+      ["Variabilní symbol", "VS"],
+      ["Konstantní symbol", "KS"],
+      ["Specifický symbol", "SS"],
+      
+      ["Datum provedení", "Datum"],
+      ["Číslo účtu protistrany", "Protiúčet"],
+      ["Typ platby", "Typ pohybu"],
+      
+      ["Částka v měně účtu", "Objem"],
+      ["Měna účtu", "Měna"],
+      
+      ["Poznámka k platbě", "Účel"],
+      ["Poznámka pro mne", "Poznámka"],
+      
+      ["Název, adresa a stát protistrany", "Název protiúčtu"],
+      ["Název, adresa a stát banky protistrany", "Název banky"],
+      
+      ["Zadal", "Provedl"],
+      ["Referenční číslo", "ID pohybu"],
+    ];
+    
+    var rows = csv.split( /\r\n|\r|\n/ );
+    
+    for(var i = 0; i < cols.length; i++)
+    {
+      rows[0] = rows[0].replace('"' + cols[i][0] + '"', '"' + cols[i][1] + '"');
+    }
+    
         return rows.join('\n');
-	}
+  }
 }
 
 
