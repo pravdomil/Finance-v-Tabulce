@@ -43,7 +43,6 @@ function trackCash() {
   ]
 
   fin.insert(arr)
-  
   fin.categorize()
 }
 
