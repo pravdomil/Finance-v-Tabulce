@@ -6,13 +6,6 @@ https://github.com/pravdomil/finance-v-tabulce
 
 */
 
-// onOpen trigger
-function onOpen() {
-  // simple triggers can't do anything that requires authorization
-  // so make option to install custom onOpen trigger that can do everything
-  SpreadsheetApp.getUi().createMenu('Finance').addItem('Instalovat', 'install').addToUi()
-}
-
 // custom onOpen trigger
 function customOnOpen() {
   finInit()
@@ -21,6 +14,14 @@ function customOnOpen() {
 // daily trigger
 function dailyTrigger() {
   finDailyTrigger()
+}
+
+
+// onOpen trigger
+function onOpen() {
+  // simple triggers can't do anything that requires authorization
+  // so make option to install custom onOpen trigger that can do everything
+  SpreadsheetApp.getUi().createMenu('Finance').addItem('Instalovat', 'install').addToUi()
 }
 
 // install custom onOpen trigger
