@@ -260,7 +260,7 @@ var finCategory = new function() {
       }
     }
     
-    if(row["Skupina"] == "") { obj["Skupina"] = " " }
+    if(row["Skupina"] == "" && !obj["Skupina"]) { obj["Skupina"] = " " }
     
     return obj
   }
