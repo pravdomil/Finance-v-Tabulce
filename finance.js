@@ -417,7 +417,6 @@ function attachFile() {\
   }
   
   this.replaceCols = function(csv) {
-    
     var cols = [
       ["Variabilní symbol", "VS"],
       ["Konstantní symbol", "KS"],
@@ -438,16 +437,15 @@ function attachFile() {\
       
       ["Zadal", "Provedl"],
       ["Referenční číslo", "ID pohybu"],
-    ];
+    ]
     
-    var rows = csv.split( /\r\n|\r|\n/ );
+    var rows = csv.split(/\r\n|\r|\n/)
     
-    for(var i = 0; i < cols.length; i++)
-    {
-      rows[0] = rows[0].replace('"' + cols[i][0] + '"', '"' + cols[i][1] + '"');
+    for(var i = 0; i < cols.length; i++) {
+      rows[0] = rows[0].replace('"' + cols[i][0] + '"', '"' + cols[i][1] + '"')
     }
     
-        return rows.join('\n');
+    return rows.join('\n')
   }
 }
 
