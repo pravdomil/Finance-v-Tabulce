@@ -249,7 +249,7 @@ var finCategory = new function() {
       }
     }
     
-    if(row["Skupina"] == "" && row["Věc"] == "") {
+    if(String(row["Skupina"]).trim() == "" && row["Věc"] == "") {
       var rule = finRules.get(row)
       
       if(rule) {
