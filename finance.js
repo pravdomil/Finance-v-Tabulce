@@ -53,12 +53,12 @@ function trackCash() {
 var fin = new function() {
   this.config = PropertiesService.getDocumentProperties()
   
-  this.dbSheet = function() {
+  this.emptyDbSheet = function() {
     var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA')
     return template.getSheetByName("db").copyTo(this.ss).setName("db").activate()
   }
   
-  this.balanceSheet = function() {
+  this.emptyBalanceSheet = function() {
     var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA')
     return template.getSheetByName("zůstatek").copyTo(this.ss).setName("zůstatek")
   }
@@ -112,8 +112,8 @@ var fin = new function() {
   
   this.ss = SpreadsheetApp.getActive()
   if(this.ss) {
-    this.sheet = this.ss.getSheetByName("db") || this.dbSheet()
-    this.balance = this.ss.getSheetByName("zůstatek") || this.balanceSheet()
+    this.sheet = this.ss.getSheetByName("db") || this.emptyDbSheet()
+    this.balance = this.ss.getSheetByName("zůstatek") || this.emptyBalanceSheet()
     this.columns = this.sheet.getRange("1:1").getValues()[0]
   }
 }
@@ -122,17 +122,15 @@ var fin = new function() {
 var finRules = new function() {
   
   this.emptySheet = function() {
-    var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA');
-    return template.getSheetByName("kategorie").copyTo(fin.ss).setName("kategorie");
+    var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA')
+    return template.getSheetByName("kategorie").copyTo(fin.ss).setName("kategorie")
   }
-
-  this.load = function() {
-      
-  if(!fin.ss) return;
   
-      this.sheet = fin.ss.getSheetByName("kategorie") || this.emptySheet();
-      
-      this.parse(this.sheet.getRange("A:G").getValues());
+  this.load = function() {
+    if(!fin.ss) { return }
+    
+    this.sheet = fin.ss.getSheetByName("kategorie") || this.emptySheet()
+    this.parse(this.sheet.getRange("A:G").getValues())
   }
   
   this.parse = function(array) {
