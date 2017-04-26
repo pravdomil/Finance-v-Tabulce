@@ -389,37 +389,31 @@ function attachFile() {\
   }
   
   this.getLatestTransaction = function() {
-    if (!this.config || !this.config.user) { return }
+    if(!this.config || !this.config.user) { return }
     this.show()
   }
   
   this.submitCsv = function(args) {
-    
     var csv = this.replaceCols(args.csv)
-    
     var arr = Papa.parse(csv, { header: true, skipEmptyLines: true }).data
-    
     arr.reverse()
-    
     this.postArr(arr)
   }
   
   this.postArr = function(arr) {
-    
-        if (!arr) return
-    
+    if (!arr) { return }
+
     var ids = fin.getIds()
     var out = []
     
     for (var i = 0; i < arr.length; i++) {
-          
-      if( ids.indexOf( arr[i]["ID pohybu"] ) !== -1) continue
-      
-      out.push( arr[i] )
-        }
+      // deduplication
+      if(ids.indexOf(arr[i]["ID pohybu"]) !== -1) { continue }
+      out.push(arr[i])
+    }
     
     fin.insert(out)
-    fin.categorize();
+    fin.categorize()
   }
   
   this.replaceCols = function(csv) {
