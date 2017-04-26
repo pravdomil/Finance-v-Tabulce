@@ -42,7 +42,7 @@ function install() {
 // try to load core if possible
 try {
   // load core from cdn
-  var core = "https://cdn.rawgit.com/Pravdomil/finance-v-tabulce/master/finance.js"
+  var core = "https://cdn.rawgit.com/pravdomil/finance-v-tabulce/master/finance.js"
   core = UrlFetchApp.fetch(core).getContentText()
   
   // run
