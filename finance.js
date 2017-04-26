@@ -609,20 +609,6 @@ var fioApi = new function() {
 finRules.load();
 
 
-function fin_query(arg) {
-    
-    return arg.replace(/FIN_[A-ž_]+/g, function(match, contents, offset, s)
-        {
-            match = match.replace(/FIN_/, "");
-            match = match.replace(/_/, " ");
-            
-            return String.fromCharCode(97 + fin.columnIndex(match) - 1).toUpperCase();
-        }
-    );
-}
-
-
-
 /*!
 	Papa Parse
 	v4.1.2
