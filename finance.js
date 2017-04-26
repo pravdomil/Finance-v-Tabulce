@@ -134,42 +134,35 @@ var finRules = new function() {
   }
   
   this.parse = function(array) {
+    this.rules = []
+    
+    for(var i = 1; i < array.length; i++) {
+      var group = array[i][0]
+      var item = array[i][1]
+      var character = array[i][5]
+      var note = array[i][6]
       
-      this.rules = [];
+      if(!group) { continue }
       
-      for(var i = 1; i < array.length; i++) {
-  
-          var group = array[i][0];
-          var item = array[i][1];
-          var character = array[i][5];
-          var note = array[i][6];
-          
-          if(!group) continue;
-          
-          var cond = [];
-          while(true)
-          {
-              var obj = {
-                  column : array[i][2],
-                  mode : array[i][3],
-                  value : String(array[i][4]),
-              }
-              
-              if(obj.column) cond.push(obj);
-              
-              if(array[i + 1][2] != "+") break;
-              
-              i += 2;
-          }
-          
-          if(cond.length) this.rules.push({
-              group : group,
-              item : item,
-              cond : cond,
-              character : character,
-			note : note,
-          })
+      var cond = []
+      while(true) {
+        var obj = {
+          column : array[i][2],
+          mode : array[i][3],
+          value : String(array[i][4]),
+        }
+        
+        if(obj.column) { cond.push(obj) }
+        
+        if(array[i + 1][2] != "+") { break }
+        
+        i += 2
       }
+      
+      if(cond.length) {
+        this.rules.push({ group: group, item: item, cond: cond, character: character, note: note })
+      }
+    }
   }
   
   this.get = function(row) {
