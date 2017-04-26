@@ -31,7 +31,7 @@ function finConfigShow() {
 }
 
 function trackCash() {
-  var amount = parseInt(Browser.inputBox('Částka'))
+  var amount = parseInt( Browser.inputBox('Částka') )
   if(!amount) { return }
   
   var date = new Date()
