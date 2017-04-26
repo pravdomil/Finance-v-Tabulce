@@ -500,27 +500,24 @@ var fioApi = new function() {
     var trans = []
     
     for (var i = 0; i < list.length; i++) {
+      var obj = list[i]
+      trans[i] = {}
+      
+      for (var key in this.columns) {
+        var val = obj[key]
+        var column = this.columns[key]
         
-        var obj = list[i];
-        
-        trans[i] = {};
-        
-        for (var key in this.columns) {
-            
-            var val = obj[key];
-            var column = this.columns[key];
-            
-            if(!val) val = "";
-            else if(column == "Datum") val = val.value.replace(/\+[0-9]+/, "");
-            else val = val.value;
-    
-    if(column == "Kód banky" && val) {
-      trans[i]["Protiúčet"] = trans[i]["Protiúčet"] + "/" + val;
-      continue;
-    }
-            
-            trans[i][column] = val;
+        if(!val) { val = "" }
+        else if(column == "Datum") { val = val.value.replace(/\+[0-9]+/, "") }
+        else { val = val.value }
+
+        if(column == "Kód banky" && val) {
+          trans[i]["Protiúčet"] = trans[i]["Protiúčet"] + "/" + val
+          continue
         }
+        
+        trans[i][column] = val
+      }
     }
     
     return trans
