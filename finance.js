@@ -166,44 +166,34 @@ var finRules = new function() {
   }
   
   this.get = function(row) {
+    for(var i = 0; i < this.rules.length; i++) {
+      var rule = this.rules[i]
+      var passed = false
       
-      for(var i = 0; i < this.rules.length; i++) {
-          
-          var rule = this.rules[i];
-          var passed = false;
-          
-          for(var c = 0; c < rule.cond.length; c++) {
-              
-              var cond = rule.cond[c];
-              
-              switch(cond.mode) {
-                  case "=":
-                      passed = (row[cond.column] == cond.value);
-                      break;
-                  
-                  case "~":
-                      var regex = new RegExp( this.escapeRegExp(cond.value), "i");
-                      passed = regex.test(row[cond.column]);
-                      break;
-                      
-                  case "<":
-                      passed = (row[cond.column] < cond.value);
-                      break;
-                      
-                  case ">":
-                      passed = (row[cond.column] > cond.value);
-                      break;
-              }
-              
-              if(!passed) break;
-          }
-          
-          if(passed) return rule;
+      for(var c = 0; c < rule.cond.length; c++) {
+        var cond = rule.cond[c]
+        
+        switch(cond.mode) {
+          case "=":
+            passed = (row[cond.column] == cond.value)
+            break
+            
+          case "~":
+            passed = String(row[cond.column]).indexOf(cond.value) !== -1
+            break
+            
+          case "<":
+            passed = (row[cond.column] < cond.value)
+            break
+            
+          case ">":
+            passed = (row[cond.column] > cond.value)
+            break
+        }
+        
+        if(passed) { return rule }
       }
-  }
-  
-  this.escapeRegExp = function(s) {
-      return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+    }
   }
 }
 
