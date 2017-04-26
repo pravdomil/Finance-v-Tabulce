@@ -1,33 +1,33 @@
 function finInit() {
-	finMenu();
+  finMenu()
 }
 
 function finDailyTrigger() {
-	finRefresh();
+  finRefresh()
 }
 
 function finMenu() {
-    SpreadsheetApp.getUi().createMenu('Finance')
-        .addItem('Aktualizovat', 'finRefresh')
-        .addItem('Rozčlenit', 'finCategorize')
-        .addSeparator()
-        .addItem('Nastavení', 'finConfigShow')
-        .addSeparator()
-        .addItem('Zanést hotovost', 'trackCash')
-        .addToUi();
+  SpreadsheetApp.getUi().createMenu('Finance')
+    .addItem('Aktualizovat', 'finRefresh')
+    .addItem('Rozčlenit', 'finCategorize')
+    .addSeparator()
+    .addItem('Nastavení', 'finConfigShow')
+    .addSeparator()
+    .addItem('Zanést hotovost', 'trackCash')
+    .addToUi()
 }
 
 function finRefresh() {
-    fin.refresh();
-    fin.categorize();
+  fin.refresh()
+  fin.categorize()
 }
 
 function finCategorize() {
-    fin.categorize();
+  fin.categorize()
 }
 
 function finConfigShow() {
-	finConfig.show();
+  finConfig.show()
 }
 
 function trackCash() {
