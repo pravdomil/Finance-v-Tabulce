@@ -48,6 +48,6 @@ try {
   eval(core)
 }
 catch(e) {
-  //throw e
+  // throw e
   Logger.log(e)
 }
