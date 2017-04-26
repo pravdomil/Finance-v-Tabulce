@@ -27,13 +27,11 @@ function dailyTrigger() {
 
 // install custom onOpen trigger
 function install() {
-	
 	var ss = SpreadsheetApp.getActiveSpreadsheet();
 	var config = PropertiesService.getDocumentProperties();
 	
 	// setup custom onOpen trigger
-	if(!config.getProperty("openTriggerSet"))
-	{
+	if(!config.getProperty("openTriggerSet")) {
 		ScriptApp.newTrigger("customOnOpen").forSpreadsheet(ss).onOpen().create();
 		config.setProperty("openTriggerSet", true);
 	}
@@ -49,17 +47,14 @@ function finBridge(args) {
 
 // try to load core if possible
 try {
-
 	// load core from cdn
 	var core = "https://cdn.rawgit.com/Pravdomil/finance-v-tabulce/master/finance.js";
 	core = UrlFetchApp.fetch(core).getContentText();
 	
 	// run
 	eval(core);
-	
 }
-catch(e)
-{
+catch(e) {
 	//throw e;
 	Logger.log(e);
 }
