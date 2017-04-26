@@ -139,8 +139,7 @@ var finRules = new function() {
     for(var i = 1; i < array.length; i++) {
       var group = array[i][0]
       var item = array[i][1]
-      var character = array[i][5]
-      var note = array[i][6]
+      var note = array[i][5]
       
       if(!group) { continue }
       
@@ -160,7 +159,7 @@ var finRules = new function() {
       }
       
       if(cond.length) {
-        this.rules.push({ group: group, item: item, cond: cond, character: character, note: note })
+        this.rules.push({ group: group, item: item, cond: cond, note: note })
       }
     }
   }
@@ -233,8 +232,6 @@ var finCategory = new function() {
     
     if(row["Částka"] === "") { obj["Částka"] = f('=ABS(FIN_OBJEM)') }
     
-    if(row["Charakter"] === "") { obj["Charakter"] = f('=IF(FIN_VĚC = ""; "Navíc"; "Výdaje")') }
-    
     if(row["Předatovat"] === "") { obj["Předatovat"] = row["Datum"] }
     
     if(row["Měsíc"] === "") {
@@ -259,7 +256,6 @@ var finCategory = new function() {
         obj["Skupina"] = rule.group
         obj["Věc"] = rule.item
         
-        if(rule.character) { obj["Charakter"] = rule.character }
         if(obj["Poznámka"] === "") { obj["Poznámka"] = rule.note }
       }
     }
