@@ -31,31 +31,20 @@ function finConfigShow() {
 }
 
 function trackCash() {
-    
-    var amount = parseInt(Browser.inputBox('Částka'));
-    if(!amount) return;
-    
-    var date = new Date();
-    date = date.getDate() + "." + ( date.getMonth() + 1 ) + "." + date.getFullYear();
-    
-    var arr = [
-		{
-			"Datum" : date,
-			"Objem" : amount,
-			"Měna" : "CZK",
-			"Typ pohybu" : "cash",
-		},
-		{
-			"Datum" : date,
-			"Objem" : amount * -1,
-			"Měna" : "CZK",
-			"Typ pohybu" : "cash",
-		}
-	];
-	
-    fin.insert(arr);
-    
-    fin.categorize();
+  var amount = parseInt(Browser.inputBox('Částka'))
+  if(!amount) { return }
+  
+  var date = new Date()
+  date = date.getDate() + "." + ( date.getMonth() + 1 ) + "." + date.getFullYear()
+  
+  var arr = [
+  	{ "Datum" : date, "Objem" : amount, "Měna" : "CZK", "Typ pohybu" : "cash" },
+  	{ "Datum" : date, "Objem" : amount * -1, "Měna" : "CZK", "Typ pohybu" : "cash" }
+  ]
+
+  fin.insert(arr)
+  
+  fin.categorize()
 }
 
 
