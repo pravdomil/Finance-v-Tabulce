@@ -490,42 +490,41 @@ var fioApi = new function() {
     return JSON.parse(response.getContentText()).accountStatement
   }
     
-    this.getLatestTransaction = function() {
+  this.getLatestTransaction = function() {
+    var json = this.api("transactions")
+    
+    if (!json || !json.transactionList) { return }
+    
+    var list = json.transactionList.transaction
+    
+    var trans = []
+    
+    for (var i = 0; i < list.length; i++) {
         
-        var json = this.api("transactions");
+        var obj = list[i];
         
-        if (!json || !json.transactionList) return;
+        trans[i] = {};
         
-        var list = json.transactionList.transaction;
-        
-        var trans = [];
-        
-        for (var i = 0; i < list.length; i++) {
+        for (var key in this.columns) {
             
-            var obj = list[i];
+            var val = obj[key];
+            var column = this.columns[key];
             
-            trans[i] = {};
-            
-            for (var key in this.columns) {
-                
-                var val = obj[key];
-                var column = this.columns[key];
-                
-                if(!val) val = "";
-                else if(column == "Datum") val = val.value.replace(/\+[0-9]+/, "");
-                else val = val.value;
-        
-        if(column == "Kód banky" && val) {
-          trans[i]["Protiúčet"] = trans[i]["Protiúčet"] + "/" + val;
-          continue;
-        }
-                
-                trans[i][column] = val;
-            }
-        }
-        
-        return trans;
+            if(!val) val = "";
+            else if(column == "Datum") val = val.value.replace(/\+[0-9]+/, "");
+            else val = val.value;
+    
+    if(column == "Kód banky" && val) {
+      trans[i]["Protiúčet"] = trans[i]["Protiúčet"] + "/" + val;
+      continue;
     }
+            
+            trans[i][column] = val;
+        }
+    }
+    
+    return trans
+  }
 }
 
 
