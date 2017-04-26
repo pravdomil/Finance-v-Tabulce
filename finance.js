@@ -478,16 +478,14 @@ var fioApi = new function() {
     this.token = args.fioToken
     fin.config.setProperty('fioToken', this.token)
   }
-    
+  
   this.api = function(arg) {
     if(!this.token) { return }
-        
-    var url = "https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json"
-    var response = UrlFetchApp.fetch(url, {muteHttpExceptions: true})
     
-    if(response.getResponseCode() != 200) {
-      throw "FioApi: Bad token? Or too fast?"
-    }
+    var url = "https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json"
+    var response = UrlFetchApp.fetch(url, { muteHttpExceptions: true })
+    
+    if(response.getResponseCode() != 200) { throw "FioApi: Bad token? Or too fast?" }
     
     return JSON.parse(response.getContentText()).accountStatement
   }
