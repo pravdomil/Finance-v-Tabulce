@@ -201,26 +201,20 @@ var finRules = new function() {
 var finCategory = new function() {
   
   this.resolve = function(sheet) {
-    this.sheet = sheet;
-    
-    var range = this.sheet.getRange(2, 1, this.sheet.getMaxRows()-1, fin.columns.length);
-    var data = range.getValues();
+    var range = sheet.getRange(2, 1, sheet.getMaxRows() - 1, fin.columns.length)
+    var data = range.getValues()
     
     for(var r = 0; r < data.length; r++) {
-        
-        var modified = this.categorize(data[r]);
-        
-        for(var key in modified) {
-            
-            var ci = fin.columnIndex(key);
-            if(ci) this.sheet.getRange(2 + r, ci).setValue(modified[key]);
-            
-        }
+      var modified = this.categorize(data[r])
+      
+      for(var key in modified) {
+        var ci = fin.columnIndex(key)
+        if(ci) { sheet.getRange(2 + r, ci).setValue(modified[key]) }
+      }
     }
   }
   
   this.categorize = function(rowArr) {
-    
     var row = this.rowToObj(rowArr);
     var obj = {};
 
