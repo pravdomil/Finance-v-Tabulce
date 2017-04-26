@@ -105,7 +105,7 @@ var fin = new function() {
     var ids = this.sheet.getRange(2, uniqueCol, this.sheet.getMaxRows()-1, 1).getValues()
     
     // flatten and convert to string
-    for (var i = 0; i < ids.length; i++) { ids[i] = ids[i][0] + "" }
+    for(var i = 0; i < ids.length; i++) { ids[i] = ids[i][0] + "" }
     
     return ids
   }
@@ -405,7 +405,7 @@ function attachFile() {\
     var ids = fin.getIds()
     var out = []
     
-    for (var i = 0; i < arr.length; i++) {
+    for(var i = 0; i < arr.length; i++) {
       // deduplication
       if(ids.indexOf(arr[i]["ID pohybu"]) !== -1) { continue }
       out.push(arr[i])
@@ -499,11 +499,11 @@ var fioApi = new function() {
     
     var trans = []
     
-    for (var i = 0; i < list.length; i++) {
+    for(var i = 0; i < list.length; i++) {
       var obj = list[i]
       trans[i] = {}
       
-      for (var key in this.columns) {
+      for(var key in this.columns) {
         var val = obj[key]
         var column = this.columns[key]
         
