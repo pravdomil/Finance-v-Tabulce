@@ -121,7 +121,7 @@ var fin = new function() {
 
 var finRules = new function() {
   
-  this.emptySheet = function() {
+  this.emptyRulesSheet = function() {
     var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA')
     return template.getSheetByName("kategorie").copyTo(fin.ss).setName("kategorie")
   }
@@ -129,7 +129,7 @@ var finRules = new function() {
   this.load = function() {
     if(!fin.ss) { return }
     
-    this.sheet = fin.ss.getSheetByName("kategorie") || this.emptySheet()
+    this.sheet = fin.ss.getSheetByName("kategorie") || this.emptyRulesSheet()
     this.parse(this.sheet.getRange("A:G").getValues())
   }
   
