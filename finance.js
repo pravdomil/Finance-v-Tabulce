@@ -38,8 +38,8 @@ function trackCash() {
   date = date.getDate() + "." + ( date.getMonth() + 1 ) + "." + date.getFullYear()
   
   var arr = [
-  	{ "Datum" : date, "Objem" : amount, "Měna" : "CZK", "Typ pohybu" : "cash" },
-  	{ "Datum" : date, "Objem" : amount * -1, "Měna" : "CZK", "Typ pohybu" : "cash" }
+    { "Datum" : date, "Objem" : amount, "Měna" : "CZK", "Typ pohybu" : "cash" },
+    { "Datum" : date, "Objem" : amount * -1, "Měna" : "CZK", "Typ pohybu" : "cash" }
   ]
 
   fin.insert(arr)
