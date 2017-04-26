@@ -38,11 +38,6 @@ function install() {
   customOnOpen()
 }
 
-// google.script.host bridge
-function finBridge(args) {
-  return eval(args.obj)[args.func](args)
-}
-
 // try to load core if possible
 try {
   // load core from cdn
@@ -55,9 +50,4 @@ try {
 catch(e) {
   //throw e
   Logger.log(e)
-}
-
-
-function FIN_QUERY(arg) {
-    return fin_query(arg)
 }
