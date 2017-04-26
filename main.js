@@ -1,9 +1,9 @@
 /*
 Finance v tabulce
-
 Authors: Filip Hráček, Pravdomil Toman
 
 https://github.com/pravdomil/finance-v-tabulce
+
 */
 
 // onOpen trigger
