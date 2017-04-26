@@ -342,7 +342,6 @@ var airApi = new function() {
   this.submit = function(args) {
     this.config = { "user": args.airUser }
     fin.config.setProperty('air', JSON.stringify(this.config))
-    fin.config.setProperty('airFetchOlder', 1)
   }
   
   this.show = function() {
