@@ -199,93 +199,90 @@ var finRules = new function() {
 
 
 var finCategory = new function() {
-    
-    this.resolve = function(sheet) {
-        
-        this.sheet = sheet;
-        
-        var range = this.sheet.getRange(2, 1, this.sheet.getMaxRows()-1, fin.columns.length);
-        var data = range.getValues();
-        
-        for(var r = 0; r < data.length; r++) {
-            
-            var modified = this.categorize(data[r]);
-            
-            for(var key in modified) {
-                
-                var ci = fin.columnIndex(key);
-                if(ci) this.sheet.getRange(2 + r, ci).setValue(modified[key]);
-                
-            }
-        }
-    }
-    
-    this.categorize = function(rowArr) {
-        
-        var row = this.rowToObj(rowArr);
-        var obj = {};
-		
-		var f = function(arg) {
-		    return arg.replace(/FIN_[A-ž_]+/g, function(match, contents, offset, s)
-		        {
-		            match = match.replace(/FIN_/, "");
-		            match = match.replace(/_/, " ");
-            		
-		            return 'INDIRECT(ADDRESS(ROW(); MATCH("' + match + '"; $1:$1; 0)))';
-		        }
-		    );
-		}
-        
-        if(row["Pohyb"] === "") obj["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem";
-		if(row["Částka"] === "") obj["Částka"] = f('=ABS(FIN_OBJEM)');
-		if(row["Charakter"] === "") {
-			obj["Charakter"] = f('=IF(FIN_VĚC = ""; "Navíc"; "Výdaje")');
-        }
-		
-        if(row["Předatovat"] === "") obj["Předatovat"] = row["Datum"];
-        if(row["Měsíc"] === "") {
-			obj["Měsíc"] = f('=IF(FIN_PŘEDATOVAT; DATE(YEAR(FIN_PŘEDATOVAT); MONTH(FIN_PŘEDATOVAT); 1); "")');
-		}
-        if(row["Rok"] === "") {
-			obj["Rok"] = f('=IF(FIN_PŘEDATOVAT; YEAR(FIN_PŘEDATOVAT); "")');
-		}
-		
-		if(row["Poznámka"] !== undefined && String(row["Poznámka"]).trim() === "")
-		{
-			if(row["Zpráva pro příjemce"]) obj["Poznámka"] = row["Zpráva pro příjemce"];
-			else if(row["Účel"]) obj["Poznámka"] = row["Účel"];
-		}
-        
-        if(row["Skupina"] == "" && row["Věc"] == "") {
-            
-            var rule = finRules.get(row);
-            
-            if(rule) {
-                obj["Skupina"] = rule.group;
-                obj["Věc"] = rule.item;
-                
-                if(rule.character) obj["Charakter"] = rule.character;
-				if(obj["Poznámka"] === "") obj["Poznámka"] = rule.note;
-            }
-        }
   
-        return obj;
-    }
+  this.resolve = function(sheet) {
+    this.sheet = sheet;
     
-    this.rowToObj = function(arr) {
+    var range = this.sheet.getRange(2, 1, this.sheet.getMaxRows()-1, fin.columns.length);
+    var data = range.getValues();
+    
+    for(var r = 0; r < data.length; r++) {
         
-        var obj = {};
+        var modified = this.categorize(data[r]);
         
-        for(var i = 0; i < fin.columns.length; i++) {
+        for(var key in modified) {
             
-            var column = fin.columns[i];
+            var ci = fin.columnIndex(key);
+            if(ci) this.sheet.getRange(2 + r, ci).setValue(modified[key]);
             
-            obj[column] = arr[i];
         }
-        
-        return obj;
     }
+  }
+  
+  this.categorize = function(rowArr) {
     
+    var row = this.rowToObj(rowArr);
+    var obj = {};
+
+var f = function(arg) {
+    return arg.replace(/FIN_[A-ž_]+/g, function(match, contents, offset, s)
+        {
+            match = match.replace(/FIN_/, "");
+            match = match.replace(/_/, " ");
+        		
+            return 'INDIRECT(ADDRESS(ROW(); MATCH("' + match + '"; $1:$1; 0)))';
+        }
+    );
+}
+    
+    if(row["Pohyb"] === "") obj["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem";
+if(row["Částka"] === "") obj["Částka"] = f('=ABS(FIN_OBJEM)');
+if(row["Charakter"] === "") {
+	obj["Charakter"] = f('=IF(FIN_VĚC = ""; "Navíc"; "Výdaje")');
+    }
+
+    if(row["Předatovat"] === "") obj["Předatovat"] = row["Datum"];
+    if(row["Měsíc"] === "") {
+	obj["Měsíc"] = f('=IF(FIN_PŘEDATOVAT; DATE(YEAR(FIN_PŘEDATOVAT); MONTH(FIN_PŘEDATOVAT); 1); "")');
+}
+    if(row["Rok"] === "") {
+	obj["Rok"] = f('=IF(FIN_PŘEDATOVAT; YEAR(FIN_PŘEDATOVAT); "")');
+}
+
+if(row["Poznámka"] !== undefined && String(row["Poznámka"]).trim() === "")
+{
+	if(row["Zpráva pro příjemce"]) obj["Poznámka"] = row["Zpráva pro příjemce"];
+	else if(row["Účel"]) obj["Poznámka"] = row["Účel"];
+}
+    
+    if(row["Skupina"] == "" && row["Věc"] == "") {
+        
+        var rule = finRules.get(row);
+        
+        if(rule) {
+            obj["Skupina"] = rule.group;
+            obj["Věc"] = rule.item;
+            
+            if(rule.character) obj["Charakter"] = rule.character;
+		if(obj["Poznámka"] === "") obj["Poznámka"] = rule.note;
+        }
+    }
+
+    return obj;
+  }
+  
+  this.rowToObj = function(arr) {
+    var obj = {};
+      
+    for(var i = 0; i < fin.columns.length; i++) {
+        
+        var column = fin.columns[i];
+        
+        obj[column] = arr[i];
+    }
+      
+    return obj;
+  }
 }
 
 
