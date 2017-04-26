@@ -400,7 +400,7 @@ function attachFile() {\
   }
   
   this.postArr = function(arr) {
-    if (!arr) { return }
+    if(!arr) { return }
 
     var ids = fin.getIds()
     var out = []
@@ -493,7 +493,7 @@ var fioApi = new function() {
   this.getLatestTransaction = function() {
     var json = this.api("transactions")
     
-    if (!json || !json.transactionList) { return }
+    if(!json || !json.transactionList) { return }
     
     var list = json.transactionList.transaction
     
