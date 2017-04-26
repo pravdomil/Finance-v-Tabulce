@@ -120,102 +120,100 @@ var fin = new function() {
 
 
 var finRules = new function() {
-    
-    this.emptySheet = function() {
-        
-        var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA');
-		return template.getSheetByName("kategorie").copyTo(fin.ss).setName("kategorie");
-    }
-	
-    this.load = function() {
-        
-		if(!fin.ss) return;
-		
-        this.sheet = fin.ss.getSheetByName("kategorie") || this.emptySheet();
-        
-        this.parse(this.sheet.getRange("A:G").getValues());
-    }
-    
-    this.parse = function(array) {
-        
-        this.rules = [];
-        
-        for(var i = 1; i < array.length; i++) {
-    
-            var group = array[i][0];
-            var item = array[i][1];
-            var character = array[i][5];
-			var note = array[i][6];
-            
-            if(!group) continue;
-            
-            var cond = [];
-            while(true)
-            {
-                var obj = {
-                    column : array[i][2],
-                    mode : array[i][3],
-                    value : String(array[i][4]),
-                }
-                
-                if(obj.column) cond.push(obj);
-                
-                if(array[i + 1][2] != "+") break;
-                
-                i += 2;
-            }
-            
-            if(cond.length) this.rules.push({
-                group : group,
-                item : item,
-                cond : cond,
-                character : character,
-				note : note,
-            })
-        }
-    }
-    
-    this.get = function(row) {
-        
-        for(var i = 0; i < this.rules.length; i++) {
-            
-            var rule = this.rules[i];
-            var passed = false;
-            
-            for(var c = 0; c < rule.cond.length; c++) {
-                
-                var cond = rule.cond[c];
-                
-                switch(cond.mode) {
-                    case "=":
-                        passed = (row[cond.column] == cond.value);
-                        break;
-                    
-                    case "~":
-                        var regex = new RegExp( this.escapeRegExp(cond.value), "i");
-                        passed = regex.test(row[cond.column]);
-                        break;
-                        
-                    case "<":
-                        passed = (row[cond.column] < cond.value);
-                        break;
-                        
-                    case ">":
-                        passed = (row[cond.column] > cond.value);
-                        break;
-                }
-                
-                if(!passed) break;
-            }
-            
-            if(passed) return rule;
-        }
-    }
-    
-    this.escapeRegExp = function(s) {
-        return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
-    }
-    
+  
+  this.emptySheet = function() {
+    var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA');
+    return template.getSheetByName("kategorie").copyTo(fin.ss).setName("kategorie");
+  }
+
+  this.load = function() {
+      
+  if(!fin.ss) return;
+  
+      this.sheet = fin.ss.getSheetByName("kategorie") || this.emptySheet();
+      
+      this.parse(this.sheet.getRange("A:G").getValues());
+  }
+  
+  this.parse = function(array) {
+      
+      this.rules = [];
+      
+      for(var i = 1; i < array.length; i++) {
+  
+          var group = array[i][0];
+          var item = array[i][1];
+          var character = array[i][5];
+          var note = array[i][6];
+          
+          if(!group) continue;
+          
+          var cond = [];
+          while(true)
+          {
+              var obj = {
+                  column : array[i][2],
+                  mode : array[i][3],
+                  value : String(array[i][4]),
+              }
+              
+              if(obj.column) cond.push(obj);
+              
+              if(array[i + 1][2] != "+") break;
+              
+              i += 2;
+          }
+          
+          if(cond.length) this.rules.push({
+              group : group,
+              item : item,
+              cond : cond,
+              character : character,
+			note : note,
+          })
+      }
+  }
+  
+  this.get = function(row) {
+      
+      for(var i = 0; i < this.rules.length; i++) {
+          
+          var rule = this.rules[i];
+          var passed = false;
+          
+          for(var c = 0; c < rule.cond.length; c++) {
+              
+              var cond = rule.cond[c];
+              
+              switch(cond.mode) {
+                  case "=":
+                      passed = (row[cond.column] == cond.value);
+                      break;
+                  
+                  case "~":
+                      var regex = new RegExp( this.escapeRegExp(cond.value), "i");
+                      passed = regex.test(row[cond.column]);
+                      break;
+                      
+                  case "<":
+                      passed = (row[cond.column] < cond.value);
+                      break;
+                      
+                  case ">":
+                      passed = (row[cond.column] > cond.value);
+                      break;
+              }
+              
+              if(!passed) break;
+          }
+          
+          if(passed) return rule;
+      }
+  }
+  
+  this.escapeRegExp = function(s) {
+      return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+  }
 }
 
 
