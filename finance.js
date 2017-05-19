@@ -51,7 +51,7 @@ function trackCash() {
 
 
 var fin = new function() {
-  this.config = PropertiesService.getDocumentProperties()
+  this.config = PropertiesService.getScriptProperties()
   
   this.emptyDbSheet = function() {
     var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA')
