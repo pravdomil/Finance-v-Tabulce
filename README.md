@@ -14,4 +14,4 @@ https://youtube.com/watch?v=Ugc4y2uK-KI
 
 https://gist.github.com/filiph/5150036
 
-Thanks Filip Hráček
+Thanks <a href="https://twitter.com/filiphracek">Filip Hráček</a>
