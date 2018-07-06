@@ -1,0 +1,13 @@
+{
+  "name": "finance-v-tabulce",
+  "productName": "Finance v tabulce",
+  "description": "Výpis z účtu v Google tabulkách",
+  "homepage": "https://pravdomil.com/#czech",
+  "keywords": [
+    "czech"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pravdomil/finance-v-tabulce.git"
+  }
+}
