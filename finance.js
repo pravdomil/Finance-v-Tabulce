@@ -178,7 +178,7 @@ var finRules = new function() {
             break
             
           case "~":
-            passed = String(row[cond.column]).indexOf(cond.value) !== -1
+            passed = String(row[cond.column]).toLowerCase().indexOf(String(cond.value).toLowerCase()) !== -1
             break
             
           case "<":
