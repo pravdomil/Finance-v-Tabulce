@@ -534,7 +534,7 @@ var fioApi = new (function() {
     var response = UrlFetchApp.fetch(url, { muteHttpExceptions: true })
 
     if (response.getResponseCode() != 200) {
-      throw "FioApi: Bad token? Or too fast?"
+      throw "FioApi: Bad token? Or too fast? Got status: " + response.getResponseCode() + "."
     }
 
     return JSON.parse(response.getContentText()).accountStatement
