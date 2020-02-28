@@ -7,13 +7,14 @@ function finDailyTrigger() {
 }
 
 function finMenu() {
-  SpreadsheetApp.getUi().createMenu('Finance')
-    .addItem('Aktualizovat', 'finRefresh')
-    .addItem('Rozčlenit', 'finCategorize')
+  SpreadsheetApp.getUi()
+    .createMenu("Finance")
+    .addItem("Aktualizovat", "finRefresh")
+    .addItem("Rozčlenit", "finCategorize")
     .addSeparator()
-    .addItem('Nastavení', 'finConfigShow')
+    .addItem("Nastavení", "finConfigShow")
     .addSeparator()
-    .addItem('Zanést hotovost', 'trackCash')
+    .addItem("Zanést hotovost", "trackCash")
     .addToUi()
 }
 
@@ -31,266 +32,307 @@ function finConfigShow() {
 }
 
 function trackCash() {
-  var amount = parseInt( Browser.inputBox('Částka') )
-  if(!amount) { return }
-  
+  var amount = parseInt(Browser.inputBox("Částka"))
+  if (!amount) {
+    return
+  }
+
   var date = new Date()
-  date = date.getDate() + "." + ( date.getMonth() + 1 ) + "." + date.getFullYear()
-  
+  date = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear()
+
   var arr = [
-    { "Datum" : date, "Objem" : amount, "Měna" : "CZK", "Typ pohybu" : "cash" },
-    { "Datum" : date, "Objem" : amount * -1, "Měna" : "CZK", "Typ pohybu" : "cash" }
+    { Datum: date, Objem: amount, Měna: "CZK", "Typ pohybu": "cash" },
+    { Datum: date, Objem: amount * -1, Měna: "CZK", "Typ pohybu": "cash" }
   ]
 
   fin.insert(arr)
   fin.categorize()
 }
 
-
 /////////////////////////
 
-
-var fin = new function() {
+var fin = new (function() {
   this.config = PropertiesService.getScriptProperties()
-  
+
   this.emptyDbSheet = function() {
-    var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA')
-    return template.getSheetByName("db").copyTo(this.ss).setName("db").activate()
+    var template = SpreadsheetApp.openById("1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA")
+    return template
+      .getSheetByName("db")
+      .copyTo(this.ss)
+      .setName("db")
+      .activate()
   }
-  
+
   this.emptyBalanceSheet = function() {
-    var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA')
-    return template.getSheetByName("zůstatek").copyTo(this.ss).setName("zůstatek")
+    var template = SpreadsheetApp.openById("1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA")
+    return template
+      .getSheetByName("zůstatek")
+      .copyTo(this.ss)
+      .setName("zůstatek")
   }
-  
+
   this.refresh = function() {
-    this.insert( fioApi.getLatestTransaction() )
-    this.insert( airApi.getLatestTransaction() )
+    this.insert(fioApi.getLatestTransaction())
+    this.insert(airApi.getLatestTransaction())
   }
-  
+
   this.categorize = function() {
     finCategory.resolve(this.sheet)
   }
-  
+
   this.insert = function(data) {
-    if(!data) { return }
-    
-    for(var i = 0; i < data.length; i++) {
+    if (!data) {
+      return
+    }
+
+    for (var i = 0; i < data.length; i++) {
       var row = new Array(fin.columns.length)
-      
-      for(var c = 0; c < row.length; c++) {
+
+      for (var c = 0; c < row.length; c++) {
         var column = fin.columns[c]
         var value = data[i][column]
-        
+
         row[c] = value ? value : ""
       }
-      
+
       this.sheet.insertRowsAfter(1, 1)
       this.sheet.getRange("2:2").setValues([row])
     }
   }
-  
+
   this.columnIndex = function(name) {
     name = String(name).toLowerCase()
-    
-    for(var i = 0; i < this.columns.length; i++) {
-      if(String(this.columns[i]).toLowerCase() == name) { return i + 1 }
+
+    for (var i = 0; i < this.columns.length; i++) {
+      if (String(this.columns[i]).toLowerCase() == name) {
+        return i + 1
+      }
     }
-    
+
     return null
   }
 
   this.getIds = function() {
     var uniqueCol = this.columnIndex("ID pohybu")
-    var ids = this.sheet.getRange(2, uniqueCol, this.sheet.getMaxRows()-1, 1).getValues()
-    
+    var ids = this.sheet.getRange(2, uniqueCol, this.sheet.getMaxRows() - 1, 1).getValues()
+
     // flatten and convert to string
-    for(var i = 0; i < ids.length; i++) { ids[i] = ids[i][0] + "" }
-    
+    for (var i = 0; i < ids.length; i++) {
+      ids[i] = ids[i][0] + ""
+    }
+
     return ids
   }
-  
+
   this.ss = SpreadsheetApp.getActive()
-  if(this.ss) {
+  if (this.ss) {
     this.sheet = this.ss.getSheetByName("db") || this.emptyDbSheet()
     this.balance = this.ss.getSheetByName("zůstatek") || this.emptyBalanceSheet()
     this.columns = this.sheet.getRange("1:1").getValues()[0]
   }
-}
+})()
 
-
-var finRules = new function() {
-  
+var finRules = new (function() {
   this.emptyRulesSheet = function() {
-    var template = SpreadsheetApp.openById('1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA')
-    return template.getSheetByName("kategorie").copyTo(fin.ss).setName("kategorie")
+    var template = SpreadsheetApp.openById("1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA")
+    return template
+      .getSheetByName("kategorie")
+      .copyTo(fin.ss)
+      .setName("kategorie")
   }
-  
+
   this.load = function() {
-    if(!fin.ss) { return }
-    
+    if (!fin.ss) {
+      return
+    }
+
     this.sheet = fin.ss.getSheetByName("kategorie") || this.emptyRulesSheet()
     this.parse(this.sheet.getRange("A:G").getValues())
   }
-  
+
   this.parse = function(array) {
     this.rules = []
-    
-    for(var i = 1; i < array.length; i++) {
+
+    for (var i = 1; i < array.length; i++) {
       var group = array[i][0]
       var item = array[i][1]
       var note = array[i][5]
-      
-      if(!group) { continue }
-      
+
+      if (!group) {
+        continue
+      }
+
       var cond = []
-      while(true) {
+      while (true) {
         var obj = {
-          column : array[i][2],
-          mode : array[i][3],
-          value : String(array[i][4]),
+          column: array[i][2],
+          mode: array[i][3],
+          value: String(array[i][4])
         }
-        
-        if(obj.column) { cond.push(obj) }
-        
-        if(array[i + 1][2] != "+") { break }
-        
+
+        if (obj.column) {
+          cond.push(obj)
+        }
+
+        if (array[i + 1][2] != "+") {
+          break
+        }
+
         i += 2
       }
-      
-      if(cond.length) {
+
+      if (cond.length) {
         this.rules.push({ group: group, item: item, cond: cond, note: note })
       }
     }
   }
-  
+
   this.get = function(row) {
-    for(var i = 0; i < this.rules.length; i++) {
+    for (var i = 0; i < this.rules.length; i++) {
       var rule = this.rules[i]
       var passed = false
-      
-      for(var c = 0; c < rule.cond.length; c++) {
+
+      for (var c = 0; c < rule.cond.length; c++) {
         var cond = rule.cond[c]
-        
-        switch(cond.mode) {
+
+        switch (cond.mode) {
           case "=":
-            passed = (row[cond.column] == cond.value)
+            passed = row[cond.column] == cond.value
             break
-            
+
           case "~":
-            passed = String(row[cond.column]).toLowerCase().indexOf(String(cond.value).toLowerCase()) !== -1
+            passed =
+              String(row[cond.column])
+                .toLowerCase()
+                .indexOf(String(cond.value).toLowerCase()) !== -1
             break
-            
+
           case "<":
-            passed = (row[cond.column] < cond.value)
+            passed = row[cond.column] < cond.value
             break
-            
+
           case ">":
-            passed = (row[cond.column] > cond.value)
+            passed = row[cond.column] > cond.value
             break
         }
-        
-        if(passed) { return rule }
+
+        if (passed) {
+          return rule
+        }
       }
     }
   }
-}
+})()
 
-
-var finCategory = new function() {
-  
+var finCategory = new (function() {
   this.resolve = function(sheet) {
     var range = sheet.getRange(2, 1, sheet.getMaxRows() - 1, fin.columns.length)
     var data = range.getValues()
-    
-    for(var r = 0; r < data.length; r++) {
+
+    for (var r = 0; r < data.length; r++) {
       var modified = this.categorize(data[r])
-      
-      for(var key in modified) {
+
+      for (var key in modified) {
         var ci = fin.columnIndex(key)
-        if(ci) { sheet.getRange(2 + r, ci).setValue(modified[key]) }
+        if (ci) {
+          sheet.getRange(2 + r, ci).setValue(modified[key])
+        }
       }
     }
   }
-  
+
   this.categorize = function(rowArr) {
     var row = this.rowToObj(rowArr)
     var obj = {}
 
     var f = function(arg) {
       var func = arg.replace(/FIN_[A-ž_]+/g, function(match, contents, offset, s) {
-          match = match.replace(/FIN_/, "")
-          match = match.replace(/_/, " ")
-          
-          return 'INDIRECT(ADDRESS(ROW(); MATCH("' + match + '"; $1:$1; 0)))'
-        }
-      )
+        match = match.replace(/FIN_/, "")
+        match = match.replace(/_/, " ")
+
+        return 'INDIRECT(ADDRESS(ROW(); MATCH("' + match + '"; $1:$1; 0)))'
+      })
       return func
     }
-    
-    if(row["Pohyb"] === "") { obj["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem" }
-    
-    if(row["Částka"] === "") { obj["Částka"] = f('=ABS(FIN_OBJEM)') }
-    
-    if(row["Předatovat"] === "") { obj["Předatovat"] = row["Datum"] }
-    
-    if(row["Měsíc"] === "") {
+
+    if (row["Pohyb"] === "") {
+      obj["Pohyb"] = row["Objem"] < 0 ? "Výdaj" : "Příjem"
+    }
+
+    if (row["Částka"] === "") {
+      obj["Částka"] = f("=ABS(FIN_OBJEM)")
+    }
+
+    if (row["Předatovat"] === "") {
+      obj["Předatovat"] = row["Datum"]
+    }
+
+    if (row["Měsíc"] === "") {
       obj["Měsíc"] = f('=IF(FIN_PŘEDATOVAT; DATE(YEAR(FIN_PŘEDATOVAT); MONTH(FIN_PŘEDATOVAT); 1); "")')
     }
-    
-    if(row["Rok"] === "") { obj["Rok"] = f('=IF(FIN_PŘEDATOVAT; YEAR(FIN_PŘEDATOVAT); "")') }
-    
-    if(row["Poznámka"] !== undefined && String(row["Poznámka"]).trim() === "") {
-      if(row["Zpráva pro příjemce"]) {
+
+    if (row["Rok"] === "") {
+      obj["Rok"] = f('=IF(FIN_PŘEDATOVAT; YEAR(FIN_PŘEDATOVAT); "")')
+    }
+
+    if (row["Poznámka"] !== undefined && String(row["Poznámka"]).trim() === "") {
+      if (row["Zpráva pro příjemce"]) {
         obj["Poznámka"] = row["Zpráva pro příjemce"]
-      }
-      else if(row["Účel"]) {
+      } else if (row["Účel"]) {
         obj["Poznámka"] = row["Účel"]
       }
     }
-    
-    if(String(row["Skupina"]).trim() == "" && row["Věc"] == "") {
+
+    if (String(row["Skupina"]).trim() == "" && row["Věc"] == "") {
       var rule = finRules.get(row)
-      
-      if(rule) {
+
+      if (rule) {
         obj["Skupina"] = rule.group
         obj["Věc"] = rule.item
-        
-        if(obj["Poznámka"] === "") { obj["Poznámka"] = rule.note }
+
+        if (obj["Poznámka"] === "") {
+          obj["Poznámka"] = rule.note
+        }
       }
     }
-    
-    if(row["Skupina"] == "" && !obj["Skupina"]) { obj["Skupina"] = " " }
-    
+
+    if (row["Skupina"] == "" && !obj["Skupina"]) {
+      obj["Skupina"] = " "
+    }
+
     return obj
   }
-  
+
   this.rowToObj = function(arr) {
     var obj = {}
-    
-    for(var i = 0; i < fin.columns.length; i++) {
+
+    for (var i = 0; i < fin.columns.length; i++) {
       var column = fin.columns[i]
       obj[column] = arr[i]
     }
-    
+
     return obj
   }
-}
+})()
 
-
-var finTrigger = new function() {
+var finTrigger = new (function() {
   try {
-    if(fin.config.getProperty("triggerSet")) { return }
-    ScriptApp.newTrigger('dailyTrigger').timeBased().atHour(6).everyDays(1).create()
+    if (fin.config.getProperty("triggerSet")) {
+      return
+    }
+    ScriptApp.newTrigger("dailyTrigger")
+      .timeBased()
+      .atHour(6)
+      .everyDays(1)
+      .create()
     fin.config.setProperty("triggerSet", true)
-  }
-  catch (e) { }
-}
+  } catch (e) {}
+})()
 
-
-var finConfig = new function() {
+var finConfig = new (function() {
   this.show = function() {
-    var html = '\
+    var html =
+      '\
 <style>\
 *{padding: 0;margin: 0;border: 0;position: relative;box-sizing: border-box;vertical-align: bottom;color: inherit;font: inherit;text-decoration: inherit;letter-spacing: inherit;word-spacing: inherit;text-transform: inherit;}\
 input,button,textarea,select,.button{display: inline-block;padding: 0.5rem;height: 2rem;border: 1px solid;-webkit-border-radius: .25rem;border-radius: .25rem;background-clip: padding-box;background-color: #FFF}input[type="submit"]{cursor: pointer}.button{text-align: center;font-weight:normal;}\
@@ -327,23 +369,24 @@ b, a { font-weight: bold; }\
 '
     var htmlOutput = HtmlService.createHtmlOutput(html)
       .setSandboxMode(HtmlService.SandboxMode.IFRAME)
-      .setWidth(250).setHeight(300)
-    
-    SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ')
+      .setWidth(250)
+      .setHeight(300)
+
+    SpreadsheetApp.getUi().showModalDialog(htmlOutput, " ")
   }
-}
+})()
 
-
-var airApi = new function() {
+var airApi = new (function() {
   this.config = JSON.parse(fin.config.getProperty("air"))
-  
+
   this.submit = function(args) {
-    this.config = { "user": args.airUser }
-    fin.config.setProperty('air', JSON.stringify(this.config))
+    this.config = { user: args.airUser }
+    fin.config.setProperty("air", JSON.stringify(this.config))
   }
-  
+
   this.show = function() {
-    var html = '\
+    var html =
+      '\
 <style>\
 *{padding: 0;margin: 0;border: 0;position: relative;box-sizing: border-box;vertical-align: bottom;color: inherit;font: inherit;text-decoration: inherit;letter-spacing: inherit;word-spacing: inherit;text-transform: inherit;}\
 input,button,textarea,select,.button{display: inline-block;padding: 0.5rem;height: 2rem;border: 1px solid;-webkit-border-radius: .25rem;border-radius: .25rem;background-clip: padding-box;background-color: #FFF}input[type="submit"]{cursor: pointer}.button{text-align: center;font-weight:normal;}\
@@ -374,154 +417,168 @@ function attachFile() {\
   <input type="hidden" name="func" value="submitCsv">\
 </form>\
 '
-    
+
     var htmlOutput = HtmlService.createHtmlOutput(html)
       .setSandboxMode(HtmlService.SandboxMode.IFRAME)
-      .setWidth(300).setHeight(300)
-    
+      .setWidth(300)
+      .setHeight(300)
+
     try {
-      SpreadsheetApp.getUi().showModalDialog(htmlOutput, ' ')
-    }
-    catch(e) { }
+      SpreadsheetApp.getUi().showModalDialog(htmlOutput, " ")
+    } catch (e) {}
   }
-  
+
   this.getLatestTransaction = function() {
-    if(!this.config || !this.config.user) { return }
+    if (!this.config || !this.config.user) {
+      return
+    }
     this.show()
   }
-  
+
   this.submitCsv = function(args) {
     var csv = this.replaceCols(args.csv)
     var arr = Papa.parse(csv, { header: true, skipEmptyLines: true }).data
     arr.reverse()
     this.postArr(arr)
   }
-  
+
   this.postArr = function(arr) {
-    if(!arr) { return }
+    if (!arr) {
+      return
+    }
 
     var ids = fin.getIds()
     var out = []
-    
-    for(var i = 0; i < arr.length; i++) {
+
+    for (var i = 0; i < arr.length; i++) {
       // deduplication
-      if(ids.indexOf(arr[i]["ID pohybu"]) !== -1) { continue }
+      if (ids.indexOf(arr[i]["ID pohybu"]) !== -1) {
+        continue
+      }
       out.push(arr[i])
     }
-    
+
     fin.insert(out)
     fin.categorize()
   }
-  
+
   this.replaceCols = function(csv) {
     var cols = [
       ["Variabilní symbol", "VS"],
       ["Konstantní symbol", "KS"],
       ["Specifický symbol", "SS"],
-      
+
       ["Datum provedení", "Datum"],
       ["Číslo účtu protistrany", "Protiúčet"],
       ["Typ platby", "Typ pohybu"],
-      
+
       ["Částka v měně účtu", "Objem"],
       ["Měna účtu", "Měna"],
-      
+
       ["Poznámka k platbě", "Účel"],
       ["Poznámka pro mne", "Poznámka"],
-      
+
       ["Název, adresa a stát protistrany", "Název protiúčtu"],
       ["Název, adresa a stát banky protistrany", "Název banky"],
-      
+
       ["Zadal", "Provedl"],
-      ["Referenční číslo", "ID pohybu"],
+      ["Referenční číslo", "ID pohybu"]
     ]
-    
+
     var rows = csv.split(/\r\n|\r|\n/)
-    
-    for(var i = 0; i < cols.length; i++) {
+
+    for (var i = 0; i < cols.length; i++) {
       rows[0] = rows[0].replace('"' + cols[i][0] + '"', '"' + cols[i][1] + '"')
     }
-    
-    return rows.join('\n')
+
+    return rows.join("\n")
   }
-}
+})()
 
-
-var fioApi = new function() {
+var fioApi = new (function() {
   this.token = fin.config.getProperty("fioToken")
 
   this.columns = {
-    'column0': 'Datum',
-    'column1': 'Objem',
-    'column14': 'Měna',
-    'column2': 'Protiúčet',
-    'column3': 'Kód banky',
-    'column4': 'KS',
-    'column5': 'VS',
-    'column6': 'SS',
-    'column8': 'Typ pohybu',
-    'column16': 'Zpráva pro příjemce',
-    'column7': 'Účel', // Uživatelská identifikace
-    'column25': 'Poznámka', // Komentář
-    'column10': 'Název protiúčtu',
-    'column12': 'Název banky',
-    'column18': 'Upřesnění',
-    'column9': 'Provedl',
-    'column26': 'BIC',
-    'column17': 'ID pokynu',
-    'column22': 'ID pohybu',
+    column0: "Datum",
+    column1: "Objem",
+    column14: "Měna",
+    column2: "Protiúčet",
+    column3: "Kód banky",
+    column4: "KS",
+    column5: "VS",
+    column6: "SS",
+    column8: "Typ pohybu",
+    column16: "Zpráva pro příjemce",
+    column7: "Účel", // Uživatelská identifikace
+    column25: "Poznámka", // Komentář
+    column10: "Název protiúčtu",
+    column12: "Název banky",
+    column18: "Upřesnění",
+    column9: "Provedl",
+    column26: "BIC",
+    column17: "ID pokynu",
+    column22: "ID pohybu"
   }
-  
+
   this.submit = function(args) {
     this.token = args.fioToken
-    fin.config.setProperty('fioToken', this.token)
+    fin.config.setProperty("fioToken", this.token)
   }
-  
+
   this.api = function(arg) {
-    if(!this.token) { return }
-    
+    if (!this.token) {
+      return
+    }
+
     var url = "https://www.fio.cz/ib_api/rest/last/" + this.token + "/" + arg + ".json"
     var response = UrlFetchApp.fetch(url, { muteHttpExceptions: true })
-    
-    if(response.getResponseCode() != 200) { throw "FioApi: Bad token? Or too fast?" }
-    
+
+    if (response.getResponseCode() != 200) {
+      throw "FioApi: Bad token? Or too fast?"
+    }
+
     return JSON.parse(response.getContentText()).accountStatement
   }
-    
+
   this.getLatestTransaction = function() {
     var json = this.api("transactions")
-    
-    if(!json || !json.transactionList) { return }
-    
+
+    if (!json || !json.transactionList) {
+      return
+    }
+
     var list = json.transactionList.transaction
-    
+
     var trans = []
-    
-    for(var i = 0; i < list.length; i++) {
+
+    for (var i = 0; i < list.length; i++) {
       var obj = list[i]
       trans[i] = {}
-      
-      for(var key in this.columns) {
+
+      for (var key in this.columns) {
         var val = obj[key]
         var column = this.columns[key]
-        
-        if(!val) { val = "" }
-        else if(column == "Datum") { val = val.value.replace(/\+[0-9]+/, "") }
-        else { val = val.value }
 
-        if(column == "Kód banky" && val) {
+        if (!val) {
+          val = ""
+        } else if (column == "Datum") {
+          val = val.value.replace(/\+[0-9]+/, "")
+        } else {
+          val = val.value
+        }
+
+        if (column == "Kód banky" && val) {
           trans[i]["Protiúčet"] = trans[i]["Protiúčet"] + "/" + val
           continue
         }
-        
+
         trans[i][column] = val
       }
     }
-    
+
     return trans
   }
-}
-
+})()
 
 finRules.load()
 
