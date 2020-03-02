@@ -66,9 +66,9 @@ var fin = new (function() {
   this.emptyBalanceSheet = function() {
     var template = SpreadsheetApp.openById("1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA")
     return template
-      .getSheetByName("zůstatek")
+      .getSheetByName("přehled")
       .copyTo(this.ss)
-      .setName("zůstatek")
+      .setName("přehled")
   }
 
   this.refresh = function() {
@@ -127,7 +127,7 @@ var fin = new (function() {
   this.ss = SpreadsheetApp.getActive()
   if (this.ss) {
     this.sheet = this.ss.getSheetByName("db") || this.emptyDbSheet()
-    this.balance = this.ss.getSheetByName("zůstatek") || this.emptyBalanceSheet()
+    this.balance = this.ss.getSheetByName("přehled") || this.emptyBalanceSheet()
     this.columns = this.sheet.getRange("1:1").getValues()[0]
   }
 })()
