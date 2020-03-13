@@ -1,7 +1,5 @@
 # Finance v tabulce
 
-Synchronises your bank transactions with Google Spreadsheet.
-
 Works with Fio Bank and Air Bank.
 
 Start with this [spreadsheet](https://docs.google.com/spreadsheets/d/1pj6zDR6Bh2Zg5DTMQFfa69yiS4np0WqUceuKsEL7jSA/copy)!
