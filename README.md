@@ -8,10 +8,4 @@ Start with this [spreadsheet](https://docs.google.com/spreadsheets/d/1pj6zDR6Bh2
 
 No warranty, use with caution and care.
 
-## Based on
-
-https://youtube.com/watch?v=Ugc4y2uK-KI
-
-https://gist.github.com/filiph/5150036
-
-Thanks [Filip Hráček](https://twitter.com/filiphracek)
+Based on [Google Apps Script versus bankovní API](https://youtube.com/watch?v=Ugc4y2uK-KI) and [fio-api-fetch.js](https://gist.github.com/filiph/5150036) by [Filip Hráček](https://twitter.com/filiphracek).
