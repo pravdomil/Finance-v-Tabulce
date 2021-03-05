@@ -6,16 +6,6 @@ https://github.com/pravdomil/finance-v-tabulce
 
 */
 
-// custom onOpen trigger
-function customOnOpen() {
-  finInit()
-}
-
-// daily trigger
-function dailyTrigger() {
-  finDailyTrigger()
-}
-
 // onOpen trigger
 function onOpen() {
   // simple triggers can't do anything that requires authorization
@@ -24,6 +14,16 @@ function onOpen() {
     .createMenu("Finance")
     .addItem("Instalovat", "install")
     .addToUi()
+}
+
+// custom onOpen trigger
+function customOnOpen() {
+  finInit()
+}
+
+// daily trigger
+function dailyTrigger() {
+  finDailyTrigger()
 }
 
 // install custom onOpen trigger
