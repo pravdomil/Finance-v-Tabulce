@@ -1,4 +1,4 @@
-# Finance v tabulce
+# Finance v Tabulce
 
 Works with Fio Bank and Air Bank.
 
