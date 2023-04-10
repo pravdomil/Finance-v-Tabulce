@@ -20,10 +20,10 @@ function onInstall(e) {
 
 function onCustomOpen(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
-  Elm.Main.init({ flags: { action: [0, e] } })
+  Elm.Main.init({ flags: { action: [1, e] } })
 }
 
 function onDailyTrigger(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
-  Elm.Main.init({ flags: { action: [0, e] } })
+  Elm.Main.init({ flags: { action: [2, e] } })
 }
