@@ -5,10 +5,12 @@ import AppScript.Spreadsheet
 import Codec
 import Finance.Action
 import Finance.Config
+import Finance.Update
 import JavaScript
 import Json.Decode
 import Json.Encode
 import Parser
+import Parser.DeadEnd
 import Task
 import Time
 
@@ -140,16 +142,16 @@ updateAction a =
                     |> Task.map (\x2 -> ( x, x2 ))
             )
         |> Task.andThen
-            (\( _, config ) ->
+            (\( transactions, config ) ->
                 AppScript.Spreadsheet.sheetValues config
                     |> Task.andThen
                         (\x ->
-                            let
-                                configs : Result (List Parser.DeadEnd) (List Finance.Config.Config)
-                                configs =
-                                    Parser.run Finance.Config.multipleParser (firstTextColumn x)
-                            in
-                            AppScript.Spreadsheet.alert "Config Values" (Debug.toString configs)
+                            case Parser.run Finance.Config.multipleParser (firstTextColumn x) of
+                                Ok x2 ->
+                                    Finance.Update.transactions transactions x2
+
+                                Err x2 ->
+                                    AppScript.Spreadsheet.alert "Invalid Config" (Parser.DeadEnd.listToString x2)
                         )
             )
 
