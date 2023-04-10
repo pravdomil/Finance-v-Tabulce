@@ -46,7 +46,8 @@ function finBridge(args) {
 // try to load core if possible
 try {
   // load core from cdn
-  var core = "https://raw.githubusercontent.com/pravdomil/finance-v-tabulce/master/dist/finance.js"
+  var core =
+    "https://raw.githubusercontent.com/pravdomil/finance-v-tabulce/master/dist/v1/finance.js"
   core = UrlFetchApp.fetch(core).getContentText()
 
   // run
