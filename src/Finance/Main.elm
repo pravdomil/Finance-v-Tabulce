@@ -42,14 +42,14 @@ mainTask flags =
             case action of
                 Ok b ->
                     case b of
-                        Finance.Action.Install _ ->
-                            install
+                        Finance.Action.Install c ->
+                            install c
 
-                        Finance.Action.Open _ ->
-                            open
+                        Finance.Action.Open c ->
+                            open c
 
-                        Finance.Action.Update _ ->
-                            update
+                        Finance.Action.Update c ->
+                            update c
 
                 Err b ->
                     Task.fail (JavaScript.DecodeError b)
@@ -66,8 +66,8 @@ mainTask flags =
 --
 
 
-install : Task.Task JavaScript.Error ()
-install =
+install : AppScript.Spreadsheet.Event -> Task.Task JavaScript.Error ()
+install _ =
     Task.succeed ()
 
 
@@ -75,8 +75,8 @@ install =
 --
 
 
-open : Task.Task JavaScript.Error ()
-open =
+open : AppScript.Spreadsheet.Event -> Task.Task JavaScript.Error ()
+open _ =
     Task.succeed ()
 
 
@@ -84,6 +84,6 @@ open =
 --
 
 
-update : Task.Task JavaScript.Error ()
-update =
+update : AppScript.Spreadsheet.Event -> Task.Task JavaScript.Error ()
+update _ =
     Task.succeed ()
