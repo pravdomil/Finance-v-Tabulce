@@ -67,8 +67,6 @@ multipleParser =
                     |> Parser.map (\() -> Parser.Done (List.reverse x))
                 , Parser.symbol "\n"
                     |> Parser.map (\() -> Parser.Loop x)
-                , Parser.symbol "Config\n"
-                    |> Parser.map (\() -> Parser.Loop x)
                 , singleParser
                     |> Parser.map (\x2 -> Parser.Loop (x2 :: x))
                 ]
