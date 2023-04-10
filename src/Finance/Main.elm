@@ -124,8 +124,34 @@ maybeInstallTriggers a =
 
 
 updateAction : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
-updateAction _ =
-    Task.succeed ()
+updateAction a =
+    maybeCreateConfigSheet a
+        |> Task.andThen (\_ -> Task.succeed ())
+
+
+maybeCreateConfigSheet : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error AppScript.Spreadsheet.Sheet
+maybeCreateConfigSheet a =
+    let
+        createConfigSheet : Task.Task JavaScript.Error AppScript.Spreadsheet.Sheet
+        createConfigSheet =
+            AppScript.Spreadsheet.insertSheet a "Config"
+                |> Task.andThen
+                    (\x ->
+                        AppScript.Spreadsheet.getRange x "A1"
+                            |> Task.andThen (\x2 -> AppScript.Spreadsheet.setValue x2 (Json.Encode.string "Config"))
+                            |> Task.map (\_ -> x)
+                    )
+    in
+    AppScript.Spreadsheet.sheetByName a "Config"
+        |> Task.andThen
+            (\x ->
+                case x of
+                    Just x2 ->
+                        Task.succeed x2
+
+                    Nothing ->
+                        createConfigSheet
+            )
 
 
 
