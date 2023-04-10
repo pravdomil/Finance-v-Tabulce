@@ -147,7 +147,7 @@ updateAction a =
                     |> Task.andThen AppScript.Spreadsheet.getValues
                     |> Task.andThen
                         (\x ->
-                            case Parser.run Finance.Config.multipleParser (firstTextColumn x) of
+                            case Parser.run Finance.Config.multipleParser (valuesToString x) of
                                 Ok x2 ->
                                     Finance.Update.transactions transactions x2
 
@@ -237,24 +237,23 @@ dailyTrigger a =
 --
 
 
-firstTextColumn : List (List AppScript.Spreadsheet.Value) -> String
-firstTextColumn a =
+valuesToString : List (List AppScript.Spreadsheet.Value) -> String
+valuesToString a =
     let
-        toString : List AppScript.Spreadsheet.Value -> String
-        toString b =
-            case List.head b of
-                Just c ->
-                    case c of
-                        AppScript.Spreadsheet.Text d ->
-                            d
+        valueToString : AppScript.Spreadsheet.Value -> String
+        valueToString b =
+            case b of
+                AppScript.Spreadsheet.Text c ->
+                    c
 
-                        AppScript.Spreadsheet.Number d ->
-                            String.fromFloat d
+                AppScript.Spreadsheet.Number c ->
+                    String.fromFloat c
 
-                        AppScript.Spreadsheet.Date d ->
-                            String.fromInt (Time.posixToMillis d)
+                AppScript.Spreadsheet.Date c ->
+                    String.fromInt (Time.posixToMillis c)
 
-                Nothing ->
-                    ""
+        valuesToString_ : List AppScript.Spreadsheet.Value -> String
+        valuesToString_ b =
+            String.join "\t" (List.map valueToString b)
     in
-    String.join "\n" (List.map toString a)
+    String.join "\n" (List.map valuesToString_ a)
