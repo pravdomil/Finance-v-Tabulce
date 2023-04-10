@@ -57,7 +57,7 @@ fetchNewTransactions time token =
             )
         |> Task.onError
             (\_ ->
-                AppScript.Spreadsheet.alert "Update Transactions Failed" "Sorry for that."
+                AppScript.Spreadsheet.alert "Update Transactions Failed" "Cannot connect to Fio bank."
                     |> Task.map (\() -> [])
             )
 
