@@ -1,31 +1,29 @@
 module Finance.Action exposing (..)
 
-import AppScript.Spreadsheet
 import Codec
-import Json.Encode
 
 
 type Action
-    = Install AppScript.Spreadsheet.Event
-    | Open AppScript.Spreadsheet.Event
-    | Update AppScript.Spreadsheet.Event
+    = Install
+    | Open
+    | Update
 
 
-actionCodec : Codec.Codec Action
-actionCodec =
+codec : Codec.Codec Action
+codec =
     Codec.custom
         (\fn1 fn2 fn3 x ->
             case x of
-                Install x1 ->
-                    fn1 x1
+                Install ->
+                    fn1
 
-                Open x1 ->
-                    fn2 x1
+                Open ->
+                    fn2
 
-                Update x1 ->
-                    fn3 x1
+                Update ->
+                    fn3
         )
-        |> Codec.variant1 Install (Codec.build (\_ -> Json.Encode.null) AppScript.Spreadsheet.eventDecoder)
-        |> Codec.variant1 Open (Codec.build (\_ -> Json.Encode.null) AppScript.Spreadsheet.eventDecoder)
-        |> Codec.variant1 Update (Codec.build (\_ -> Json.Encode.null) AppScript.Spreadsheet.eventDecoder)
+        |> Codec.variant0 Install
+        |> Codec.variant0 Open
+        |> Codec.variant0 Update
         |> Codec.buildCustom
