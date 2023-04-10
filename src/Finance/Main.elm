@@ -6,6 +6,7 @@ import Codec
 import Finance.Action
 import JavaScript
 import Json.Decode
+import Json.Encode
 import Task
 
 
@@ -133,16 +134,15 @@ updateAction =
 
 openTrigger : Task.Task JavaScript.Error ()
 openTrigger =
-    AppScript.Spreadsheet.active
-        |> Task.andThen
-            (\x ->
-                case x of
-                    Just _ ->
-                        Task.succeed ()
-
-                    Nothing ->
-                        Task.succeed ()
-            )
+    let
+        createMenu : Task.Task JavaScript.Error ()
+        createMenu =
+            JavaScript.run
+                "SpreadsheetApp.getUi().createMenu('Finance v Tabulce').addItem('Update', 'onUpdateAction').addToUi()"
+                Json.Encode.null
+                (Json.Decode.succeed ())
+    in
+    createMenu
 
 
 
