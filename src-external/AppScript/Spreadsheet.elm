@@ -67,20 +67,20 @@ sheetByName (Spreadsheet a) name_ =
         )
 
 
-sheetValues : Sheet -> Task.Task JavaScript.Error (List (List Value))
-sheetValues (Sheet a) =
-    JavaScript.run
-        "a.getSheetValues(1, 1, a.getMaxRows(), a.getMaxColumns())"
-        a
-        (Json.Decode.list (Json.Decode.list valueDecoder))
-
-
 
 --
 
 
 type Range
     = Range Json.Decode.Value
+
+
+allRange : Sheet -> Task.Task JavaScript.Error Range
+allRange (Sheet a) =
+    JavaScript.run
+        "a.getRange(1, 1, a.getMaxRows(), a.getMaxColumns())"
+        a
+        (Json.Decode.map Range Json.Decode.value)
 
 
 getRange : Sheet -> String -> Task.Task JavaScript.Error Range
@@ -91,12 +91,28 @@ getRange (Sheet a) range =
         (Json.Decode.map Range Json.Decode.value)
 
 
+getValue : Range -> Task.Task JavaScript.Error Value
+getValue (Range a) =
+    JavaScript.run
+        "a.getValue()"
+        a
+        valueDecoder
+
+
 setValue : Range -> Value -> Task.Task JavaScript.Error ()
 setValue (Range a) value =
     JavaScript.run
         "a[0].setValue(a[1])"
         (Json.Encode.list identity [ a, encodeValue value ])
         (Json.Decode.succeed ())
+
+
+getValues : Range -> Task.Task JavaScript.Error (List (List Value))
+getValues (Range a) =
+    JavaScript.run
+        "a.getValues()"
+        a
+        (Json.Decode.list (Json.Decode.list valueDecoder))
 
 
 setValues : Range -> List (List Value) -> Task.Task JavaScript.Error ()
