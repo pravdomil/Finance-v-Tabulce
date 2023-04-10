@@ -10,12 +10,16 @@ type Spreadsheet
     = Spreadsheet Json.Decode.Value
 
 
-active : Task.Task JavaScript.Error Spreadsheet
+active : Task.Task JavaScript.Error (Maybe Spreadsheet)
 active =
     JavaScript.run
         "SpreadsheetApp.getActiveSpreadsheet()"
         Json.Encode.null
-        (Json.Decode.map Spreadsheet Json.Decode.value)
+        (Json.Decode.oneOf
+            [ Json.Decode.null Nothing
+            , Json.Decode.map (Spreadsheet >> Just) Json.Decode.value
+            ]
+        )
 
 
 name : Spreadsheet -> Task.Task JavaScript.Error String
