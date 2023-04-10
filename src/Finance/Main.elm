@@ -143,7 +143,8 @@ updateAction a =
             )
         |> Task.andThen
             (\( transactions, config ) ->
-                AppScript.Spreadsheet.sheetValues config
+                AppScript.Spreadsheet.allRange config
+                    |> Task.andThen AppScript.Spreadsheet.getValues
                     |> Task.andThen
                         (\x ->
                             case Parser.run Finance.Config.multipleParser (firstTextColumn x) of
