@@ -35,7 +35,7 @@ insertNewTransactions sheet tokens =
             )
 
 
-insertNewTransactionsHelper : AppScript.Spreadsheet.Sheet -> Time.Posix -> String -> Task.Task JavaScript.Error ()
+insertNewTransactionsHelper : AppScript.Spreadsheet.Sheet -> Time.Posix -> String -> Task.Task JavaScript.Error (List FioCz.Transaction)
 insertNewTransactionsHelper _ time token =
     let
         url : String
@@ -53,7 +53,7 @@ insertNewTransactionsHelper _ time token =
             (\x ->
                 case Json.Decode.decodeString FioCz.statementDecoder x of
                     Ok x2 ->
-                        AppScript.Spreadsheet.alert "New Transactions" (Debug.toString x2)
+                        Task.succeed x2.transactions
 
                     Err x2 ->
                         Task.fail (JavaScript.DecodeError x2)
@@ -61,6 +61,7 @@ insertNewTransactionsHelper _ time token =
         |> Task.onError
             (\_ ->
                 AppScript.Spreadsheet.alert "Update Transactions Failed" "Sorry for that."
+                    |> Task.map (\() -> [])
             )
 
 
