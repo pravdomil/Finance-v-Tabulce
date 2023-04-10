@@ -158,7 +158,7 @@ maybeCreateTransactionsSheet a =
                 |> Task.andThen
                     (\x ->
                         AppScript.Spreadsheet.getRange x "A1"
-                            |> Task.andThen (\x2 -> AppScript.Spreadsheet.setValue x2 (AppScript.Spreadsheet.Text "Transactions"))
+                            |> Task.andThen (\x2 -> AppScript.Spreadsheet.setValue x2 (AppScript.Spreadsheet.Text "Data"))
                             |> Task.map (\_ -> x)
                     )
     in
