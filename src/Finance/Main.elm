@@ -1,5 +1,6 @@
 module Finance.Main exposing (..)
 
+import AppScript.Script
 import AppScript.Spreadsheet
 import Codec
 import Finance.Action
@@ -68,7 +69,50 @@ mainTask flags =
 
 install : Task.Task JavaScript.Error ()
 install =
-    Task.succeed ()
+    AppScript.Spreadsheet.active
+        |> Task.andThen
+            (\x ->
+                case x of
+                    Just b ->
+                        maybeInstallTriggers b
+
+                    Nothing ->
+                        Task.succeed ()
+            )
+
+
+maybeInstallTriggers : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
+maybeInstallTriggers a =
+    AppScript.Script.spreadsheetTriggers a
+        |> Task.andThen
+            (\x ->
+                case x of
+                    [] ->
+                        installTriggers a
+
+                    _ ->
+                        Task.succeed ()
+            )
+
+
+installTriggers : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
+installTriggers (AppScript.Spreadsheet.Spreadsheet a) =
+    let
+        onOpenTrigger : Task.Task JavaScript.Error ()
+        onOpenTrigger =
+            JavaScript.run
+                "ScriptApp.newTrigger('onOpenTrigger').forSpreadsheet(a).onOpen().create()"
+                a
+                (Json.Decode.succeed ())
+
+        onDailyTrigger : Task.Task JavaScript.Error ()
+        onDailyTrigger =
+            JavaScript.run
+                "ScriptApp.newTrigger('onDailyTrigger').timeBased().atHour(6).everyDays(1).create()"
+                a
+                (Json.Decode.succeed ())
+    in
+    Task.sequence [ onOpenTrigger, onDailyTrigger ] |> Task.map (\_ -> ())
 
 
 
