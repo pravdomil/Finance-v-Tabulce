@@ -15,15 +15,15 @@ function onOpen() {
 
 function onCustomOpen(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
-  Elm.Main.init({ flags: { name: "onCustomOpen", event: e } })
+  Elm.Main.init({ flags: { action: [0, e] } })
 }
 
 function onDailyTrigger(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
-  Elm.Main.init({ flags: { name: "onDailyTrigger", event: e } })
+  Elm.Main.init({ flags: { action: [0, e] } })
 }
 
 function onInstall(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
-  Elm.Main.init({ flags: { name: "onInstall", event: e } })
+  Elm.Main.init({ flags: { action: [0, e] } })
 }
