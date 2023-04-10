@@ -1,3 +1,10 @@
+/*
+ * Finance v Tabulce
+ *
+ * https://github.com/pravdomil/finance-v-tabulce
+ *
+ */
+
 var financeUrl =
   "https://raw.githubusercontent.com/pravdomil/finance-v-tabulce/master/dist/v2/finance.js"
 
