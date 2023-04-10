@@ -2,13 +2,17 @@ module Finance.Update exposing (..)
 
 import AppScript.Spreadsheet
 import AppScript.UrlFetch
+import Codec
 import Finance.Config
+import Finance.Utils
 import FioCz
 import Iso8601
 import JavaScript
 import Json.Decode
+import Result.Extra
 import Task
 import Time
+import Time.Codec
 import Url
 
 
@@ -63,8 +67,38 @@ fetchNewTransactions time token =
 
 
 insertNewTransactions : AppScript.Spreadsheet.Sheet -> List FioCz.Transaction -> Task.Task JavaScript.Error ()
-insertNewTransactions _ _ =
-    Task.succeed ()
+insertNewTransactions sheet a =
+    let
+        rowToNonEmptyString : List AppScript.Spreadsheet.Value -> Maybe String
+        rowToNonEmptyString b =
+            case Finance.Utils.cellsToString b of
+                "" ->
+                    Nothing
+
+                c ->
+                    Just c
+
+        transactionsInSheet : Task.Task JavaScript.Error (Result Json.Decode.Error (List FioCz.Transaction))
+        transactionsInSheet =
+            AppScript.Spreadsheet.getRange sheet "A2:A"
+                |> Task.andThen AppScript.Spreadsheet.getValues
+                |> Task.map
+                    (\x ->
+                        List.filterMap rowToNonEmptyString x
+                            |> List.map (Codec.decodeString transactionCodec)
+                            |> Result.Extra.sequence
+                    )
+    in
+    transactionsInSheet
+        |> Task.andThen
+            (\x ->
+                case x of
+                    Ok _ ->
+                        Task.succeed ()
+
+                    Err _ ->
+                        AppScript.Spreadsheet.alert "Update Transactions Failed" "Cannot decode transactions."
+            )
 
 
 
@@ -83,3 +117,40 @@ updateCells _ _ =
 minusDays : Int -> Time.Posix -> Time.Posix
 minusDays days a =
     Time.millisToPosix (Time.posixToMillis a - days * 24 * 60 * 60 * 1000)
+
+
+
+--
+
+
+transactionCodec : Codec.Codec FioCz.Transaction
+transactionCodec =
+    Codec.record (\x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 -> { id = x1, type_ = x2, amount = x3, currency = x4, originalAmount = x5, date = x6, accountName = x7, accountNumber = x8, bankName = x9, bankNumber = x10, bankBic = x11, constantSymbol = x12, variableSymbol = x13, specificSymbol = x14, reference = x15, description = x16, message = x17, note = x18, author = x19, orderId = x20 })
+        |> Codec.field .id Codec.int
+        |> Codec.field .type_ Codec.string
+        |> Codec.field .amount Codec.float
+        |> Codec.field .currency Codec.string
+        |> Codec.field .originalAmount
+            (Codec.maybe
+                (Codec.record (\x1 x2 -> { amount = x1, currency = x2 })
+                    |> Codec.field .amount Codec.float
+                    |> Codec.field .currency Codec.string
+                    |> Codec.buildRecord
+                )
+            )
+        |> Codec.field .date Time.Codec.posix
+        |> Codec.field .accountName (Codec.maybe Codec.string)
+        |> Codec.field .accountNumber (Codec.maybe Codec.string)
+        |> Codec.field .bankName (Codec.maybe Codec.string)
+        |> Codec.field .bankNumber (Codec.maybe Codec.string)
+        |> Codec.field .bankBic (Codec.maybe Codec.string)
+        |> Codec.field .constantSymbol (Codec.maybe Codec.string)
+        |> Codec.field .variableSymbol (Codec.maybe Codec.string)
+        |> Codec.field .specificSymbol (Codec.maybe Codec.string)
+        |> Codec.field .reference (Codec.maybe Codec.string)
+        |> Codec.field .description (Codec.maybe Codec.string)
+        |> Codec.field .message (Codec.maybe Codec.string)
+        |> Codec.field .note (Codec.maybe Codec.string)
+        |> Codec.field .author (Codec.maybe Codec.string)
+        |> Codec.field .orderId (Codec.maybe Codec.int)
+        |> Codec.buildRecord
