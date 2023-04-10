@@ -46,6 +46,6 @@ eventDecoder =
 
 alert : String -> String -> Task.Task JavaScript.Error ()
 alert title description =
-    JavaScript.run "SpreadsheetApp.getUi().alert(a[0], a[1])"
+    JavaScript.run "SpreadsheetApp.getUi().alert(a[0], a[1], SpreadsheetApp.getUi().ButtonSet.OK)"
         (Json.Encode.list Json.Encode.string [ title, description ])
         (Json.Decode.succeed ())
