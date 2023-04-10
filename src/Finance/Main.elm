@@ -57,7 +57,7 @@ mainTask flags =
     task
         |> Task.onError
             (\_ ->
-                AppScript.Spreadsheet.alert "Application is Broken" "Sorry that that."
+                AppScript.Spreadsheet.alert "Application is Broken" "Sorry for that."
                     |> Task.onError (\_ -> Task.succeed ())
             )
 
