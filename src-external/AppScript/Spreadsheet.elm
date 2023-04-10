@@ -1,9 +1,12 @@
 module AppScript.Spreadsheet exposing (..)
 
 import JavaScript
+import JavaScript.Decoder
+import JavaScript.Encoder
 import Json.Decode
 import Json.Encode
 import Task
+import Time
 
 
 type Spreadsheet
@@ -94,6 +97,38 @@ setValues (Range a) values =
         "a[0].setValues(a[1])"
         (Json.Encode.list identity [ a, Json.Encode.list (Json.Encode.list identity) values ])
         (Json.Decode.succeed ())
+
+
+
+--
+
+
+type Value
+    = Text String
+    | Number Float
+    | Date Time.Posix
+
+
+valueDecoder : Json.Decode.Decoder Value
+valueDecoder =
+    Json.Decode.oneOf
+        [ Json.Decode.map Text Json.Decode.string
+        , Json.Decode.map Number Json.Decode.float
+        , Json.Decode.map Date JavaScript.Decoder.timePosix
+        ]
+
+
+encodeValue : Value -> Json.Encode.Value
+encodeValue a =
+    case a of
+        Text b ->
+            Json.Encode.string b
+
+        Number b ->
+            Json.Encode.float b
+
+        Date b ->
+            JavaScript.Encoder.timePosix b
 
 
 
