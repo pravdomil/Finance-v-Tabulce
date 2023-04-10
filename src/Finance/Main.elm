@@ -42,14 +42,14 @@ mainTask flags =
             case action of
                 Ok b ->
                     case b of
-                        Finance.Action.Install c ->
-                            install c
+                        Finance.Action.Install ->
+                            install
 
-                        Finance.Action.Open c ->
-                            open c
+                        Finance.Action.Open ->
+                            open
 
-                        Finance.Action.Update c ->
-                            update c
+                        Finance.Action.Update ->
+                            update
 
                 Err b ->
                     Task.fail (JavaScript.DecodeError b)
