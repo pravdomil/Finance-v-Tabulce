@@ -4,10 +4,13 @@ import AppScript.Script
 import AppScript.Spreadsheet
 import Codec
 import Finance.Action
+import Finance.Config
 import JavaScript
 import Json.Decode
 import Json.Encode
+import Parser
 import Task
+import Time
 
 
 main : Program Json.Decode.Value () ()
@@ -126,7 +129,19 @@ maybeInstallTriggers a =
 updateAction : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
 updateAction a =
     maybeCreateConfigSheet a
-        |> Task.andThen (\_ -> Task.succeed ())
+        |> Task.andThen
+            (\x ->
+                AppScript.Spreadsheet.sheetValues x
+                    |> Task.andThen
+                        (\x2 ->
+                            let
+                                configs : Result (List Parser.DeadEnd) (List Finance.Config.Config)
+                                configs =
+                                    Parser.run Finance.Config.multipleParser (firstTextColumn x2)
+                            in
+                            AppScript.Spreadsheet.alert "Config Values" (Debug.toString configs)
+                        )
+            )
 
 
 maybeCreateConfigSheet : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error AppScript.Spreadsheet.Sheet
@@ -178,3 +193,30 @@ openTrigger _ =
 dailyTrigger : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
 dailyTrigger a =
     updateAction a
+
+
+
+--
+
+
+firstTextColumn : List (List AppScript.Spreadsheet.Value) -> String
+firstTextColumn a =
+    let
+        toString : List AppScript.Spreadsheet.Value -> String
+        toString b =
+            case List.head b of
+                Just c ->
+                    case c of
+                        AppScript.Spreadsheet.Text d ->
+                            d
+
+                        AppScript.Spreadsheet.Number d ->
+                            String.fromFloat d
+
+                        AppScript.Spreadsheet.Date d ->
+                            String.fromInt (Time.posixToMillis d)
+
+                Nothing ->
+                    ""
+    in
+    String.join "\n" (List.map toString a)
