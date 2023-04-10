@@ -34,6 +34,25 @@ name (Spreadsheet a) =
 --
 
 
+type Sheet
+    = Sheet Json.Decode.Value
+
+
+sheetByName : Spreadsheet -> String -> Task.Task JavaScript.Error (Maybe Sheet)
+sheetByName (Spreadsheet a) name_ =
+    JavaScript.run "a[0].getSheetByName(a[1])"
+        (Json.Encode.list identity [ a, Json.Encode.string name_ ])
+        (Json.Decode.oneOf
+            [ Json.Decode.null Nothing
+            , Json.Decode.map (Sheet >> Just) Json.Decode.value
+            ]
+        )
+
+
+
+--
+
+
 type alias Event =
     { authMode : Json.Decode.Value
     , source : Spreadsheet
