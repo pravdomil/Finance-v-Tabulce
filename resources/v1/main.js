@@ -20,10 +20,7 @@ function dailyTrigger() {
 function onOpen() {
   // simple triggers can't do anything that requires authorization
   // so make option to install custom onOpen trigger that can do everything
-  SpreadsheetApp.getUi()
-    .createMenu("Finance")
-    .addItem("Instalovat", "install")
-    .addToUi()
+  SpreadsheetApp.getUi().createMenu("Finance").addItem("Instalovat", "install").addToUi()
 }
 
 // install custom onOpen trigger
@@ -33,10 +30,7 @@ function install() {
 
   // setup custom onOpen trigger
   if (!config.getProperty("openTriggerSet")) {
-    ScriptApp.newTrigger("customOnOpen")
-      .forSpreadsheet(ss)
-      .onOpen()
-      .create()
+    ScriptApp.newTrigger("customOnOpen").forSpreadsheet(ss).onOpen().create()
     config.setProperty("openTriggerSet", true)
   }
 
