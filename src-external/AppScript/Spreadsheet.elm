@@ -30,6 +30,13 @@ name (Spreadsheet a) =
         Json.Decode.string
 
 
+showMessage : Spreadsheet -> String -> String -> Task.Task JavaScript.Error ()
+showMessage (Spreadsheet a) title description =
+    JavaScript.run "a[0].toast(a[1], a[2])"
+        (Json.Encode.list identity [ a, Json.Encode.string description, Json.Encode.string title ])
+        (Json.Decode.succeed ())
+
+
 insertSheet : Spreadsheet -> String -> Task.Task JavaScript.Error Sheet
 insertSheet (Spreadsheet a) name_ =
     JavaScript.run
