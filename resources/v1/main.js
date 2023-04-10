@@ -1,43 +1,62 @@
-/**
- * Finance v Tabulce
- * https://github.com/pravdomil/Finance-v-Tabulce
- */
+/*
+Finance v tabulce
+Authors: Filip Hráček, Pravdomil Toman
 
-/**
- * Runs when a user opens a spreadsheet, document, presentation, or form that the user has permission to edit.
- * Simple triggers can't do anything that requires authorization.
- * More information: https://developers.google.com/apps-script/guides/triggers#restrictions
- */
-function onOpen() {
-  SpreadsheetApp.getUi().createMenu("Finance").addItem("Install", "install").addToUi()
+https://github.com/pravdomil/finance-v-tabulce
+
+*/
+
+// custom onOpen trigger
+function customOnOpen() {
+  finInit()
 }
 
-function install() {
-  const a = SpreadsheetApp.getActiveSpreadsheet()
+// daily trigger
+function dailyTrigger() {
+  finDailyTrigger()
+}
 
-  if (ScriptApp.getUserTriggers(a).length === 0) {
-    ScriptApp.newTrigger("openTrigger").forSpreadsheet(a).onOpen().create()
+// onOpen trigger
+function onOpen() {
+  // simple triggers can't do anything that requires authorization
+  // so make option to install custom onOpen trigger that can do everything
+  SpreadsheetApp.getUi()
+    .createMenu("Finance")
+    .addItem("Instalovat", "install")
+    .addToUi()
+}
+
+// install custom onOpen trigger
+function install() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet()
+  var config = PropertiesService.getDocumentProperties()
+
+  // setup custom onOpen trigger
+  if (!config.getProperty("openTriggerSet")) {
+    ScriptApp.newTrigger("customOnOpen")
+      .forSpreadsheet(ss)
+      .onOpen()
+      .create()
+    config.setProperty("openTriggerSet", true)
   }
 
-  run({ task: "install" })
+  // run custom trigger
+  customOnOpen()
 }
 
-function openTrigger() {
-  run({ task: "open" })
+// google.script.host bridge
+function finBridge(args) {
+  return eval(args.obj)[args.func](args)
 }
 
-function dailyTrigger() {
-  run({ task: "daily" })
-}
-
-function run(flags) {
-  Elm.Main.init({ flags })
-}
-
+// try to load core if possible
 try {
-  const url = "https://raw.githubusercontent.com/pravdomil/finance-v-tabulce/master/dist/elm.js"
-  const code = UrlFetchApp.fetch(url).getContentText()
-  eval(code)
+  // load core from cdn
+  var core = "https://raw.githubusercontent.com/pravdomil/finance-v-tabulce/master/dist/finance.js"
+  core = UrlFetchApp.fetch(core).getContentText()
+
+  // run
+  eval(core)
 } catch (e) {
   // throw e
   Logger.log(e)
