@@ -28,12 +28,12 @@ transactions sheet configs =
 fetchAndInsertNewTransactions : AppScript.Spreadsheet.Sheet -> List String -> Task.Task JavaScript.Error ()
 fetchAndInsertNewTransactions sheet tokens =
     Time.now
-        |> Task.andThen (\x -> Task.sequence (List.map (fetchNewTransactions sheet x) tokens))
+        |> Task.andThen (\x -> Task.sequence (List.map (fetchNewTransactions x) tokens))
         |> Task.andThen (\x -> insertNewTransactions sheet (List.concat x))
 
 
-fetchNewTransactions : AppScript.Spreadsheet.Sheet -> Time.Posix -> String -> Task.Task JavaScript.Error (List FioCz.Transaction)
-fetchNewTransactions _ time token =
+fetchNewTransactions : Time.Posix -> String -> Task.Task JavaScript.Error (List FioCz.Transaction)
+fetchNewTransactions time token =
     let
         url : String
         url =
