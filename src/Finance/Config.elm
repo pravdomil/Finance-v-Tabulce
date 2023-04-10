@@ -8,6 +8,34 @@ type Config
     | Rule String
 
 
+tokens : List Config -> List String
+tokens a =
+    List.filterMap
+        (\x ->
+            case x of
+                FioToken x2 ->
+                    Just x2
+
+                _ ->
+                    Nothing
+        )
+        a
+
+
+rules : List Config -> List String
+rules a =
+    List.filterMap
+        (\x ->
+            case x of
+                Rule x2 ->
+                    Just x2
+
+                _ ->
+                    Nothing
+        )
+        a
+
+
 singleParser : Parser.Parser Config
 singleParser =
     Parser.getChompedString (Parser.chompWhile (\x -> x /= ':' && x /= '\n'))
