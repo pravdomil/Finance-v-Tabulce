@@ -119,10 +119,6 @@ minusDays days a =
     Time.millisToPosix (Time.posixToMillis a - days * 24 * 60 * 60 * 1000)
 
 
-
---
-
-
 transactionCodec : Codec.Codec FioCz.Transaction
 transactionCodec =
     Codec.versioned
