@@ -138,7 +138,7 @@ maybeCreateConfigSheet a =
                 |> Task.andThen
                     (\x ->
                         AppScript.Spreadsheet.getRange x "A1"
-                            |> Task.andThen (\x2 -> AppScript.Spreadsheet.setValue x2 (Json.Encode.string "Config"))
+                            |> Task.andThen (\x2 -> AppScript.Spreadsheet.setValue x2 (AppScript.Spreadsheet.Text "Config"))
                             |> Task.map (\_ -> x)
                     )
     in
