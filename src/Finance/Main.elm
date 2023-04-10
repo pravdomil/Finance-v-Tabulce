@@ -46,11 +46,14 @@ mainTask flags =
                         Finance.Action.Install ->
                             installAction
 
-                        Finance.Action.Open ->
-                            openAction
-
                         Finance.Action.Update ->
                             updateAction
+
+                        Finance.Action.OpenTrigger ->
+                            openTrigger
+
+                        Finance.Action.DailyTrigger ->
+                            dailyTrigger
 
                 Err b ->
                     Task.fail (JavaScript.DecodeError b)
@@ -74,7 +77,7 @@ installAction =
             (\x ->
                 case x of
                     Just b ->
-                        Task.sequence [ maybeInstallTriggers b, openAction ] |> Task.map (\_ -> ())
+                        Task.sequence [ maybeInstallTriggers b, openTrigger ] |> Task.map (\_ -> ())
 
                     Nothing ->
                         Task.succeed ()
@@ -119,8 +122,17 @@ installTriggers (AppScript.Spreadsheet.Spreadsheet a) =
 --
 
 
-openAction : Task.Task JavaScript.Error ()
-openAction =
+updateAction : Task.Task JavaScript.Error ()
+updateAction =
+    Task.succeed ()
+
+
+
+--
+
+
+openTrigger : Task.Task JavaScript.Error ()
+openTrigger =
     AppScript.Spreadsheet.active
         |> Task.andThen
             (\x ->
@@ -137,6 +149,6 @@ openAction =
 --
 
 
-updateAction : Task.Task JavaScript.Error ()
-updateAction =
+dailyTrigger : Task.Task JavaScript.Error ()
+dailyTrigger =
     Task.succeed ()
