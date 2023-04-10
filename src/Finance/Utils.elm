@@ -4,14 +4,14 @@ import AppScript.Spreadsheet
 import Time
 
 
-valuesToString : List (List AppScript.Spreadsheet.Value) -> String
-valuesToString a =
-    let
-        valuesToString_ : List AppScript.Spreadsheet.Value -> String
-        valuesToString_ b =
-            String.join "\t" (List.map valueToString b)
-    in
-    String.join "\n" (List.map valuesToString_ a)
+rowsToString : List (List AppScript.Spreadsheet.Value) -> String
+rowsToString a =
+    String.join "\n" (List.map cellsToString a)
+
+
+cellsToString : List AppScript.Spreadsheet.Value -> String
+cellsToString b =
+    String.join "\t" (List.map valueToString b)
 
 
 valueToString : AppScript.Spreadsheet.Value -> String

@@ -147,7 +147,7 @@ updateAction a =
                     |> Task.andThen AppScript.Spreadsheet.getValues
                     |> Task.andThen
                         (\x ->
-                            case Parser.run Finance.Config.multipleParser (Finance.Utils.valuesToString x) of
+                            case Parser.run Finance.Config.multipleParser (Finance.Utils.rowsToString x) of
                                 Ok x2 ->
                                     Finance.Update.transactions transactions x2
 
