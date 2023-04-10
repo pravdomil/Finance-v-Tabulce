@@ -21,6 +21,6 @@ mkdir -p $dir
 cp -r resources/ dist
 
 # Compile.
-elm make src/Main.elm --output $dir/v2/elm.js --optimize
-elm-ffi $dir/v2/elm.js
-elm-minify $dir/v2/elm.js
+elm make src/Main.elm --output $dir/v2/finance.js --optimize
+elm-ffi $dir/v2/finance.js
+elm-minify $dir/v2/finance.js
