@@ -151,4 +151,4 @@ openTrigger =
 
 dailyTrigger : Task.Task JavaScript.Error ()
 dailyTrigger =
-    Task.succeed ()
+    updateAction
