@@ -83,19 +83,19 @@ getRange (Sheet a) range =
         (Json.Decode.map Range Json.Decode.value)
 
 
-setValue : Range -> Json.Encode.Value -> Task.Task JavaScript.Error ()
+setValue : Range -> Value -> Task.Task JavaScript.Error ()
 setValue (Range a) value =
     JavaScript.run
         "a[0].setValue(a[1])"
-        (Json.Encode.list identity [ a, value ])
+        (Json.Encode.list identity [ a, encodeValue value ])
         (Json.Decode.succeed ())
 
 
-setValues : Range -> List (List Json.Encode.Value) -> Task.Task JavaScript.Error ()
+setValues : Range -> List (List Value) -> Task.Task JavaScript.Error ()
 setValues (Range a) values =
     JavaScript.run
         "a[0].setValues(a[1])"
-        (Json.Encode.list identity [ a, Json.Encode.list (Json.Encode.list identity) values ])
+        (Json.Encode.list identity [ a, Json.Encode.list (Json.Encode.list encodeValue) values ])
         (Json.Decode.succeed ())
 
 
