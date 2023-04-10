@@ -13,17 +13,17 @@ function onOpen() {
   SpreadsheetApp.getUi().createMenu("Finance v Tabulce").addItem("Install", "onInstall").addToUi()
 }
 
+function onInstall(e) {
+  eval(UrlFetchApp.fetch(financeUrl).getContentText())
+  Elm.Main.init({ flags: { action: [0, e] } })
+}
+
 function onCustomOpen(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
   Elm.Main.init({ flags: { action: [0, e] } })
 }
 
 function onDailyTrigger(e) {
-  eval(UrlFetchApp.fetch(financeUrl).getContentText())
-  Elm.Main.init({ flags: { action: [0, e] } })
-}
-
-function onInstall(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
   Elm.Main.init({ flags: { action: [0, e] } })
 }
