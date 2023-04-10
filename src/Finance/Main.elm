@@ -34,7 +34,7 @@ mainTask flags =
         action : Result Json.Decode.Error Finance.Action.Action
         action =
             Json.Decode.decodeValue
-                (Json.Decode.field "action" (Codec.decoder Finance.Action.actionCodec))
+                (Json.Decode.field "action" (Codec.decoder Finance.Action.codec))
                 flags
 
         task : Task.Task JavaScript.Error ()
