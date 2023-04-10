@@ -6,13 +6,13 @@ import Codec
 import Finance.Action
 import Finance.Config
 import Finance.Update
+import Finance.Utils
 import JavaScript
 import Json.Decode
 import Json.Encode
 import Parser
 import Parser.DeadEnd
 import Task
-import Time
 
 
 main : Program Json.Decode.Value () ()
@@ -147,7 +147,7 @@ updateAction a =
                     |> Task.andThen AppScript.Spreadsheet.getValues
                     |> Task.andThen
                         (\x ->
-                            case Parser.run Finance.Config.multipleParser (valuesToString x) of
+                            case Parser.run Finance.Config.multipleParser (Finance.Utils.valuesToString x) of
                                 Ok x2 ->
                                     Finance.Update.transactions transactions x2
 
@@ -231,29 +231,3 @@ openTrigger _ =
 dailyTrigger : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
 dailyTrigger a =
     updateAction a
-
-
-
---
-
-
-valuesToString : List (List AppScript.Spreadsheet.Value) -> String
-valuesToString a =
-    let
-        valueToString : AppScript.Spreadsheet.Value -> String
-        valueToString b =
-            case b of
-                AppScript.Spreadsheet.Text c ->
-                    c
-
-                AppScript.Spreadsheet.Number c ->
-                    String.fromFloat c
-
-                AppScript.Spreadsheet.Date c ->
-                    String.fromInt (Time.posixToMillis c)
-
-        valuesToString_ : List AppScript.Spreadsheet.Value -> String
-        valuesToString_ b =
-            String.join "\t" (List.map valueToString b)
-    in
-    String.join "\n" (List.map valuesToString_ a)
