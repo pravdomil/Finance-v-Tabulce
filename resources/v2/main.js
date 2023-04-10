@@ -18,7 +18,7 @@ function onInstall(e) {
   Elm.Main.init({ flags: { action: [0, e] } })
 }
 
-function onCustomOpen(e) {
+function onOpenTrigger(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
   Elm.Main.init({ flags: { action: [1, e] } })
 }
