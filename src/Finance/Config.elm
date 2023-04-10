@@ -8,8 +8,8 @@ type Config
     | Rule String
 
 
-tokens : List Config -> List String
-tokens a =
+fioTokens : List Config -> List String
+fioTokens a =
     List.filterMap
         (\x ->
             case x of
