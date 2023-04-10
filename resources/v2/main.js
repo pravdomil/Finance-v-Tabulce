@@ -10,20 +10,25 @@ var financeUrl =
 
 function onOpen() {
   // simple triggers can't do anything that requires authorization
-  SpreadsheetApp.getUi().createMenu("Finance v Tabulce").addItem("Install", "onInstall").addToUi()
+  SpreadsheetApp.getUi().createMenu("Finance v Tabulce").addItem("Install", "onInstallAction").addToUi()
 }
 
-function onInstall(e) {
+function onInstallAction(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
   Elm.Main.init({ flags: { action: [0, e] } })
 }
 
-function onOpenTrigger(e) {
+function onUpdateAction(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
   Elm.Main.init({ flags: { action: [1, e] } })
 }
 
-function onDailyTrigger(e) {
+function onOpenTrigger(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
   Elm.Main.init({ flags: { action: [2, e] } })
+}
+
+function onDailyTrigger(e) {
+  eval(UrlFetchApp.fetch(financeUrl).getContentText())
+  Elm.Main.init({ flags: { action: [3, e] } })
 }
