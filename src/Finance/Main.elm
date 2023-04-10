@@ -144,6 +144,31 @@ updateAction a =
             )
 
 
+maybeCreateTransactionsSheet : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error AppScript.Spreadsheet.Sheet
+maybeCreateTransactionsSheet a =
+    let
+        createTransactionsSheet : Task.Task JavaScript.Error AppScript.Spreadsheet.Sheet
+        createTransactionsSheet =
+            AppScript.Spreadsheet.insertSheet a "Transactions"
+                |> Task.andThen
+                    (\x ->
+                        AppScript.Spreadsheet.getRange x "A1"
+                            |> Task.andThen (\x2 -> AppScript.Spreadsheet.setValue x2 (AppScript.Spreadsheet.Text "Transactions"))
+                            |> Task.map (\_ -> x)
+                    )
+    in
+    AppScript.Spreadsheet.sheetByName a "Transactions"
+        |> Task.andThen
+            (\x ->
+                case x of
+                    Just x2 ->
+                        Task.succeed x2
+
+                    Nothing ->
+                        createTransactionsSheet
+            )
+
+
 maybeCreateConfigSheet : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error AppScript.Spreadsheet.Sheet
 maybeCreateConfigSheet a =
     let
