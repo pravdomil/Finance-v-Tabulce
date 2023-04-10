@@ -87,6 +87,26 @@ installAction a =
 
 maybeInstallTriggers : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
 maybeInstallTriggers a =
+    let
+        installTriggers : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
+        installTriggers (AppScript.Spreadsheet.Spreadsheet a) =
+            let
+                onOpenTrigger : Task.Task JavaScript.Error ()
+                onOpenTrigger =
+                    JavaScript.run
+                        "ScriptApp.newTrigger('onOpenTrigger').forSpreadsheet(a).onOpen().create()"
+                        a
+                        (Json.Decode.succeed ())
+
+                onDailyTrigger : Task.Task JavaScript.Error ()
+                onDailyTrigger =
+                    JavaScript.run
+                        "ScriptApp.newTrigger('onDailyTrigger').timeBased().atHour(6).everyDays(1).create()"
+                        a
+                        (Json.Decode.succeed ())
+            in
+            Task.sequence [ onOpenTrigger, onDailyTrigger ] |> Task.map (\_ -> ())
+    in
     AppScript.Script.spreadsheetTriggers a
         |> Task.andThen
             (\x ->
@@ -97,26 +117,6 @@ maybeInstallTriggers a =
                     _ ->
                         Task.succeed ()
             )
-
-
-installTriggers : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
-installTriggers (AppScript.Spreadsheet.Spreadsheet a) =
-    let
-        onOpenTrigger : Task.Task JavaScript.Error ()
-        onOpenTrigger =
-            JavaScript.run
-                "ScriptApp.newTrigger('onOpenTrigger').forSpreadsheet(a).onOpen().create()"
-                a
-                (Json.Decode.succeed ())
-
-        onDailyTrigger : Task.Task JavaScript.Error ()
-        onDailyTrigger =
-            JavaScript.run
-                "ScriptApp.newTrigger('onDailyTrigger').timeBased().atHour(6).everyDays(1).create()"
-                a
-                (Json.Decode.succeed ())
-    in
-    Task.sequence [ onOpenTrigger, onDailyTrigger ] |> Task.map (\_ -> ())
 
 
 
