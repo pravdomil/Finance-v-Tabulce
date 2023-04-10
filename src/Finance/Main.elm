@@ -128,16 +128,21 @@ maybeInstallTriggers a =
 
 updateAction : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
 updateAction a =
-    maybeCreateConfigSheet a
+    maybeCreateTransactionsSheet a
         |> Task.andThen
             (\x ->
-                AppScript.Spreadsheet.sheetValues x
+                maybeCreateConfigSheet a
+                    |> Task.map (\x2 -> ( x, x2 ))
+            )
+        |> Task.andThen
+            (\( _, config ) ->
+                AppScript.Spreadsheet.sheetValues config
                     |> Task.andThen
-                        (\x2 ->
+                        (\x ->
                             let
                                 configs : Result (List Parser.DeadEnd) (List Finance.Config.Config)
                                 configs =
-                                    Parser.run Finance.Config.multipleParser (firstTextColumn x2)
+                                    Parser.run Finance.Config.multipleParser (firstTextColumn x)
                             in
                             AppScript.Spreadsheet.alert "Config Values" (Debug.toString configs)
                         )
