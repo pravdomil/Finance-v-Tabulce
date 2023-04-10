@@ -85,7 +85,12 @@ mainTask flags =
 
 installAction : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
 installAction a =
-    Task.sequence [ maybeInstallTriggers a, openTrigger a, updateAction a ] |> Task.map (\_ -> ())
+    Task.sequence
+        [ maybeInstallTriggers a
+        , openTrigger a
+        , updateAction a
+        ]
+        |> Task.map (\_ -> ())
 
 
 maybeInstallTriggers : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
