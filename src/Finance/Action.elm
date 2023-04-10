@@ -1,13 +1,14 @@
 module Finance.Action exposing (..)
 
+import AppScript.Spreadsheet
 import Codec
-import Json.Decode
+import Json.Encode
 
 
 type Action
-    = Install Json.Decode.Value
-    | Open Json.Decode.Value
-    | Update Json.Decode.Value
+    = Install AppScript.Spreadsheet.Event
+    | Open AppScript.Spreadsheet.Event
+    | Update AppScript.Spreadsheet.Event
 
 
 actionCodec : Codec.Codec Action
@@ -24,7 +25,7 @@ actionCodec =
                 Update x1 ->
                     fn3 x1
         )
-        |> Codec.variant1 Install Codec.value
-        |> Codec.variant1 Open Codec.value
-        |> Codec.variant1 Update Codec.value
+        |> Codec.variant1 Install (Codec.build (\_ -> Json.Encode.null) AppScript.Spreadsheet.eventDecoder)
+        |> Codec.variant1 Open (Codec.build (\_ -> Json.Encode.null) AppScript.Spreadsheet.eventDecoder)
+        |> Codec.variant1 Update (Codec.build (\_ -> Json.Encode.null) AppScript.Spreadsheet.eventDecoder)
         |> Codec.buildCustom
