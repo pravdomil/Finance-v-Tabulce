@@ -43,18 +43,27 @@ mainTask flags =
         task =
             case action of
                 Ok b ->
-                    case b of
-                        Finance.Action.Install ->
-                            installAction
+                    AppScript.Spreadsheet.active
+                        |> Task.andThen
+                            (\x ->
+                                case x of
+                                    Just x2 ->
+                                        case b of
+                                            Finance.Action.Install ->
+                                                installAction x2
 
-                        Finance.Action.Update ->
-                            updateAction
+                                            Finance.Action.Update ->
+                                                updateAction x2
 
-                        Finance.Action.OpenTrigger ->
-                            openTrigger
+                                            Finance.Action.OpenTrigger ->
+                                                openTrigger x2
 
-                        Finance.Action.DailyTrigger ->
-                            dailyTrigger
+                                            Finance.Action.DailyTrigger ->
+                                                dailyTrigger x2
+
+                                    Nothing ->
+                                        Task.succeed ()
+                            )
 
                 Err b ->
                     Task.fail (JavaScript.DecodeError b)
@@ -71,18 +80,9 @@ mainTask flags =
 --
 
 
-installAction : Task.Task JavaScript.Error ()
-installAction =
-    AppScript.Spreadsheet.active
-        |> Task.andThen
-            (\x ->
-                case x of
-                    Just b ->
-                        Task.sequence [ maybeInstallTriggers b, openTrigger ] |> Task.map (\_ -> ())
-
-                    Nothing ->
-                        Task.succeed ()
-            )
+installAction : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
+installAction a =
+    Task.sequence [ maybeInstallTriggers a, openTrigger a ] |> Task.map (\_ -> ())
 
 
 maybeInstallTriggers : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
@@ -123,8 +123,8 @@ installTriggers (AppScript.Spreadsheet.Spreadsheet a) =
 --
 
 
-updateAction : Task.Task JavaScript.Error ()
-updateAction =
+updateAction : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
+updateAction _ =
     Task.succeed ()
 
 
@@ -132,8 +132,8 @@ updateAction =
 --
 
 
-openTrigger : Task.Task JavaScript.Error ()
-openTrigger =
+openTrigger : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
+openTrigger _ =
     let
         createMenu : Task.Task JavaScript.Error ()
         createMenu =
@@ -149,6 +149,6 @@ openTrigger =
 --
 
 
-dailyTrigger : Task.Task JavaScript.Error ()
-dailyTrigger =
-    updateAction
+dailyTrigger : AppScript.Spreadsheet.Spreadsheet -> Task.Task JavaScript.Error ()
+dailyTrigger a =
+    updateAction a
