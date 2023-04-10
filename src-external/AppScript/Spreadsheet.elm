@@ -10,6 +10,14 @@ type Spreadsheet
     = Spreadsheet Json.Decode.Value
 
 
+name : Spreadsheet -> Task.Task JavaScript.Error String
+name (Spreadsheet a) =
+    JavaScript.run
+        "a.getName()"
+        a
+        Json.Decode.string
+
+
 
 --
 
