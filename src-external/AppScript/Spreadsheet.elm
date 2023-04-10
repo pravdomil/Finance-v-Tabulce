@@ -67,6 +67,14 @@ sheetByName (Spreadsheet a) name_ =
         )
 
 
+sheetValues : Sheet -> Task.Task JavaScript.Error (List (List Value))
+sheetValues (Sheet a) =
+    JavaScript.run
+        "a.getSheetValues(1, 1, a.getMaxRows(), a.getMaxColumns())"
+        a
+        (Json.Decode.list (Json.Decode.list valueDecoder))
+
+
 
 --
 
