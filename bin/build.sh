@@ -17,6 +17,9 @@ dir=dist
 if [ -d $dir ]; then rm -r $dir; fi
 mkdir -p $dir
 
+# Copy static resources.
+cp -r resources/ dist
+
 # Compile.
 elm make src/Main.elm --output $dir/temp.js --optimize
 elm-ffi $dir/temp.js
