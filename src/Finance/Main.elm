@@ -74,7 +74,7 @@ install =
             (\x ->
                 case x of
                     Just b ->
-                        maybeInstallTriggers b
+                        Task.sequence [ maybeInstallTriggers b, open ] |> Task.map (\_ -> ())
 
                     Nothing ->
                         Task.succeed ()
@@ -121,7 +121,16 @@ installTriggers (AppScript.Spreadsheet.Spreadsheet a) =
 
 open : Task.Task JavaScript.Error ()
 open =
-    Task.succeed ()
+    AppScript.Spreadsheet.active
+        |> Task.andThen
+            (\x ->
+                case x of
+                    Just _ ->
+                        Task.succeed ()
+
+                    Nothing ->
+                        Task.succeed ()
+            )
 
 
 
