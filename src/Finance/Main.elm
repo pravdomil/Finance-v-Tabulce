@@ -66,8 +66,8 @@ mainTask flags =
 --
 
 
-install : AppScript.Spreadsheet.Event -> Task.Task JavaScript.Error ()
-install _ =
+install : Task.Task JavaScript.Error ()
+install =
     Task.succeed ()
 
 
@@ -75,8 +75,8 @@ install _ =
 --
 
 
-open : AppScript.Spreadsheet.Event -> Task.Task JavaScript.Error ()
-open _ =
+open : Task.Task JavaScript.Error ()
+open =
     Task.succeed ()
 
 
@@ -84,6 +84,6 @@ open _ =
 --
 
 
-update : AppScript.Spreadsheet.Event -> Task.Task JavaScript.Error ()
-update _ =
+update : Task.Task JavaScript.Error ()
+update =
     Task.succeed ()
