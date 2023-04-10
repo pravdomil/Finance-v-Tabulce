@@ -2,6 +2,9 @@
     "type": "application",
     "source-directories": [
         "src",
+        "src-external",
+        "node_modules/elm-codec/src",
+        "node_modules/elm-ffi/src",
         "node_modules/elm-utils/src"
     ],
     "elm-version": "0.19.1",
