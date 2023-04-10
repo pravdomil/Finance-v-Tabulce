@@ -30,6 +30,14 @@ name (Spreadsheet a) =
         Json.Decode.string
 
 
+insertSheet : Spreadsheet -> String -> Task.Task JavaScript.Error Sheet
+insertSheet (Spreadsheet a) name_ =
+    JavaScript.run
+        "a[0].insertSheet(a[1])"
+        (Json.Encode.list identity [ a, Json.Encode.string name_ ])
+        (Json.Decode.map Sheet Json.Decode.value)
+
+
 
 --
 
