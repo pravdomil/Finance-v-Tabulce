@@ -15,7 +15,7 @@ import Url
 transactions : AppScript.Spreadsheet.Sheet -> List Finance.Config.Config -> Task.Task JavaScript.Error ()
 transactions sheet configs =
     Task.sequence
-        [ insertNewTransactions sheet (Finance.Config.fioTokens configs)
+        [ fetchAndInsertNewTransactions sheet (Finance.Config.fioTokens configs)
         , updateCells sheet (Finance.Config.rules configs)
         ]
         |> Task.map (\_ -> ())
@@ -25,18 +25,18 @@ transactions sheet configs =
 --
 
 
-insertNewTransactions : AppScript.Spreadsheet.Sheet -> List String -> Task.Task JavaScript.Error ()
-insertNewTransactions sheet tokens =
+fetchAndInsertNewTransactions : AppScript.Spreadsheet.Sheet -> List String -> Task.Task JavaScript.Error ()
+fetchAndInsertNewTransactions sheet tokens =
     Time.now
         |> Task.andThen
             (\now ->
-                Task.sequence (List.map (insertNewTransactionsHelper sheet now) tokens)
+                Task.sequence (List.map (fetchNewTransactions sheet now) tokens)
                     |> Task.map (\_ -> ())
             )
 
 
-insertNewTransactionsHelper : AppScript.Spreadsheet.Sheet -> Time.Posix -> String -> Task.Task JavaScript.Error (List FioCz.Transaction)
-insertNewTransactionsHelper _ time token =
+fetchNewTransactions : AppScript.Spreadsheet.Sheet -> Time.Posix -> String -> Task.Task JavaScript.Error (List FioCz.Transaction)
+fetchNewTransactions _ time token =
     let
         url : String
         url =
