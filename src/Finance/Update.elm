@@ -28,11 +28,8 @@ transactions sheet configs =
 fetchAndInsertNewTransactions : AppScript.Spreadsheet.Sheet -> List String -> Task.Task JavaScript.Error ()
 fetchAndInsertNewTransactions sheet tokens =
     Time.now
-        |> Task.andThen
-            (\now ->
-                Task.sequence (List.map (fetchNewTransactions sheet now) tokens)
-                    |> Task.map (\_ -> ())
-            )
+        |> Task.andThen (\x -> Task.sequence (List.map (fetchNewTransactions sheet x) tokens))
+        |> Task.andThen (\x -> insertNewTransactions sheet (List.concat x))
 
 
 fetchNewTransactions : AppScript.Spreadsheet.Sheet -> Time.Posix -> String -> Task.Task JavaScript.Error (List FioCz.Transaction)
@@ -63,6 +60,11 @@ fetchNewTransactions _ time token =
                 AppScript.Spreadsheet.alert "Update Transactions Failed" "Sorry for that."
                     |> Task.map (\() -> [])
             )
+
+
+insertNewTransactions : AppScript.Spreadsheet.Sheet -> List FioCz.Transaction -> Task.Task JavaScript.Error ()
+insertNewTransactions _ _ =
+    Task.succeed ()
 
 
 
