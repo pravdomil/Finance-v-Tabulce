@@ -2,7 +2,9 @@ module Finance.Column exposing (..)
 
 
 type Column
-    = Id
+    = TokenName
+      --
+    | Id
     | Type
     | Amount
     | Currency
@@ -44,6 +46,9 @@ type Column
 fromString : String -> Maybe Column
 fromString a =
     case String.toLower a of
+        "token name" ->
+            Just TokenName
+
         "id" ->
             Just Id
 
