@@ -24,7 +24,7 @@ transactions : AppScript.Spreadsheet.Sheet -> List Finance.Config.Config -> Task
 transactions sheet configs =
     Task.sequence
         [ fetchAndInsertNewTransactions sheet (Finance.Config.fioTokens configs)
-        , updateTransactions sheet (Finance.Config.rules configs)
+        , updateTransactions sheet (Finance.Config.categoryRules configs)
         ]
         |> Task.map (\_ -> ())
 
@@ -135,7 +135,7 @@ insertNewTransactions sheet a =
 --
 
 
-updateTransactions : AppScript.Spreadsheet.Sheet -> List String -> Task.Task JavaScript.Error ()
+updateTransactions : AppScript.Spreadsheet.Sheet -> List Finance.Config.CategoryRule -> Task.Task JavaScript.Error ()
 updateTransactions sheet rules =
     AppScript.Spreadsheet.allRange sheet
         |> Task.andThen
@@ -148,7 +148,7 @@ updateTransactions sheet rules =
             )
 
 
-updateTransactionsHelper : List String -> Array.Array (Array.Array AppScript.Spreadsheet.Value) -> Array.Array (Array.Array AppScript.Spreadsheet.Value)
+updateTransactionsHelper : List Finance.Config.CategoryRule -> Array.Array (Array.Array AppScript.Spreadsheet.Value) -> Array.Array (Array.Array AppScript.Spreadsheet.Value)
 updateTransactionsHelper _ a =
     let
         columns : List ( Int, Finance.Column.Column )
