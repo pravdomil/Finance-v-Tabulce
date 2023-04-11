@@ -2,27 +2,30 @@ module Finance.Column.Utils exposing (..)
 
 import AppScript.Spreadsheet
 import Finance.Column
+import Finance.Transaction
 import Finance.UserData
-import FioCz
 
 
-transactionValue : Finance.Column.Column -> Finance.UserData.UserData -> FioCz.Transaction -> AppScript.Spreadsheet.Value
+transactionValue : Finance.Column.Column -> Finance.UserData.UserData -> Finance.Transaction.Transaction -> AppScript.Spreadsheet.Value
 transactionValue column data a =
     case column of
+        Finance.Column.TokenName ->
+            AppScript.Spreadsheet.Text a.tokenName
+
         Finance.Column.Id ->
-            AppScript.Spreadsheet.WholeNumber a.id
+            AppScript.Spreadsheet.WholeNumber a.transaction.id
 
         Finance.Column.Type ->
-            AppScript.Spreadsheet.Text a.type_
+            AppScript.Spreadsheet.Text a.transaction.type_
 
         Finance.Column.Amount ->
-            AppScript.Spreadsheet.Number a.amount
+            AppScript.Spreadsheet.Number a.transaction.amount
 
         Finance.Column.Currency ->
-            AppScript.Spreadsheet.Text a.currency
+            AppScript.Spreadsheet.Text a.transaction.currency
 
         Finance.Column.OriginalAmount ->
-            case a.originalAmount of
+            case a.transaction.originalAmount of
                 Just b ->
                     AppScript.Spreadsheet.Number b.amount
 
@@ -30,7 +33,7 @@ transactionValue column data a =
                     AppScript.Spreadsheet.Text ""
 
         Finance.Column.OriginalCurrency ->
-            case a.originalAmount of
+            case a.transaction.originalAmount of
                 Just b ->
                     AppScript.Spreadsheet.Text b.currency
 
@@ -38,49 +41,49 @@ transactionValue column data a =
                     AppScript.Spreadsheet.Text ""
 
         Finance.Column.Date ->
-            AppScript.Spreadsheet.Date a.date
+            AppScript.Spreadsheet.Date a.transaction.date
 
         Finance.Column.AccountName ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.accountName)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.accountName)
 
         Finance.Column.AccountNumber ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.accountNumber)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.accountNumber)
 
         Finance.Column.BankName ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.bankName)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.bankName)
 
         Finance.Column.BankNumber ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.bankNumber)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.bankNumber)
 
         Finance.Column.BankBic ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.bankBic)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.bankBic)
 
         Finance.Column.ConstantSymbol ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.constantSymbol)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.constantSymbol)
 
         Finance.Column.VariableSymbol ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.variableSymbol)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.variableSymbol)
 
         Finance.Column.SpecificSymbol ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.specificSymbol)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.specificSymbol)
 
         Finance.Column.Reference ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.reference)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.reference)
 
         Finance.Column.Description ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.description)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.description)
 
         Finance.Column.Message ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.message)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.message)
 
         Finance.Column.Note ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.note)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.note)
 
         Finance.Column.Author ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.author)
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.author)
 
         Finance.Column.OrderId ->
-            case a.orderId of
+            case a.transaction.orderId of
                 Just b ->
                     AppScript.Spreadsheet.WholeNumber b
 
@@ -92,8 +95,8 @@ transactionValue column data a =
                 (String.trim
                     (String.join " "
                         (List.filterMap identity
-                            [ a.accountName
-                            , Maybe.map2 (\x x2 -> x ++ "/" ++ x2) a.accountNumber a.bankNumber
+                            [ a.transaction.accountName
+                            , Maybe.map2 (\x x2 -> x ++ "/" ++ x2) a.transaction.accountNumber a.transaction.bankNumber
                             ]
                         )
                     )
