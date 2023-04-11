@@ -2,15 +2,16 @@ module Finance.Config exposing (..)
 
 import Finance.Category
 import Finance.Column
+import Finance.FioToken
 import Parser
 
 
 type Config
-    = FioToken_ FioToken
+    = FioToken_ Finance.FioToken.FioToken
     | CategoryRule_ Finance.Category.Rule
 
 
-fioTokens : List Config -> List FioToken
+fioTokens : List Config -> List Finance.FioToken.FioToken
 fioTokens a =
     List.filterMap
         (\x ->
@@ -47,7 +48,7 @@ singleParser =
                     "fio token" ->
                         Parser.token ":"
                             |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '\n')))
-                            |> Parser.map (\x -> FioToken_ (stringToFioToken (String.trim x)))
+                            |> Parser.map (\x -> FioToken_ (Finance.FioToken.fromString (String.trim x)))
 
                     "rule" ->
                         Parser.token ":"
@@ -73,21 +74,3 @@ multipleParser =
                     |> Parser.map (\x2 -> Parser.Loop (x2 :: x))
                 ]
         )
-
-
-
---
-
-
-type FioToken
-    = FioToken String
-
-
-stringToFioToken : String -> FioToken
-stringToFioToken =
-    FioToken
-
-
-fioTokenToString : FioToken -> String
-fioTokenToString (FioToken a) =
-    a
