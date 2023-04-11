@@ -36,6 +36,8 @@ type Column
     | Category
     | Subcategory
     | FulfillmentDate
+    | FulfillmentMonth
+    | FulfillmentYear
 
 
 fromString : String -> Maybe Column
@@ -121,6 +123,12 @@ fromString a =
 
         "fulfillment date" ->
             Just FulfillmentDate
+
+        "fulfillment month" ->
+            Just FulfillmentMonth
+
+        "fulfillment year" ->
+            Just FulfillmentYear
 
         _ ->
             Nothing
