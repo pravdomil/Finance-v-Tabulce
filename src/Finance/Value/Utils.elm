@@ -1,4 +1,4 @@
-module Finance.Utils exposing (..)
+module Finance.Value.Utils exposing (..)
 
 import AppScript.Spreadsheet
 import Time

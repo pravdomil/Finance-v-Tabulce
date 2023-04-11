@@ -11,7 +11,7 @@ import Finance.Column
 import Finance.Column.Utils
 import Finance.Config
 import Finance.FioToken
-import Finance.Utils
+import Finance.Value.Utils
 import FioCz
 import Iso8601
 import JavaScript
@@ -79,7 +79,7 @@ insertNewTransactions sheet a =
     let
         rowToNonEmptyString : List AppScript.Spreadsheet.Value -> Maybe String
         rowToNonEmptyString b =
-            case Finance.Utils.cellsToString b of
+            case Finance.Value.Utils.cellsToString b of
                 "" ->
                     Nothing
 
@@ -185,7 +185,7 @@ updateTransactionsHelper rules a =
 
         updateTransaction : Array.Array AppScript.Spreadsheet.Value -> Array.Array AppScript.Spreadsheet.Value
         updateTransaction b =
-            case Array.get 0 b |> Maybe.andThen (\x -> Finance.Utils.valueToString x |> Codec.decodeString transactionCodec |> Result.toMaybe) of
+            case Array.get 0 b |> Maybe.andThen (\x -> Finance.Value.Utils.valueToString x |> Codec.decodeString transactionCodec |> Result.toMaybe) of
                 Just transaction ->
                     let
                         category : Finance.Category.Category
@@ -231,7 +231,7 @@ columnIndexes a =
             (\x ->
                 Array.foldl
                     (\x2 ( acc, i ) ->
-                        ( case Finance.Column.fromString (Finance.Utils.valueToString x2) of
+                        ( case Finance.Column.fromString (Finance.Value.Utils.valueToString x2) of
                             Just x3 ->
                                 ( i, x3 ) :: acc
 

@@ -3,7 +3,7 @@ module Finance.Category.Utils exposing (..)
 import AppScript.Spreadsheet
 import Finance.Category
 import Finance.Column.Utils
-import Finance.Utils
+import Finance.Value.Utils
 import FioCz
 import List.Extra
 
@@ -22,4 +22,4 @@ ruleMatches : FioCz.Transaction -> Finance.Category.Rule -> Bool
 ruleMatches transaction a =
     String.contains
         (String.toLower a.contains)
-        (String.toLower (Finance.Utils.valueToString (Finance.Column.Utils.transactionValue a.column Finance.Category.empty transaction)))
+        (String.toLower (Finance.Value.Utils.valueToString (Finance.Column.Utils.transactionValue a.column Finance.Category.empty transaction)))

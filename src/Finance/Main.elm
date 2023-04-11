@@ -6,7 +6,7 @@ import Codec
 import Finance.Action
 import Finance.Config
 import Finance.Update
-import Finance.Utils
+import Finance.Value.Utils
 import JavaScript
 import Json.Decode
 import Json.Encode
@@ -147,7 +147,7 @@ updateAction a =
                     |> Task.andThen AppScript.Spreadsheet.getValues
                     |> Task.andThen
                         (\x ->
-                            case Parser.run Finance.Config.multipleParser ("\n" ++ Finance.Utils.rowsToString x) of
+                            case Parser.run Finance.Config.multipleParser ("\n" ++ Finance.Value.Utils.rowsToString x) of
                                 Ok x2 ->
                                     Finance.Update.transactions transactions x2
 
