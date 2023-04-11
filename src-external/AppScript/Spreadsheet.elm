@@ -162,6 +162,7 @@ setValues_ (Range a) values =
 
 type Value
     = Text String
+    | WholeNumber Int
     | Number Float
     | Date Time.Posix
 
@@ -170,6 +171,7 @@ valueDecoder : Json.Decode.Decoder Value
 valueDecoder =
     Json.Decode.oneOf
         [ Json.Decode.map Text Json.Decode.string
+        , Json.Decode.map WholeNumber Json.Decode.int
         , Json.Decode.map Number Json.Decode.float
         , Json.Decode.map Date JavaScript.Decoder.timePosix
         ]
@@ -180,6 +182,9 @@ encodeValue a =
     case a of
         Text b ->
             Json.Encode.string b
+
+        WholeNumber b ->
+            Json.Encode.int b
 
         Number b ->
             Json.Encode.float b
