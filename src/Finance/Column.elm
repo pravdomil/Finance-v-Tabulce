@@ -30,6 +30,8 @@ type Column
     | OrderId
       --
     | Account
+    | Category
+    | Subcategory
 
 
 fromString : String -> Maybe Column
@@ -100,6 +102,12 @@ fromString a =
 
         "account" ->
             Just Account
+
+        "category" ->
+            Just Category
+
+        "subcategory" ->
+            Just Subcategory
 
         _ ->
             Nothing
