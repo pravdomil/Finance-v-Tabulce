@@ -47,8 +47,8 @@ singleParser =
                 case String.toLower name of
                     "fio token" ->
                         Parser.token ":"
-                            |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '\n')))
-                            |> Parser.map (\x -> FioToken_ (Finance.FioToken.fromString (String.trim x)))
+                            |> Parser.andThen (\() -> fioTokenParser)
+                            |> Parser.map FioToken_
 
                     "rule" ->
                         Parser.token ":"
@@ -74,6 +74,20 @@ multipleParser =
                     |> Parser.map (\x2 -> Parser.Loop (x2 :: x))
                 ]
         )
+
+
+
+--
+
+
+fioTokenParser : Parser.Parser Finance.FioToken.FioToken
+fioTokenParser =
+    Parser.succeed Finance.FioToken.fromString
+        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
 
 
 ruleParser : Parser.Parser Finance.Category.Rule
@@ -102,6 +116,10 @@ ruleParser =
         |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
         |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
         |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+
+
+
+--
 
 
 spaces : Parser.Parser ()
