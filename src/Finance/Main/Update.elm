@@ -282,14 +282,14 @@ columnIndexes a =
         |> Maybe.withDefault []
 
 
-computeNewTransaction : List FioCz.Transaction -> List FioCz.Transaction -> List FioCz.Transaction
+computeNewTransaction : List Finance.Transaction.Transaction -> List Finance.Transaction.Transaction -> List Finance.Transaction.Transaction
 computeNewTransaction a b =
     Dict.merge
         (\_ x acc -> x :: acc)
         (\_ _ _ acc -> acc)
         (\_ _ acc -> acc)
-        (Dict.fromList (List.map (\x -> ( x.id, x )) a))
-        (Dict.fromList (List.map (\x -> ( x.id, x )) b))
+        (Dict.fromList (List.map (\x -> ( x.transaction.id, x )) a))
+        (Dict.fromList (List.map (\x -> ( x.transaction.id, x )) b))
         []
 
 
