@@ -30,7 +30,7 @@ type alias Account =
 codec : Codec.Codec Transaction
 codec =
     Codec.versioned
-        "FioCzTransaction1"
+        "Transaction1"
         (Codec.record (\x1 x2 -> { account = x1, transaction = x2 })
             |> Codec.field .account accountCodec
             |> Codec.field .transaction fioCzTransactionCodec
