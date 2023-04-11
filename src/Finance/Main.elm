@@ -143,7 +143,7 @@ updateAction a =
             )
         |> Task.andThen
             (\( transactions, config ) ->
-                AppScript.Spreadsheet.getRange config "A2:A"
+                AppScript.Spreadsheet.getRange config "A2:E"
                     |> Task.andThen AppScript.Spreadsheet.getValues
                     |> Task.andThen
                         (\x ->

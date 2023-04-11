@@ -41,17 +41,17 @@ categoryRules a =
 
 singleParser : Parser.Parser Config
 singleParser =
-    Parser.getChompedString (Parser.chompWhile (\x -> x /= ':' && x /= '\n'))
+    cellText
         |> Parser.andThen
             (\name ->
                 case String.toLower name of
                     "account" ->
-                        Parser.token ":"
+                        Parser.token "\t"
                             |> Parser.andThen (\() -> accountParser)
                             |> Parser.map Account
 
                     "rule" ->
-                        Parser.token ":"
+                        Parser.token "\t"
                             |> Parser.andThen (\() -> ruleParser)
                             |> Parser.map CategoryRule
 
@@ -70,6 +70,8 @@ multipleParser =
                     |> Parser.map (\() -> Parser.Done (List.reverse x))
                 , Parser.symbol "\n"
                     |> Parser.map (\() -> Parser.Loop x)
+                , Parser.symbol "\t\t\t\t"
+                    |> Parser.map (\() -> Parser.Loop x)
                 , singleParser
                     |> Parser.map (\x2 -> Parser.Loop (x2 :: x))
                 ]
@@ -83,13 +85,12 @@ multipleParser =
 accountParser : Parser.Parser Finance.Account.Account
 accountParser =
     Parser.succeed Finance.Account.fio
-        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
-        |> Parser.andThen (\x -> Parser.symbol "\"fio\"" |> Parser.map (\() -> x))
-        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
-        |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
-        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
-        |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
-        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> Parser.symbol "fio" |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> Parser.token "\t" |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> cellText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> Parser.token "\t" |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> cellText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> Parser.token "\t" |> Parser.map (\() -> x))
 
 
 ruleParser : Parser.Parser Finance.Category.Rule
@@ -97,7 +98,7 @@ ruleParser =
     let
         column : Parser.Parser Finance.Column.Column
         column =
-            quotedText
+            cellText
                 |> Parser.andThen
                     (\x ->
                         case Finance.Column.fromString x of
@@ -109,28 +110,19 @@ ruleParser =
                     )
     in
     Parser.succeed Finance.Category.Rule
-        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
-        |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
-        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
-        |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
-        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> cellText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> Parser.token "\t" |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> cellText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> Parser.token "\t" |> Parser.map (\() -> x))
         |> Parser.andThen (\x -> column |> Parser.map (\x2 -> x x2))
-        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
-        |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
-        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> Parser.token "\t" |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> cellText |> Parser.map (\x2 -> x x2))
 
 
 
 --
 
 
-spaces : Parser.Parser ()
-spaces =
-    Parser.chompWhile (\x -> x == ' ')
-
-
-quotedText : Parser.Parser String
-quotedText =
-    Parser.symbol "\""
-        |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '"' && x /= '\n')))
-        |> Parser.andThen (\x -> Parser.symbol "\"" |> Parser.map (\() -> x))
+cellText : Parser.Parser String
+cellText =
+    Parser.getChompedString (Parser.chompWhile (\x -> x /= '\t' && x /= '\n'))
