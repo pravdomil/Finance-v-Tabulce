@@ -20,6 +20,9 @@ valueToString b =
         AppScript.Spreadsheet.Text c ->
             c
 
+        AppScript.Spreadsheet.WholeNumber c ->
+            String.fromInt c
+
         AppScript.Spreadsheet.Number c ->
             String.fromFloat c
 
