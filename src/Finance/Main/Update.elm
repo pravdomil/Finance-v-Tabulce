@@ -184,6 +184,10 @@ updateTransactionsHelper rules a =
         fulfillmentDateColumnIndex =
             findColumn Finance.Column.FulfillmentDate
 
+        userNoteColumnIndex : Maybe Int
+        userNoteColumnIndex =
+            findColumn Finance.Column.UserNote
+
         updateTransaction : Array.Array AppScript.Spreadsheet.Value -> Array.Array AppScript.Spreadsheet.Value
         updateTransaction b =
             case Array.get 0 b |> Maybe.andThen (\x -> Finance.Value.Utils.valueToString x |> Codec.decodeString transactionCodec |> Result.toMaybe) of
@@ -195,6 +199,7 @@ updateTransactionsHelper rules a =
                                 (categoryColumnIndex |> Maybe.andThen (\x -> Array.get x b) |> Maybe.withDefault (AppScript.Spreadsheet.Text ""))
                                 (subcategoryColumnIndex |> Maybe.andThen (\x -> Array.get x b) |> Maybe.withDefault (AppScript.Spreadsheet.Text ""))
                                 (fulfillmentDateColumnIndex |> Maybe.andThen (\x -> Array.get x b) |> Maybe.withDefault (AppScript.Spreadsheet.Text ""))
+                                (userNoteColumnIndex |> Maybe.andThen (\x -> Array.get x b) |> Maybe.withDefault (AppScript.Spreadsheet.Text ""))
                                 |> (\x ->
                                         case x.category of
                                             AppScript.Spreadsheet.Text "" ->
