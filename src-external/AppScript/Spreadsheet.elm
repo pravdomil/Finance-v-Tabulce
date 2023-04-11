@@ -1,5 +1,6 @@
 module AppScript.Spreadsheet exposing (..)
 
+import Array
 import JavaScript
 import JavaScript.Decoder
 import JavaScript.Encoder
@@ -131,11 +132,27 @@ getValues (Range a) =
         (Json.Decode.list (Json.Decode.list valueDecoder))
 
 
+getValues_ : Range -> Task.Task JavaScript.Error (Array.Array (Array.Array Value))
+getValues_ (Range a) =
+    JavaScript.run
+        "a.getValues()"
+        a
+        (Json.Decode.array (Json.Decode.array valueDecoder))
+
+
 setValues : Range -> List (List Value) -> Task.Task JavaScript.Error ()
 setValues (Range a) values =
     JavaScript.run
         "a[0].setValues(a[1])"
         (Json.Encode.list identity [ a, Json.Encode.list (Json.Encode.list encodeValue) values ])
+        (Json.Decode.succeed ())
+
+
+setValues_ : Range -> Array.Array (Array.Array Value) -> Task.Task JavaScript.Error ()
+setValues_ (Range a) values =
+    JavaScript.run
+        "a[0].setValues(a[1])"
+        (Json.Encode.list identity [ a, Json.Encode.array (Json.Encode.array encodeValue) values ])
         (Json.Decode.succeed ())
 
 
