@@ -74,7 +74,7 @@ fetchNewTransactions time token =
             )
 
 
-insertNewTransactions : AppScript.Spreadsheet.Sheet -> List FioCz.Transaction -> Task.Task JavaScript.Error ()
+insertNewTransactions : AppScript.Spreadsheet.Sheet -> List Finance.Transaction.Transaction -> Task.Task JavaScript.Error ()
 insertNewTransactions sheet a =
     let
         rowToNonEmptyString : List AppScript.Spreadsheet.Value -> Maybe String
@@ -86,14 +86,14 @@ insertNewTransactions sheet a =
                 c ->
                     Just c
 
-        transactionsInSheet : Task.Task JavaScript.Error (Result Json.Decode.Error (List FioCz.Transaction))
+        transactionsInSheet : Task.Task JavaScript.Error (Result Json.Decode.Error (List Finance.Transaction.Transaction))
         transactionsInSheet =
             AppScript.Spreadsheet.getRange sheet "A2:A"
                 |> Task.andThen AppScript.Spreadsheet.getValues
                 |> Task.map
                     (\x ->
                         List.filterMap rowToNonEmptyString x
-                            |> List.map (Codec.decodeString transactionCodec)
+                            |> List.map (Codec.decodeString Finance.Transaction.codec)
                             |> Result.Extra.sequence
                     )
     in
@@ -103,7 +103,7 @@ insertNewTransactions sheet a =
                 case x of
                     Ok b ->
                         let
-                            newTransactions : List FioCz.Transaction
+                            newTransactions : List Finance.Transaction.Transaction
                             newTransactions =
                                 computeNewTransaction a b
 
@@ -123,7 +123,7 @@ insertNewTransactions sheet a =
                                             x2
                                             (List.map
                                                 (\x3 ->
-                                                    [ AppScript.Spreadsheet.Text (Codec.encodeToString 0 transactionCodec x3)
+                                                    [ AppScript.Spreadsheet.Text (Codec.encodeToString 0 Finance.Transaction.codec x3)
                                                     ]
                                                 )
                                                 newTransactions
