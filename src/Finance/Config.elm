@@ -4,8 +4,8 @@ import Parser
 
 
 type Config
-    = FioToken String
-    | Rule String
+    = FioToken_ String
+    | Rule_ String
 
 
 fioTokens : List Config -> List String
@@ -13,7 +13,7 @@ fioTokens a =
     List.filterMap
         (\x ->
             case x of
-                FioToken x2 ->
+                FioToken_ x2 ->
                     Just x2
 
                 _ ->
@@ -27,7 +27,7 @@ rules a =
     List.filterMap
         (\x ->
             case x of
-                Rule x2 ->
+                Rule_ x2 ->
                     Just x2
 
                 _ ->
@@ -45,12 +45,12 @@ singleParser =
                     "fio token" ->
                         Parser.token ":"
                             |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '\n')))
-                            |> Parser.map (\x -> FioToken (String.trim x))
+                            |> Parser.map (\x -> FioToken_ (String.trim x))
 
                     "rule" ->
                         Parser.token ":"
                             |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '\n')))
-                            |> Parser.map (\x -> Rule (String.trim x))
+                            |> Parser.map (\x -> Rule_ (String.trim x))
 
                     _ ->
                         Parser.problem ("Unknown config " ++ name ++ ".")
