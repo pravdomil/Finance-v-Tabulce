@@ -15,20 +15,20 @@ function onOpen() {
 
 function onInstallAction(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
-  Elm.Main.init({ flags: { action: [0, e] } })
+  Elm.Main.init({ flags: { action: ["v1", [0, e]] } })
 }
 
 function onUpdateAction(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
-  Elm.Main.init({ flags: { action: [1, e] } })
+  Elm.Main.init({ flags: { action: ["v1", [1, e]] } })
 }
 
 function onOpenTrigger(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
-  Elm.Main.init({ flags: { action: [2, e] } })
+  Elm.Main.init({ flags: { action: ["v1", [2, e]] } })
 }
 
 function onDailyTrigger(e) {
   eval(UrlFetchApp.fetch(financeUrl).getContentText())
-  Elm.Main.init({ flags: { action: [3, e] } })
+  Elm.Main.init({ flags: { action: ["v1", [3, e]] } })
 }
