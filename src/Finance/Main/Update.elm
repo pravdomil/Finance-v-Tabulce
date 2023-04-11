@@ -196,7 +196,7 @@ updateTransactionsHelper rules a =
 
         updateTransaction : Array.Array AppScript.Spreadsheet.Value -> Array.Array AppScript.Spreadsheet.Value
         updateTransaction b =
-            case Array.get 0 b |> Maybe.andThen (\x -> Finance.Value.Utils.valueToString x |> Codec.decodeString transactionCodec |> Result.toMaybe) of
+            case Array.get 0 b |> Maybe.andThen (\x -> Finance.Value.Utils.valueToString x |> Codec.decodeString Finance.Transaction.codec |> Result.toMaybe) of
                 Just transaction ->
                     let
                         data : Finance.UserData.UserData
@@ -217,7 +217,7 @@ updateTransactionsHelper rules a =
                                 |> (\x ->
                                         case x.fulfillmentDate of
                                             AppScript.Spreadsheet.Text "" ->
-                                                { x | fulfillmentDate = AppScript.Spreadsheet.Date transaction.date }
+                                                { x | fulfillmentDate = AppScript.Spreadsheet.Date transaction.transaction.date }
 
                                             _ ->
                                                 x
@@ -225,7 +225,7 @@ updateTransactionsHelper rules a =
                                 |> (\x ->
                                         case x.note of
                                             AppScript.Spreadsheet.Text "" ->
-                                                { x | note = AppScript.Spreadsheet.Text (Maybe.withDefault "" transaction.note) }
+                                                { x | note = AppScript.Spreadsheet.Text (Maybe.withDefault "" transaction.transaction.note) }
 
                                             _ ->
                                                 x
