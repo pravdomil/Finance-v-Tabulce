@@ -1,13 +1,13 @@
 module Finance.Column.Utils exposing (..)
 
 import AppScript.Spreadsheet
-import Finance.Category
 import Finance.Column
+import Finance.UserData
 import FioCz
 
 
-transactionValue : Finance.Column.Column -> Finance.Category.Category -> FioCz.Transaction -> AppScript.Spreadsheet.Value
-transactionValue column category a =
+transactionValue : Finance.Column.Column -> Finance.UserData.UserData -> FioCz.Transaction -> AppScript.Spreadsheet.Value
+transactionValue column data a =
     case column of
         Finance.Column.Id ->
             AppScript.Spreadsheet.WholeNumber a.id
@@ -106,7 +106,10 @@ transactionValue column category a =
             AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(), MATCH("Date", $1:$1, 0)))), 1, 1)"""
 
         Finance.Column.Category ->
-            category.category
+            data.category
 
         Finance.Column.Subcategory ->
-            category.subcategory
+            data.subcategory
+
+        Finance.Column.FulfillmentDate ->
+            data.fulfillmentDate
