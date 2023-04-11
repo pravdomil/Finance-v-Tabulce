@@ -63,10 +63,19 @@ fetchNewTransactions time account =
             (\x ->
                 case Json.Decode.decodeString FioCz.statementDecoder x of
                     Ok x2 ->
+                        let
+                            account_ : Finance.Transaction.Account
+                            account_ =
+                                Finance.Transaction.Account
+                                    (Finance.Account.name account)
+                                    x2.account.number
+                                    x2.account.bankNumber
+                                    x2.account.currency
+                        in
                         Task.succeed
                             (List.map
                                 (\x3 ->
-                                    Finance.Transaction.Transaction (Finance.Account.name account) x3
+                                    Finance.Transaction.Transaction account_ x3
                                 )
                                 x2.transactions
                             )
