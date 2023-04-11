@@ -79,16 +79,6 @@ multipleParser =
 ruleParser : Parser.Parser Finance.Category.Rule
 ruleParser =
     let
-        spaces : Parser.Parser ()
-        spaces =
-            Parser.chompWhile (\x -> x == ' ')
-
-        quotedText : Parser.Parser String
-        quotedText =
-            Parser.symbol "\""
-                |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '"' && x /= '\n')))
-                |> Parser.andThen (\x -> Parser.symbol "\"" |> Parser.map (\() -> x))
-
         column : Parser.Parser Finance.Column.Column
         column =
             quotedText
@@ -112,3 +102,15 @@ ruleParser =
         |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
         |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
         |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+
+
+spaces : Parser.Parser ()
+spaces =
+    Parser.chompWhile (\x -> x == ' ')
+
+
+quotedText : Parser.Parser String
+quotedText =
+    Parser.symbol "\""
+        |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '"' && x /= '\n')))
+        |> Parser.andThen (\x -> Parser.symbol "\"" |> Parser.map (\() -> x))
