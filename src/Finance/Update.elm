@@ -3,8 +3,10 @@ module Finance.Update exposing (..)
 import AppScript.Spreadsheet
 import AppScript.UrlFetch
 import Array
+import Array.Extra
 import Codec
 import Dict
+import Finance.Column
 import Finance.Config
 import Finance.Utils
 import FioCz
@@ -22,7 +24,7 @@ transactions : AppScript.Spreadsheet.Sheet -> List Finance.Config.Config -> Task
 transactions sheet configs =
     Task.sequence
         [ fetchAndInsertNewTransactions sheet (Finance.Config.fioTokens configs)
-        , updateCells sheet (Finance.Config.rules configs)
+        , updateTransactions sheet (Finance.Config.rules configs)
         ]
         |> Task.map (\_ -> ())
 
@@ -133,22 +135,56 @@ insertNewTransactions sheet a =
 --
 
 
-updateCells : AppScript.Spreadsheet.Sheet -> List String -> Task.Task JavaScript.Error ()
-updateCells sheet rules =
+updateTransactions : AppScript.Spreadsheet.Sheet -> List String -> Task.Task JavaScript.Error ()
+updateTransactions sheet rules =
     AppScript.Spreadsheet.allRange sheet
         |> Task.andThen
             (\x ->
                 AppScript.Spreadsheet.getValues_ x
                     |> Task.andThen
                         (\x2 ->
-                            AppScript.Spreadsheet.setValues_ x (updateValues rules x2)
+                            AppScript.Spreadsheet.setValues_ x (updateTransactionsHelper rules x2)
                         )
             )
 
 
-updateValues : List String -> Array.Array (Array.Array AppScript.Spreadsheet.Value) -> Array.Array (Array.Array AppScript.Spreadsheet.Value)
-updateValues _ a =
-    a
+updateTransactionsHelper : List String -> Array.Array (Array.Array AppScript.Spreadsheet.Value) -> Array.Array (Array.Array AppScript.Spreadsheet.Value)
+updateTransactionsHelper _ a =
+    let
+        columns : List ( Int, Finance.Column.Column )
+        columns =
+            Array.get 0 a
+                |> Maybe.map
+                    (\x ->
+                        Array.foldl
+                            (\x2 ( acc, i ) ->
+                                ( case Finance.Column.fromString (Finance.Utils.valueToString x2) of
+                                    Just x3 ->
+                                        ( i, x3 ) :: acc
+
+                                    Nothing ->
+                                        acc
+                                , i + 1
+                                )
+                            )
+                            ( []
+                            , 0
+                            )
+                            x
+                            |> Tuple.first
+                            |> List.reverse
+                    )
+                |> Maybe.withDefault []
+    in
+    Array.Extra.update
+        0
+        (\x ->
+            Array.set
+                1
+                (AppScript.Spreadsheet.Text (Debug.toString columns))
+                x
+        )
+        a
 
 
 
