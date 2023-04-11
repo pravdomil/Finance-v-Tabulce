@@ -33,20 +33,20 @@ transactions sheet configs =
 --
 
 
-fetchAndInsertNewTransactions : AppScript.Spreadsheet.Sheet -> List String -> Task.Task JavaScript.Error ()
+fetchAndInsertNewTransactions : AppScript.Spreadsheet.Sheet -> List Finance.Config.FioToken -> Task.Task JavaScript.Error ()
 fetchAndInsertNewTransactions sheet tokens =
     Time.now
         |> Task.andThen (\x -> Task.sequence (List.map (fetchNewTransactions x) tokens))
         |> Task.andThen (\x -> insertNewTransactions sheet (List.concat x))
 
 
-fetchNewTransactions : Time.Posix -> String -> Task.Task JavaScript.Error (List FioCz.Transaction)
+fetchNewTransactions : Time.Posix -> Finance.Config.FioToken -> Task.Task JavaScript.Error (List FioCz.Transaction)
 fetchNewTransactions time token =
     let
         url : String
         url =
             "https://www.fio.cz/ib_api/rest/periods/"
-                ++ Url.percentEncode token
+                ++ Url.percentEncode (Finance.Config.fioTokenToString token)
                 ++ "/"
                 ++ Url.percentEncode (String.left 10 (Iso8601.fromTime (minusDays 30 time)))
                 ++ "/"

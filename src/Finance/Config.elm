@@ -4,11 +4,11 @@ import Parser
 
 
 type Config
-    = FioToken_ String
+    = FioToken_ FioToken
     | Rule_ String
 
 
-fioTokens : List Config -> List String
+fioTokens : List Config -> List FioToken
 fioTokens a =
     List.filterMap
         (\x ->
@@ -45,7 +45,7 @@ singleParser =
                     "fio token" ->
                         Parser.token ":"
                             |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '\n')))
-                            |> Parser.map (\x -> FioToken_ (String.trim x))
+                            |> Parser.map (\x -> FioToken_ (stringToFioToken (String.trim x)))
 
                     "rule" ->
                         Parser.token ":"
