@@ -2,12 +2,12 @@ module Finance.Category.Utils exposing (..)
 
 import Finance.Category
 import Finance.Column.Utils
+import Finance.Transaction
 import Finance.UserData
 import Finance.Value.Utils
-import FioCz
 
 
-ruleMatches : FioCz.Transaction -> Finance.UserData.UserData -> Finance.Category.Rule -> Bool
+ruleMatches : Finance.Transaction.Transaction -> Finance.UserData.UserData -> Finance.Category.Rule -> Bool
 ruleMatches transaction data a =
     String.contains
         (String.toLower a.contains)
