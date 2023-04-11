@@ -5,11 +5,11 @@ import AppScript.UrlFetch
 import Array
 import Codec
 import Dict
+import Finance.Account
 import Finance.Category
 import Finance.Column
 import Finance.Column.Utils
 import Finance.Config
-import Finance.FioToken
 import Finance.Transaction
 import Finance.UserData
 import Finance.UserData.Utils
@@ -38,20 +38,20 @@ transactions sheet configs =
 --
 
 
-fetchAndInsertNewTransactions : AppScript.Spreadsheet.Sheet -> List Finance.FioToken.FioToken -> Task.Task JavaScript.Error ()
+fetchAndInsertNewTransactions : AppScript.Spreadsheet.Sheet -> List Finance.Account.Account -> Task.Task JavaScript.Error ()
 fetchAndInsertNewTransactions sheet tokens =
     Time.now
         |> Task.andThen (\x -> Task.sequence (List.map (fetchNewTransactions x) tokens))
         |> Task.andThen (\x -> insertNewTransactions sheet (List.concat x))
 
 
-fetchNewTransactions : Time.Posix -> Finance.FioToken.FioToken -> Task.Task JavaScript.Error (List Finance.Transaction.Transaction)
+fetchNewTransactions : Time.Posix -> Finance.Account.Account -> Task.Task JavaScript.Error (List Finance.Transaction.Transaction)
 fetchNewTransactions time token =
     let
         url : String
         url =
             "https://www.fio.cz/ib_api/rest/periods/"
-                ++ Url.percentEncode (Finance.FioToken.token token)
+                ++ Url.percentEncode (Finance.Account.token token)
                 ++ "/"
                 ++ Url.percentEncode (String.left 10 (Iso8601.fromTime (minusDays 30 time)))
                 ++ "/"
@@ -66,7 +66,7 @@ fetchNewTransactions time token =
                         Task.succeed
                             (List.map
                                 (\x3 ->
-                                    Finance.Transaction.Transaction (Finance.FioToken.name token) x3
+                                    Finance.Transaction.Transaction (Finance.Account.name token) x3
                                 )
                                 x2.transactions
                             )

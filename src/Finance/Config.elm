@@ -1,17 +1,17 @@
 module Finance.Config exposing (..)
 
+import Finance.Account
 import Finance.Category
 import Finance.Column
-import Finance.FioToken
 import Parser
 
 
 type Config
-    = FioToken_ Finance.FioToken.FioToken
+    = FioToken_ Finance.Account.Account
     | CategoryRule_ Finance.Category.Rule
 
 
-fioTokens : List Config -> List Finance.FioToken.FioToken
+fioTokens : List Config -> List Finance.Account.Account
 fioTokens a =
     List.filterMap
         (\x ->
@@ -80,9 +80,9 @@ multipleParser =
 --
 
 
-fioTokenParser : Parser.Parser Finance.FioToken.FioToken
+fioTokenParser : Parser.Parser Finance.Account.Account
 fioTokenParser =
-    Parser.succeed Finance.FioToken.fromString
+    Parser.succeed Finance.Account.fromString
         |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
         |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
         |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
