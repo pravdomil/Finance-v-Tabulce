@@ -1,6 +1,5 @@
 module Finance.Config exposing (..)
 
-import AppScript.Spreadsheet
 import Finance.Column
 import Parser
 
@@ -102,14 +101,4 @@ type alias CategoryRule =
     , subcategory : String
     , column : Finance.Column.Column
     , contains : String
-    }
-
-
-
---
-
-
-type alias Category =
-    { category : AppScript.Spreadsheet.Value
-    , subcategory : AppScript.Spreadsheet.Value
     }

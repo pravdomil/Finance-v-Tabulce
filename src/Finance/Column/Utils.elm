@@ -1,12 +1,12 @@
 module Finance.Column.Utils exposing (..)
 
 import AppScript.Spreadsheet
+import Finance.Category
 import Finance.Column
-import Finance.Config
 import FioCz
 
 
-transactionValue : Finance.Column.Column -> Finance.Config.Category -> FioCz.Transaction -> AppScript.Spreadsheet.Value
+transactionValue : Finance.Column.Column -> Finance.Category.Category -> FioCz.Transaction -> AppScript.Spreadsheet.Value
 transactionValue column category a =
     case column of
         Finance.Column.Id ->
