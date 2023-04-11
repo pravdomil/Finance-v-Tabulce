@@ -5,7 +5,7 @@ import AppScript.Spreadsheet
 import Codec
 import Finance.Action
 import Finance.Config
-import Finance.Update
+import Finance.Main.Update
 import Finance.Value.Utils
 import JavaScript
 import Json.Decode
@@ -149,7 +149,7 @@ updateAction a =
                         (\x ->
                             case Parser.run Finance.Config.multipleParser ("\n" ++ Finance.Value.Utils.rowsToString x) of
                                 Ok x2 ->
-                                    Finance.Update.transactions transactions x2
+                                    Finance.Main.Update.transactions transactions x2
 
                                 Err x2 ->
                                     AppScript.Spreadsheet.alert "Invalid Config" (Parser.DeadEnd.listToString x2)

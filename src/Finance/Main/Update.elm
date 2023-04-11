@@ -1,4 +1,4 @@
-module Finance.Update exposing (..)
+module Finance.Main.Update exposing (..)
 
 import AppScript.Spreadsheet
 import AppScript.UrlFetch
