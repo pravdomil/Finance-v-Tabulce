@@ -34,71 +34,71 @@ type Column
 
 fromString : String -> Maybe Column
 fromString a =
-    case a of
-        "ID" ->
+    case String.toLower a of
+        "id" ->
             Just Id
 
-        "Type" ->
+        "type" ->
             Just Type
 
-        "Amount" ->
+        "amount" ->
             Just Amount
 
-        "Currency" ->
+        "currency" ->
             Just Currency
 
-        "Original Amount" ->
+        "original amount" ->
             Just OriginalAmount
 
-        "Original Currency" ->
+        "original currency" ->
             Just OriginalCurrency
 
-        "Date" ->
+        "date" ->
             Just Date
 
-        "Account Name" ->
+        "account name" ->
             Just AccountName
 
-        "Account Number" ->
+        "account number" ->
             Just AccountNumber
 
-        "Bank Name" ->
+        "bank name" ->
             Just BankName
 
-        "Bank Number" ->
+        "bank number" ->
             Just BankNumber
 
-        "Bank BIC" ->
+        "bank bic" ->
             Just BankBic
 
-        "Constant Symbol" ->
+        "constant symbol" ->
             Just ConstantSymbol
 
-        "Variable Symbol" ->
+        "variable symbol" ->
             Just VariableSymbol
 
-        "Specific Symbol" ->
+        "specific symbol" ->
             Just SpecificSymbol
 
-        "Reference" ->
+        "reference" ->
             Just Reference
 
-        "Description" ->
+        "description" ->
             Just Description
 
-        "Message" ->
+        "message" ->
             Just Message
 
-        "Note" ->
+        "note" ->
             Just Note
 
-        "Author" ->
+        "author" ->
             Just Author
 
-        "Order ID" ->
+        "order id" ->
             Just OrderId
 
-        "Account" ->
+        "account" ->
             Just Account
 
         _ ->
