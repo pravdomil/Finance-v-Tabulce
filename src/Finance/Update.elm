@@ -104,20 +104,24 @@ insertNewTransactions sheet a =
                             count =
                                 List.length newTransactions
                         in
-                        AppScript.Spreadsheet.insertRowsAfter sheet 1 count
-                            |> Task.andThen (\() -> AppScript.Spreadsheet.getRange sheet ("A2:A" ++ String.fromInt (count + 1)))
-                            |> Task.andThen
-                                (\x2 ->
-                                    AppScript.Spreadsheet.setValues
-                                        x2
-                                        (List.map
-                                            (\x3 ->
-                                                [ AppScript.Spreadsheet.Text (Codec.encodeToString 0 transactionCodec x3)
-                                                ]
+                        if count == 0 then
+                            Task.succeed ()
+
+                        else
+                            AppScript.Spreadsheet.insertRowsAfter sheet 1 count
+                                |> Task.andThen (\() -> AppScript.Spreadsheet.getRange sheet ("A2:A" ++ String.fromInt (count + 1)))
+                                |> Task.andThen
+                                    (\x2 ->
+                                        AppScript.Spreadsheet.setValues
+                                            x2
+                                            (List.map
+                                                (\x3 ->
+                                                    [ AppScript.Spreadsheet.Text (Codec.encodeToString 0 transactionCodec x3)
+                                                    ]
+                                                )
+                                                newTransactions
                                             )
-                                            newTransactions
-                                        )
-                                )
+                                    )
 
                     Err _ ->
                         AppScript.Spreadsheet.alert "Update Transactions Failed" "Cannot decode transactions."
