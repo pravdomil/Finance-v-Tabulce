@@ -216,6 +216,14 @@ updateTransactionsHelper rules a =
                                             _ ->
                                                 x
                                    )
+                                |> (\x ->
+                                        case x.note of
+                                            AppScript.Spreadsheet.Text "" ->
+                                                { x | note = AppScript.Spreadsheet.Text (Maybe.withDefault "" transaction.note) }
+
+                                            _ ->
+                                                x
+                                   )
                     in
                     List.foldl
                         (\( i, x ) acc ->
