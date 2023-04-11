@@ -5,8 +5,8 @@ type Account
     = Fio String String
 
 
-fromString : String -> String -> Account
-fromString name_ token_ =
+fio : String -> String -> Account
+fio name_ token_ =
     Fio name_ token_
 
 

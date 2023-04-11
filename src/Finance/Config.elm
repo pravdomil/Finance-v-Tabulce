@@ -82,7 +82,7 @@ multipleParser =
 
 accountParser : Parser.Parser Finance.Account.Account
 accountParser =
-    Parser.succeed Finance.Account.fromString
+    Parser.succeed Finance.Account.fio
         |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
         |> Parser.andThen (\x -> Parser.symbol "\"fio\"" |> Parser.map (\() -> x))
         |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
