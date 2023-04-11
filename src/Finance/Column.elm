@@ -35,6 +35,7 @@ type Column
       --
     | Category
     | Subcategory
+    | FulfillmentDate
 
 
 fromString : String -> Maybe Column
@@ -117,6 +118,9 @@ fromString a =
 
         "subcategory" ->
             Just Subcategory
+
+        "fulfillment date" ->
+            Just FulfillmentDate
 
         _ ->
             Nothing
