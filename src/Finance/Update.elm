@@ -2,6 +2,7 @@ module Finance.Update exposing (..)
 
 import AppScript.Spreadsheet
 import AppScript.UrlFetch
+import Array
 import Codec
 import Dict
 import Finance.Config
@@ -133,8 +134,21 @@ insertNewTransactions sheet a =
 
 
 updateCells : AppScript.Spreadsheet.Sheet -> List String -> Task.Task JavaScript.Error ()
-updateCells _ _ =
-    Task.succeed ()
+updateCells sheet rules =
+    AppScript.Spreadsheet.allRange sheet
+        |> Task.andThen
+            (\x ->
+                AppScript.Spreadsheet.getValues_ x
+                    |> Task.andThen
+                        (\x2 ->
+                            AppScript.Spreadsheet.setValues_ x (updateValues rules x2)
+                        )
+            )
+
+
+updateValues : List String -> Array.Array (Array.Array AppScript.Spreadsheet.Value) -> Array.Array (Array.Array AppScript.Spreadsheet.Value)
+updateValues _ a =
+    a
 
 
 
