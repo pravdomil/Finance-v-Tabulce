@@ -6,7 +6,7 @@ import Time.Codec
 
 
 type alias Transaction =
-    { tokenName : String
+    { accountName : String
     , transaction : FioCz.Transaction
     }
 
@@ -15,8 +15,8 @@ codec : Codec.Codec Transaction
 codec =
     Codec.versioned
         "FioCzTransaction1"
-        (Codec.record (\x1 x2 -> { tokenName = x1, transaction = x2 })
-            |> Codec.field .tokenName Codec.string
+        (Codec.record (\x1 x2 -> { accountName = x1, transaction = x2 })
+            |> Codec.field .accountName Codec.string
             |> Codec.field .transaction fioCzTransactionCodec
             |> Codec.buildRecord
         )
