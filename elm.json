@@ -20,6 +20,7 @@
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
             "elm-community/array-extra": "2.6.0",
+            "elm-community/list-extra": "8.7.0",
             "mdgriffith/elm-ui": "1.1.8",
             "rtfeldman/elm-iso8601-date-strings": "1.1.4"
         },
