@@ -153,28 +153,7 @@ updateTransactionsHelper _ a =
     let
         columns : List ( Int, Finance.Column.Column )
         columns =
-            Array.get 0 a
-                |> Maybe.map
-                    (\x ->
-                        Array.foldl
-                            (\x2 ( acc, i ) ->
-                                ( case Finance.Column.fromString (Finance.Utils.valueToString x2) of
-                                    Just x3 ->
-                                        ( i, x3 ) :: acc
-
-                                    Nothing ->
-                                        acc
-                                , i + 1
-                                )
-                            )
-                            ( []
-                            , 0
-                            )
-                            x
-                            |> Tuple.first
-                            |> List.reverse
-                    )
-                |> Maybe.withDefault []
+            columnIndexes a
 
         updateTransaction : Array.Array AppScript.Spreadsheet.Value -> Array.Array AppScript.Spreadsheet.Value
         updateTransaction b =
@@ -203,6 +182,32 @@ updateTransactionsHelper _ a =
 
 
 --
+
+
+columnIndexes : Array.Array (Array.Array AppScript.Spreadsheet.Value) -> List ( Int, Finance.Column.Column )
+columnIndexes a =
+    Array.get 0 a
+        |> Maybe.map
+            (\x ->
+                Array.foldl
+                    (\x2 ( acc, i ) ->
+                        ( case Finance.Column.fromString (Finance.Utils.valueToString x2) of
+                            Just x3 ->
+                                ( i, x3 ) :: acc
+
+                            Nothing ->
+                                acc
+                        , i + 1
+                        )
+                    )
+                    ( []
+                    , 0
+                    )
+                    x
+                    |> Tuple.first
+                    |> List.reverse
+            )
+        |> Maybe.withDefault []
 
 
 computeNewTransaction : List FioCz.Transaction -> List FioCz.Transaction -> List FioCz.Transaction
