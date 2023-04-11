@@ -3,7 +3,6 @@ module Finance.Update exposing (..)
 import AppScript.Spreadsheet
 import AppScript.UrlFetch
 import Array
-import Array.Extra
 import Codec
 import Dict
 import Finance.Column
