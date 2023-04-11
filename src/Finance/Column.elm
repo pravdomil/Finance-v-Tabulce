@@ -30,6 +30,7 @@ type Column
     | OrderId
       --
     | Account
+    | Month
     | Category
     | Subcategory
 
@@ -102,6 +103,9 @@ fromString a =
 
         "account" ->
             Just Account
+
+        "month" ->
+            Just Month
 
         "category" ->
             Just Category
