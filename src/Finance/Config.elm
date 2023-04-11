@@ -7,16 +7,16 @@ import Parser
 
 
 type Config
-    = FioToken_ Finance.Account.Account
+    = Account_ Finance.Account.Account
     | CategoryRule_ Finance.Category.Rule
 
 
-fioTokens : List Config -> List Finance.Account.Account
-fioTokens a =
+accounts : List Config -> List Finance.Account.Account
+accounts a =
     List.filterMap
         (\x ->
             case x of
-                FioToken_ x2 ->
+                Account_ x2 ->
                     Just x2
 
                 _ ->
@@ -45,10 +45,10 @@ singleParser =
         |> Parser.andThen
             (\name ->
                 case String.toLower name of
-                    "fio token" ->
+                    "account" ->
                         Parser.token ":"
-                            |> Parser.andThen (\() -> fioTokenParser)
-                            |> Parser.map FioToken_
+                            |> Parser.andThen (\() -> accountParser)
+                            |> Parser.map Account_
 
                     "rule" ->
                         Parser.token ":"
@@ -80,8 +80,8 @@ multipleParser =
 --
 
 
-fioTokenParser : Parser.Parser Finance.Account.Account
-fioTokenParser =
+accountParser : Parser.Parser Finance.Account.Account
+accountParser =
     Parser.succeed Finance.Account.fromString
         |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
         |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
