@@ -2,14 +2,19 @@ module Finance.FioToken exposing (..)
 
 
 type FioToken
-    = FioToken String
+    = FioToken String String
 
 
-fromString : String -> FioToken
-fromString =
-    FioToken
+fromString : String -> String -> FioToken
+fromString name_ token_ =
+    FioToken name_ token_
 
 
-toString : FioToken -> String
-toString (FioToken a) =
+name : FioToken -> String
+name (FioToken a _) =
+    a
+
+
+token : FioToken -> String
+token (FioToken _ a) =
     a
