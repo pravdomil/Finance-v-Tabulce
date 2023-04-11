@@ -10,7 +10,7 @@ transactionValue : Finance.Column.Column -> Finance.UserData.UserData -> Finance
 transactionValue column data a =
     case column of
         Finance.Column.Account ->
-            AppScript.Spreadsheet.Text a.accountName
+            AppScript.Spreadsheet.Text a.account.name
 
         Finance.Column.Id ->
             AppScript.Spreadsheet.WholeNumber a.transaction.id
