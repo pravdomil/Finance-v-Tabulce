@@ -7,8 +7,8 @@ import Parser
 
 
 type Config
-    = Account_ Finance.Account.Account
-    | CategoryRule_ Finance.Category.Rule
+    = Account Finance.Account.Account
+    | CategoryRule Finance.Category.Rule
 
 
 accounts : List Config -> List Finance.Account.Account
@@ -16,7 +16,7 @@ accounts a =
     List.filterMap
         (\x ->
             case x of
-                Account_ x2 ->
+                Account x2 ->
                     Just x2
 
                 _ ->
@@ -30,7 +30,7 @@ categoryRules a =
     List.filterMap
         (\x ->
             case x of
-                CategoryRule_ x2 ->
+                CategoryRule x2 ->
                     Just x2
 
                 _ ->
@@ -48,12 +48,12 @@ singleParser =
                     "account" ->
                         Parser.token ":"
                             |> Parser.andThen (\() -> accountParser)
-                            |> Parser.map Account_
+                            |> Parser.map Account
 
                     "rule" ->
                         Parser.token ":"
                             |> Parser.andThen (\() -> ruleParser)
-                            |> Parser.map CategoryRule_
+                            |> Parser.map CategoryRule
 
                     _ ->
                         Parser.problem ("Unknown config " ++ name ++ ".")
