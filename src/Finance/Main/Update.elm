@@ -51,7 +51,7 @@ fetchNewTransactions time token =
         url : String
         url =
             "https://www.fio.cz/ib_api/rest/periods/"
-                ++ Url.percentEncode (Finance.FioToken.toString token)
+                ++ Url.percentEncode (Finance.FioToken.token token)
                 ++ "/"
                 ++ Url.percentEncode (String.left 10 (Iso8601.fromTime (minusDays 30 time)))
                 ++ "/"
