@@ -84,6 +84,8 @@ accountParser : Parser.Parser Finance.Account.Account
 accountParser =
     Parser.succeed Finance.Account.fromString
         |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> Parser.symbol "\"fio\"" |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
         |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
         |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
         |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
