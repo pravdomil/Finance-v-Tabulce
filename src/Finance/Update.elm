@@ -94,8 +94,30 @@ insertNewTransactions sheet a =
         |> Task.andThen
             (\x ->
                 case x of
-                    Ok _ ->
-                        Task.succeed ()
+                    Ok b ->
+                        let
+                            newTransactions : List FioCz.Transaction
+                            newTransactions =
+                                computeNewTransaction a b
+
+                            count : Int
+                            count =
+                                List.length newTransactions
+                        in
+                        AppScript.Spreadsheet.insertRowsAfter sheet 1 count
+                            |> Task.andThen (\() -> AppScript.Spreadsheet.getRange sheet ("A2:A" ++ String.fromInt (count + 1)))
+                            |> Task.andThen
+                                (\x2 ->
+                                    AppScript.Spreadsheet.setValues
+                                        x2
+                                        (List.map
+                                            (\x3 ->
+                                                [ AppScript.Spreadsheet.Text (Codec.encodeToString 0 transactionCodec x3)
+                                                ]
+                                            )
+                                            newTransactions
+                                        )
+                                )
 
                     Err _ ->
                         AppScript.Spreadsheet.alert "Update Transactions Failed" "Cannot decode transactions."
