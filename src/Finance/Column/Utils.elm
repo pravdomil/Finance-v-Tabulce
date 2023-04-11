@@ -102,6 +102,9 @@ transactionValue column category a =
         Finance.Column.Month ->
             AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(), MATCH("Date", $1:$1, 0)))), MONTH(INDIRECT(ADDRESS(ROW(), MATCH("Date", $1:$1, 0)))), 1)"""
 
+        Finance.Column.Year ->
+            AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(), MATCH("Date", $1:$1, 0)))), 1, 1)"""
+
         Finance.Column.Category ->
             category.category
 

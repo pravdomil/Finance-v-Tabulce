@@ -31,6 +31,7 @@ type Column
       --
     | Account
     | Month
+    | Year
     | Category
     | Subcategory
 
@@ -106,6 +107,9 @@ fromString a =
 
         "month" ->
             Just Month
+
+        "year" ->
+            Just Year
 
         "category" ->
             Just Category
