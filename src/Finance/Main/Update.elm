@@ -10,6 +10,7 @@ import Finance.Column
 import Finance.Column.Utils
 import Finance.Config
 import Finance.FioToken
+import Finance.Transaction
 import Finance.UserData
 import Finance.UserData.Utils
 import Finance.Value.Utils
@@ -44,7 +45,7 @@ fetchAndInsertNewTransactions sheet tokens =
         |> Task.andThen (\x -> insertNewTransactions sheet (List.concat x))
 
 
-fetchNewTransactions : Time.Posix -> Finance.FioToken.FioToken -> Task.Task JavaScript.Error (List FioCz.Transaction)
+fetchNewTransactions : Time.Posix -> Finance.FioToken.FioToken -> Task.Task JavaScript.Error (List Finance.Transaction.Transaction)
 fetchNewTransactions time token =
     let
         url : String
@@ -62,7 +63,13 @@ fetchNewTransactions time token =
             (\x ->
                 case Json.Decode.decodeString FioCz.statementDecoder x of
                     Ok x2 ->
-                        Task.succeed x2.transactions
+                        Task.succeed
+                            (List.map
+                                (\x3 ->
+                                    Finance.Transaction.Transaction (Finance.FioToken.name token) x3
+                                )
+                                x2.transactions
+                            )
 
                     Err x2 ->
                         Task.fail (JavaScript.DecodeError x2)
