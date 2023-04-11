@@ -6,6 +6,7 @@ import Array
 import Codec
 import Dict
 import Finance.Category
+import Finance.Category.Utils
 import Finance.Column
 import Finance.Column.Utils
 import Finance.Config
@@ -191,7 +192,7 @@ updateTransactionsHelper rules a =
                         category =
                             case categoryColumnIndex |> Maybe.andThen (\x -> Array.get x b) |> Maybe.withDefault (AppScript.Spreadsheet.Text "") of
                                 AppScript.Spreadsheet.Text "" ->
-                                    Finance.Category.categorize rules transaction
+                                    Finance.Category.Utils.categorize rules transaction
 
                                 c ->
                                     Finance.Category.Category
