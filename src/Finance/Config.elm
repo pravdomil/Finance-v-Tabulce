@@ -52,8 +52,8 @@ singleParser =
 
                     "rule" ->
                         Parser.token ":"
-                            |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '\n')))
-                            |> Parser.map (\_ -> CategoryRule_ (Finance.Category.Rule "" "" Finance.Column.Id ""))
+                            |> Parser.andThen (\() -> ruleParser)
+                            |> Parser.map CategoryRule_
 
                     _ ->
                         Parser.problem ("Unknown config " ++ name ++ ".")
@@ -74,3 +74,41 @@ multipleParser =
                     |> Parser.map (\x2 -> Parser.Loop (x2 :: x))
                 ]
         )
+
+
+ruleParser : Parser.Parser Finance.Category.Rule
+ruleParser =
+    let
+        spaces : Parser.Parser ()
+        spaces =
+            Parser.chompWhile (\x -> x == ' ')
+
+        quotedText : Parser.Parser String
+        quotedText =
+            Parser.symbol "\""
+                |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '"' && x /= '\n')))
+                |> Parser.andThen (\x -> Parser.symbol "\"" |> Parser.map (\() -> x))
+
+        column : Parser.Parser Finance.Column.Column
+        column =
+            quotedText
+                |> Parser.andThen
+                    (\x ->
+                        case Finance.Column.fromString x of
+                            Just x2 ->
+                                Parser.succeed x2
+
+                            Nothing ->
+                                Parser.problem ("Unknown column " ++ x ++ ".")
+                    )
+    in
+    Parser.succeed Finance.Category.Rule
+        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> column |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> quotedText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> spaces |> Parser.map (\() -> x))
