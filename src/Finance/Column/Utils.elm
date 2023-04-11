@@ -9,7 +9,7 @@ import Finance.UserData
 transactionValue : Finance.Column.Column -> Finance.UserData.UserData -> Finance.Transaction.Transaction -> AppScript.Spreadsheet.Value
 transactionValue column data a =
     case column of
-        Finance.Column.TokenName ->
+        Finance.Column.Account ->
             AppScript.Spreadsheet.Text a.accountName
 
         Finance.Column.Id ->
