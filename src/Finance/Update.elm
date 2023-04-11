@@ -3,6 +3,7 @@ module Finance.Update exposing (..)
 import AppScript.Spreadsheet
 import AppScript.UrlFetch
 import Codec
+import Dict
 import Finance.Config
 import Finance.Utils
 import FioCz
@@ -112,6 +113,17 @@ updateCells _ _ =
 
 
 --
+
+
+computeNewTransaction : List FioCz.Transaction -> List FioCz.Transaction -> List FioCz.Transaction
+computeNewTransaction a b =
+    Dict.merge
+        (\_ x acc -> x :: acc)
+        (\_ _ _ acc -> acc)
+        (\_ _ acc -> acc)
+        (Dict.fromList (List.map (\x -> ( x.id, x )) a))
+        (Dict.fromList (List.map (\x -> ( x.id, x )) b))
+        []
 
 
 minusDays : Int -> Time.Posix -> Time.Posix
