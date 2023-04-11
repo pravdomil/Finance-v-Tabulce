@@ -195,19 +195,18 @@ updateTransactionsHelper rules a =
                                 (categoryColumnIndex |> Maybe.andThen (\x -> Array.get x b) |> Maybe.withDefault (AppScript.Spreadsheet.Text ""))
                                 (subcategoryColumnIndex |> Maybe.andThen (\x -> Array.get x b) |> Maybe.withDefault (AppScript.Spreadsheet.Text ""))
                                 (fulfillmentDateColumnIndex |> Maybe.andThen (\x -> Array.get x b) |> Maybe.withDefault (AppScript.Spreadsheet.Text ""))
+                                |> (\x ->
+                                        case x.category of
+                                            AppScript.Spreadsheet.Text "" ->
+                                                Finance.UserData.Utils.categorize rules transaction x
 
-                        nextData : Finance.UserData.UserData
-                        nextData =
-                            case data.category of
-                                AppScript.Spreadsheet.Text "" ->
-                                    Finance.UserData.Utils.categorize rules transaction data
-
-                                _ ->
-                                    data
+                                            _ ->
+                                                x
+                                   )
                     in
                     List.foldl
                         (\( i, x ) acc ->
-                            Array.set i (Finance.Column.Utils.transactionValue x nextData transaction) acc
+                            Array.set i (Finance.Column.Utils.transactionValue x data transaction) acc
                         )
                         b
                         columns
