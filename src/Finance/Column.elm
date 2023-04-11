@@ -32,6 +32,7 @@ type Column
     | Account
     | Month
     | Year
+      --
     | Category
     | Subcategory
 
