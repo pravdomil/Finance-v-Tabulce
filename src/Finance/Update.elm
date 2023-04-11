@@ -15,6 +15,7 @@ import FioCz
 import Iso8601
 import JavaScript
 import Json.Decode
+import List.Extra
 import Result.Extra
 import Task
 import Time
@@ -151,19 +152,55 @@ updateTransactions sheet rules =
 
 
 updateTransactionsHelper : List Finance.Category.Rule -> Array.Array (Array.Array AppScript.Spreadsheet.Value) -> Array.Array (Array.Array AppScript.Spreadsheet.Value)
-updateTransactionsHelper _ a =
+updateTransactionsHelper rules a =
     let
         columns : List ( Int, Finance.Column.Column )
         columns =
             columnIndexes a
 
+        categoryColumnIndex : Maybe Int
+        categoryColumnIndex =
+            List.Extra.findMap
+                (\( x, x2 ) ->
+                    if x2 == Finance.Column.Category then
+                        Just x
+
+                    else
+                        Nothing
+                )
+                columns
+
+        subcategoryColumnIndex : Maybe Int
+        subcategoryColumnIndex =
+            List.Extra.findMap
+                (\( x, x2 ) ->
+                    if x2 == Finance.Column.Subcategory then
+                        Just x
+
+                    else
+                        Nothing
+                )
+                columns
+
         updateTransaction : Array.Array AppScript.Spreadsheet.Value -> Array.Array AppScript.Spreadsheet.Value
         updateTransaction b =
             case Array.get 0 b |> Maybe.andThen (\x -> Finance.Utils.valueToString x |> Codec.decodeString transactionCodec |> Result.toMaybe) of
-                Just c ->
+                Just transaction ->
+                    let
+                        category : Finance.Category.Category
+                        category =
+                            case categoryColumnIndex |> Maybe.andThen (\x -> Array.get x b) |> Maybe.withDefault (AppScript.Spreadsheet.Text "") of
+                                AppScript.Spreadsheet.Text "" ->
+                                    Finance.Category.categorize rules transaction
+
+                                c ->
+                                    Finance.Category.Category
+                                        c
+                                        (subcategoryColumnIndex |> Maybe.andThen (\x -> Array.get x b) |> Maybe.withDefault (AppScript.Spreadsheet.Text ""))
+                    in
                     List.foldl
                         (\( i, x ) acc ->
-                            Array.set i (Finance.Column.Utils.transactionValue x c) acc
+                            Array.set i (Finance.Column.Utils.transactionValue x category transaction) acc
                         )
                         b
                         columns
