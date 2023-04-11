@@ -71,3 +71,21 @@ multipleParser =
                     |> Parser.map (\x2 -> Parser.Loop (x2 :: x))
                 ]
         )
+
+
+
+--
+
+
+type FioToken
+    = FioToken String
+
+
+stringToFioToken : String -> FioToken
+stringToFioToken =
+    FioToken
+
+
+fioTokenToString : FioToken -> String
+fioTokenToString (FioToken a) =
+    a
