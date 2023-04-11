@@ -203,6 +203,14 @@ updateTransactionsHelper rules a =
                                             _ ->
                                                 x
                                    )
+                                |> (\x ->
+                                        case x.fulfillmentDate of
+                                            AppScript.Spreadsheet.Text "" ->
+                                                { x | fulfillmentDate = AppScript.Spreadsheet.Date transaction.date }
+
+                                            _ ->
+                                                x
+                                   )
                     in
                     List.foldl
                         (\( i, x ) acc ->
