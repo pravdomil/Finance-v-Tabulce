@@ -2,11 +2,12 @@ module Finance.Column.Utils exposing (..)
 
 import AppScript.Spreadsheet
 import Finance.Column
+import Finance.Config
 import FioCz
 
 
-transactionValue : Finance.Column.Column -> FioCz.Transaction -> AppScript.Spreadsheet.Value
-transactionValue column a =
+transactionValue : Finance.Column.Column -> Finance.Config.Category -> FioCz.Transaction -> AppScript.Spreadsheet.Value
+transactionValue column category a =
     case column of
         Finance.Column.Id ->
             AppScript.Spreadsheet.WholeNumber a.id
@@ -97,3 +98,9 @@ transactionValue column a =
                         )
                     )
                 )
+
+        Finance.Column.Category ->
+            category.category
+
+        Finance.Column.Subcategory ->
+            category.subcategory
