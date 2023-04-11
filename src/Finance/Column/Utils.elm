@@ -113,3 +113,9 @@ transactionValue column data a =
 
         Finance.Column.FulfillmentDate ->
             data.fulfillmentDate
+
+        Finance.Column.FulfillmentMonth ->
+            AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(), MATCH("Fulfillment Date", $1:$1, 0)))), MONTH(INDIRECT(ADDRESS(ROW(), MATCH("Fulfillment Date", $1:$1, 0)))), 1)"""
+
+        Finance.Column.FulfillmentYear ->
+            AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(), MATCH("Fulfillment Date", $1:$1, 0)))), 1, 1)"""
