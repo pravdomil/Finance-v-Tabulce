@@ -28,7 +28,7 @@ import Url
 transactions : AppScript.Spreadsheet.Sheet -> List Finance.Config.Config -> Task.Task JavaScript.Error ()
 transactions sheet configs =
     Task.sequence
-        [ fetchAndInsertNewTransactions sheet (Finance.Config.fioTokens configs)
+        [ fetchAndInsertNewTransactions sheet (Finance.Config.accounts configs)
         , updateTransactions sheet (Finance.Config.categoryRules configs)
         ]
         |> Task.map (\_ -> ())
@@ -39,19 +39,19 @@ transactions sheet configs =
 
 
 fetchAndInsertNewTransactions : AppScript.Spreadsheet.Sheet -> List Finance.Account.Account -> Task.Task JavaScript.Error ()
-fetchAndInsertNewTransactions sheet tokens =
+fetchAndInsertNewTransactions sheet accounts =
     Time.now
-        |> Task.andThen (\x -> Task.sequence (List.map (fetchNewTransactions x) tokens))
+        |> Task.andThen (\x -> Task.sequence (List.map (fetchNewTransactions x) accounts))
         |> Task.andThen (\x -> insertNewTransactions sheet (List.concat x))
 
 
 fetchNewTransactions : Time.Posix -> Finance.Account.Account -> Task.Task JavaScript.Error (List Finance.Transaction.Transaction)
-fetchNewTransactions time token =
+fetchNewTransactions time account =
     let
         url : String
         url =
             "https://www.fio.cz/ib_api/rest/periods/"
-                ++ Url.percentEncode (Finance.Account.token token)
+                ++ Url.percentEncode (Finance.Account.token account)
                 ++ "/"
                 ++ Url.percentEncode (String.left 10 (Iso8601.fromTime (minusDays 30 time)))
                 ++ "/"
@@ -66,7 +66,7 @@ fetchNewTransactions time token =
                         Task.succeed
                             (List.map
                                 (\x3 ->
-                                    Finance.Transaction.Transaction (Finance.Account.name token) x3
+                                    Finance.Transaction.Transaction (Finance.Account.name account) x3
                                 )
                                 x2.transactions
                             )
