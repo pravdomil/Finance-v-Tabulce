@@ -103,10 +103,10 @@ transactionValue column data a =
                 )
 
         Finance.Column.Month ->
-            AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(), MATCH("Date", $1:$1, 0)))), MONTH(INDIRECT(ADDRESS(ROW(), MATCH("Date", $1:$1, 0)))), 1)"""
+            AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(); MATCH("Date"; $1:$1; 0)))); MONTH(INDIRECT(ADDRESS(ROW(); MATCH("Date"; $1:$1; 0)))); 1)"""
 
         Finance.Column.Year ->
-            AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(), MATCH("Date", $1:$1, 0)))), 1, 1)"""
+            AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(); MATCH("Date"; $1:$1; 0)))); 1; 1)"""
 
         Finance.Column.Category ->
             data.category
@@ -118,10 +118,10 @@ transactionValue column data a =
             data.fulfillmentDate
 
         Finance.Column.FulfillmentMonth ->
-            AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(), MATCH("Fulfillment Date", $1:$1, 0)))), MONTH(INDIRECT(ADDRESS(ROW(), MATCH("Fulfillment Date", $1:$1, 0)))), 1)"""
+            AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(); MATCH("Fulfillment Date"; $1:$1; 0)))); MONTH(INDIRECT(ADDRESS(ROW(); MATCH("Fulfillment Date"; $1:$1; 0)))); 1)"""
 
         Finance.Column.FulfillmentYear ->
-            AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(), MATCH("Fulfillment Date", $1:$1, 0)))), 1, 1)"""
+            AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(); MATCH("Fulfillment Date"; $1:$1; 0)))); 1; 1)"""
 
         Finance.Column.UserNote ->
             data.note
