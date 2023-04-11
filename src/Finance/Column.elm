@@ -31,7 +31,7 @@ type Column
     | Author
     | OrderId
       --
-    | Account
+    | AccountNameAndNumber
     | Month
     | Year
       --
@@ -112,8 +112,8 @@ fromString a =
         "order id" ->
             Just OrderId
 
-        "account" ->
-            Just Account
+        "account name and number" ->
+            Just AccountNameAndNumber
 
         "month" ->
             Just Month

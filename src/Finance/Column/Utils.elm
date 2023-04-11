@@ -90,7 +90,7 @@ transactionValue column data a =
                 Nothing ->
                     AppScript.Spreadsheet.Text ""
 
-        Finance.Column.Account ->
+        Finance.Column.AccountNameAndNumber ->
             AppScript.Spreadsheet.Text
                 (String.trim
                     (String.join " "
