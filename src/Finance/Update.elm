@@ -6,6 +6,7 @@ import Array
 import Codec
 import Dict
 import Finance.Column
+import Finance.Column.Utils
 import Finance.Config
 import Finance.Utils
 import FioCz
@@ -174,14 +175,28 @@ updateTransactionsHelper _ a =
                             |> List.reverse
                     )
                 |> Maybe.withDefault []
+
+        updateTransaction : Array.Array AppScript.Spreadsheet.Value -> Array.Array AppScript.Spreadsheet.Value
+        updateTransaction b =
+            case Array.get 0 b |> Maybe.andThen (\x -> Finance.Utils.valueToString x |> Codec.decodeString transactionCodec |> Result.toMaybe) of
+                Just c ->
+                    List.foldl
+                        (\( i, x ) acc ->
+                            Array.set i (Finance.Column.Utils.transactionValue x c) acc
+                        )
+                        b
+                        columns
+
+                Nothing ->
+                    b
     in
-    Array.Extra.update
-        0
-        (\x ->
-            Array.set
-                1
-                (AppScript.Spreadsheet.Text (Debug.toString columns))
+    Array.indexedMap
+        (\i x ->
+            if i == 0 then
                 x
+
+            else
+                updateTransaction x
         )
         a
 
