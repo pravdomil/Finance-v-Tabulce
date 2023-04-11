@@ -38,6 +38,7 @@ type Column
     | FulfillmentDate
     | FulfillmentMonth
     | FulfillmentYear
+    | UserNote
 
 
 fromString : String -> Maybe Column
@@ -129,6 +130,9 @@ fromString a =
 
         "fulfillment year" ->
             Just FulfillmentYear
+
+        "user note" ->
+            Just UserNote
 
         _ ->
             Nothing
