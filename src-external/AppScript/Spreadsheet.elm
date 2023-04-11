@@ -67,6 +67,14 @@ sheetByName (Spreadsheet a) name_ =
         )
 
 
+insertRowsAfter : Sheet -> Int -> Int -> Task.Task JavaScript.Error ()
+insertRowsAfter (Sheet a) rowNumber count =
+    JavaScript.run
+        "a[0].insertRowsAfter(a[1], a[2])"
+        (Json.Encode.list identity [ a, Json.Encode.int rowNumber, Json.Encode.int count ])
+        (Json.Decode.succeed ())
+
+
 insertRowsBefore : Sheet -> Int -> Int -> Task.Task JavaScript.Error ()
 insertRowsBefore (Sheet a) rowNumber count =
     JavaScript.run
