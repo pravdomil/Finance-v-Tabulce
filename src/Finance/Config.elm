@@ -5,7 +5,7 @@ import Parser
 
 type Config
     = FioToken_ FioToken
-    | Rule_ String
+    | CategoryRule_ String
 
 
 fioTokens : List Config -> List FioToken
@@ -27,7 +27,7 @@ rules a =
     List.filterMap
         (\x ->
             case x of
-                Rule_ x2 ->
+                CategoryRule_ x2 ->
                     Just x2
 
                 _ ->
@@ -50,7 +50,7 @@ singleParser =
                     "rule" ->
                         Parser.token ":"
                             |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '\n')))
-                            |> Parser.map (\x -> Rule_ (String.trim x))
+                            |> Parser.map (\x -> CategoryRule_ (String.trim x))
 
                     _ ->
                         Parser.problem ("Unknown config " ++ name ++ ".")
