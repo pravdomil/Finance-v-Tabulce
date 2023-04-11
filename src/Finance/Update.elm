@@ -5,6 +5,7 @@ import AppScript.UrlFetch
 import Array
 import Codec
 import Dict
+import Finance.Category
 import Finance.Column
 import Finance.Column.Utils
 import Finance.Config
@@ -135,7 +136,7 @@ insertNewTransactions sheet a =
 --
 
 
-updateTransactions : AppScript.Spreadsheet.Sheet -> List Finance.Config.CategoryRule -> Task.Task JavaScript.Error ()
+updateTransactions : AppScript.Spreadsheet.Sheet -> List Finance.Category.Rule -> Task.Task JavaScript.Error ()
 updateTransactions sheet rules =
     AppScript.Spreadsheet.allRange sheet
         |> Task.andThen
@@ -148,7 +149,7 @@ updateTransactions sheet rules =
             )
 
 
-updateTransactionsHelper : List Finance.Config.CategoryRule -> Array.Array (Array.Array AppScript.Spreadsheet.Value) -> Array.Array (Array.Array AppScript.Spreadsheet.Value)
+updateTransactionsHelper : List Finance.Category.Rule -> Array.Array (Array.Array AppScript.Spreadsheet.Value) -> Array.Array (Array.Array AppScript.Spreadsheet.Value)
 updateTransactionsHelper _ a =
     let
         columns : List ( Int, Finance.Column.Column )

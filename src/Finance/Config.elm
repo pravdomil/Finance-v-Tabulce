@@ -1,12 +1,13 @@
 module Finance.Config exposing (..)
 
+import Finance.Category
 import Finance.Column
 import Parser
 
 
 type Config
     = FioToken_ FioToken
-    | CategoryRule_ CategoryRule
+    | CategoryRule_ Finance.Category.Rule
 
 
 fioTokens : List Config -> List FioToken
@@ -23,7 +24,7 @@ fioTokens a =
         a
 
 
-categoryRules : List Config -> List CategoryRule
+categoryRules : List Config -> List Finance.Category.Rule
 categoryRules a =
     List.filterMap
         (\x ->
@@ -51,7 +52,7 @@ singleParser =
                     "rule" ->
                         Parser.token ":"
                             |> Parser.andThen (\() -> Parser.getChompedString (Parser.chompWhile (\x -> x /= '\n')))
-                            |> Parser.map (\_ -> CategoryRule_ (CategoryRule "" "" Finance.Column.Id ""))
+                            |> Parser.map (\_ -> CategoryRule_ (Finance.Category.Rule "" "" Finance.Column.Id ""))
 
                     _ ->
                         Parser.problem ("Unknown config " ++ name ++ ".")
@@ -90,15 +91,3 @@ stringToFioToken =
 fioTokenToString : FioToken -> String
 fioTokenToString (FioToken a) =
     a
-
-
-
---
-
-
-type alias CategoryRule =
-    { category : String
-    , subcategory : String
-    , column : Finance.Column.Column
-    , contains : String
-    }
