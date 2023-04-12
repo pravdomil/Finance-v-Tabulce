@@ -6,6 +6,7 @@ import Array
 import Codec
 import Dict
 import Finance.Account
+import Finance.AccountName
 import Finance.Category
 import Finance.Column
 import Finance.Column.Utils
@@ -175,6 +176,10 @@ updateTransactionsHelper configs a =
         rules =
             Finance.Config.categoryRules configs
 
+        accountNames : Finance.AccountName.Database
+        accountNames =
+            Finance.AccountName.accountNamesToDatabase (Finance.Config.accountNames configs)
+
         columns : List ( Int, Finance.Column.Column )
         columns =
             columnIndexes a
@@ -222,7 +227,7 @@ updateTransactionsHelper configs a =
                                 |> (\x ->
                                         case x.category of
                                             AppScript.Spreadsheet.Text "" ->
-                                                Finance.UserData.Utils.categorize rules transaction x
+                                                Finance.UserData.Utils.categorize accountNames rules transaction x
 
                                             _ ->
                                                 x
@@ -246,7 +251,7 @@ updateTransactionsHelper configs a =
                     in
                     List.foldl
                         (\( i, x ) acc ->
-                            Array.set i (Finance.Column.Utils.transactionValue x data transaction) acc
+                            Array.set i (Finance.Column.Utils.transactionValue accountNames x data transaction) acc
                         )
                         b
                         columns
