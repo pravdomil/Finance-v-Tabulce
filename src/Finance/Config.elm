@@ -66,6 +66,11 @@ singleParser =
                             |> Parser.andThen (\() -> accountParser)
                             |> Parser.map Account
 
+                    "account name" ->
+                        Parser.token "\t"
+                            |> Parser.andThen (\() -> accountNameParser)
+                            |> Parser.map AccountName
+
                     "rule" ->
                         Parser.token "\t"
                             |> Parser.andThen (\() -> ruleParser)
@@ -106,6 +111,16 @@ accountParser =
         |> Parser.andThen (\x -> cellText |> Parser.map (\x2 -> x x2))
         |> Parser.andThen (\x -> Parser.token "\t" |> Parser.map (\() -> x))
         |> Parser.andThen (\x -> cellText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> Parser.token "\t" |> Parser.map (\() -> x))
+
+
+accountNameParser : Parser.Parser Finance.AccountName.AccountName
+accountNameParser =
+    Parser.succeed Finance.AccountName.AccountName
+        |> Parser.andThen (\x -> cellText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> Parser.token "\t" |> Parser.map (\() -> x))
+        |> Parser.andThen (\x -> cellText |> Parser.map (\x2 -> x x2))
+        |> Parser.andThen (\x -> Parser.token "\t" |> Parser.map (\() -> x))
         |> Parser.andThen (\x -> Parser.token "\t" |> Parser.map (\() -> x))
 
 
