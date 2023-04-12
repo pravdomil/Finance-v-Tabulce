@@ -1,13 +1,16 @@
 module Finance.Column.Utils exposing (..)
 
 import AppScript.Spreadsheet
+import Dict
+import Finance.AccountName
 import Finance.Column
 import Finance.Transaction
 import Finance.UserData
+import Maybe.Extra
 
 
-transactionValue : Finance.Column.Column -> Finance.UserData.UserData -> Finance.Transaction.Transaction -> AppScript.Spreadsheet.Value
-transactionValue column data a =
+transactionValue : Finance.AccountName.Database -> Finance.Column.Column -> Finance.UserData.UserData -> Finance.Transaction.Transaction -> AppScript.Spreadsheet.Value
+transactionValue accountNames column data a =
     case column of
         Finance.Column.Account ->
             AppScript.Spreadsheet.Text a.account.name
@@ -44,7 +47,12 @@ transactionValue column data a =
             AppScript.Spreadsheet.Date a.transaction.date
 
         Finance.Column.AccountName ->
-            AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.accountName)
+            AppScript.Spreadsheet.Text
+                (Maybe.map2 (\x x2 -> x ++ "/" ++ x2) a.transaction.accountNumber a.transaction.bankNumber
+                    |> Maybe.andThen (\x -> Dict.get x accountNames)
+                    |> Maybe.Extra.onNothing (\() -> a.transaction.accountName)
+                    |> Maybe.withDefault ""
+                )
 
         Finance.Column.AccountNumber ->
             AppScript.Spreadsheet.Text (Maybe.withDefault "" a.transaction.accountNumber)
