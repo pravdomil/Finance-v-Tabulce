@@ -29,7 +29,7 @@ transactions : AppScript.Spreadsheet.Sheet -> List Finance.Config.Config -> Task
 transactions sheet configs =
     Task.sequence
         [ fetchAndInsertNewTransactions sheet (Finance.Config.accounts configs)
-        , updateTransactions sheet (Finance.Config.categoryRules configs)
+        , updateTransactions sheet configs
         ]
         |> Task.map (\_ -> ())
 
@@ -155,22 +155,26 @@ insertNewTransactions sheet a =
 --
 
 
-updateTransactions : AppScript.Spreadsheet.Sheet -> List Finance.Category.Rule -> Task.Task JavaScript.Error ()
-updateTransactions sheet rules =
+updateTransactions : AppScript.Spreadsheet.Sheet -> List Finance.Config.Config -> Task.Task JavaScript.Error ()
+updateTransactions sheet configs =
     AppScript.Spreadsheet.allRange sheet
         |> Task.andThen
             (\x ->
                 AppScript.Spreadsheet.getValues_ x
                     |> Task.andThen
                         (\x2 ->
-                            AppScript.Spreadsheet.setValues_ x (updateTransactionsHelper rules x2)
+                            AppScript.Spreadsheet.setValues_ x (updateTransactionsHelper configs x2)
                         )
             )
 
 
-updateTransactionsHelper : List Finance.Category.Rule -> Array.Array (Array.Array AppScript.Spreadsheet.Value) -> Array.Array (Array.Array AppScript.Spreadsheet.Value)
-updateTransactionsHelper rules a =
+updateTransactionsHelper : List Finance.Config.Config -> Array.Array (Array.Array AppScript.Spreadsheet.Value) -> Array.Array (Array.Array AppScript.Spreadsheet.Value)
+updateTransactionsHelper configs a =
     let
+        rules : List Finance.Category.Rule
+        rules =
+            Finance.Config.categoryRules configs
+
         columns : List ( Int, Finance.Column.Column )
         columns =
             columnIndexes a
