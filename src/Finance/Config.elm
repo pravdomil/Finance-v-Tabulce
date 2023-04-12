@@ -1,6 +1,7 @@
 module Finance.Config exposing (..)
 
 import Finance.Account
+import Finance.AccountName
 import Finance.Category
 import Finance.Column
 import Parser
@@ -8,6 +9,7 @@ import Parser
 
 type Config
     = Account Finance.Account.Account
+    | AccountName Finance.AccountName.AccountName
     | CategoryRule Finance.Category.Rule
 
 
@@ -17,6 +19,20 @@ accounts a =
         (\x ->
             case x of
                 Account x2 ->
+                    Just x2
+
+                _ ->
+                    Nothing
+        )
+        a
+
+
+accountNames : List Config -> List Finance.AccountName.AccountName
+accountNames a =
+    List.filterMap
+        (\x ->
+            case x of
+                AccountName x2 ->
                     Just x2
 
                 _ ->
