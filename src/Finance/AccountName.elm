@@ -4,8 +4,8 @@ import Dict
 
 
 type alias AccountName =
-    { account : String
-    , name : String
+    { name : String
+    , account : String
     }
 
 
