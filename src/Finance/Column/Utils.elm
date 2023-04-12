@@ -90,17 +90,8 @@ transactionValue column data a =
                 Nothing ->
                     AppScript.Spreadsheet.Text ""
 
-        Finance.Column.AccountNameAndNumber ->
-            AppScript.Spreadsheet.Text
-                (String.trim
-                    (String.join " "
-                        (List.filterMap identity
-                            [ a.transaction.accountName
-                            , Maybe.map2 (\x x2 -> x ++ "/" ++ x2) a.transaction.accountNumber a.transaction.bankNumber
-                            ]
-                        )
-                    )
-                )
+        Finance.Column.AccountAndBankNumber ->
+            AppScript.Spreadsheet.Text (Maybe.withDefault "" (Maybe.map2 (\x x2 -> x ++ "/" ++ x2) a.transaction.accountNumber a.transaction.bankNumber))
 
         Finance.Column.Month ->
             AppScript.Spreadsheet.Text """=DATE(YEAR(INDIRECT(ADDRESS(ROW(); MATCH("Date"; $1:$1; 0)))); MONTH(INDIRECT(ADDRESS(ROW(); MATCH("Date"; $1:$1; 0)))); 1)"""
