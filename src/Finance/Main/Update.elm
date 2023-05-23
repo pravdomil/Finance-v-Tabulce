@@ -1,7 +1,7 @@
 module Finance.Main.Update exposing (..)
 
+import AppScript.Fetch
 import AppScript.Spreadsheet
-import AppScript.UrlFetch
 import Array
 import Codec
 import Dict
@@ -59,7 +59,7 @@ fetchNewTransactions time account =
                 ++ Url.percentEncode (String.left 10 (Iso8601.fromTime time))
                 ++ "/transactions.json"
     in
-    AppScript.UrlFetch.fetch url
+    AppScript.Fetch.text url
         |> Task.andThen
             (\x ->
                 case Json.Decode.decodeString FioCz.statementDecoder x of
