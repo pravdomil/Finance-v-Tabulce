@@ -18,7 +18,7 @@ if [ -d $dir ]; then rm -r $dir; fi
 mkdir -p $dir
 
 # Copy static resources.
-cp -r resources/ dist
+cp -r resources/ $dir
 
 # Compile.
 elm make src/Main.elm --output $dir/v2/finance.js --optimize
