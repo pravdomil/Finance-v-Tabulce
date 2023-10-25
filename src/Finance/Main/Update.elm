@@ -140,7 +140,7 @@ insertNewTransactions sheet a =
                                             x2
                                             (List.map
                                                 (\x3 ->
-                                                    [ AppScript.Spreadsheet.Text (Codec.encodeToString 0 Finance.Transaction.codec x3)
+                                                    [ AppScript.Spreadsheet.Text (Codec.encodeToString Finance.Transaction.codec x3)
                                                     ]
                                                 )
                                                 newTransactions
