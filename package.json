@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "elm": "^0.19.1-6",
     "elm-ffi": "github:pravdomil/elm-ffi",
     "elm-ffi-appscript": "github:pravdomil/elm-ffi-appscript",
     "elm-fio-cz": "github:pravdomil/elm-fio-cz",
